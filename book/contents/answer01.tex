@@ -1,4 +1,111 @@
 \answer
 \begin{enumerate}
-\item （解答整備予定）
+
+%%--- 章末問題 1.1 ---
+\item[\ref{ex1.1}]
+$E - E_F \gg kT$なら$\exp\left(\frac{E-E_F}{kT}\right) \gg 1$だから，
+式\ref{eq1.2}の分母の1が無視できて
+$f(E) \approx \exp\left(-\frac{E-E_F}{kT}\right)$となる。
+
+シリコン：$\dfrac{E_g/2}{kT} = \dfrac{0.55}{0.026} \approx 21$より
+$f \approx \exp(-21) \approx 7\times10^{-10}$。
+SiC：$\dfrac{1.65}{0.026} \approx 63$より
+$f \approx \exp(-63) \approx 4\times10^{-28}$。
+比はおよそ$10^{18}$倍にもなる。
+
+SiCでは熱で生まれるキャリアがシリコンよりけた違いに少ないから，
+オフ状態の漏れ電流がきわめて小さい。
+また温度が上がってもキャリアの熱生成が問題になりにくく，
+シリコンより高温で動作できる（3章）。
+
+%%--- 章末問題 1.2 ---
+\item[\ref{ex1.2}]
+(a) 多数キャリアの電子は$n \approx N_d = 10^{17}\,\mathrm{cm^{-3}}$。
+少数キャリアの正孔は質量作用の法則\ref{eq1.3}より
+\begin{equation*}
+p = \frac{n_i^2}{n} = \frac{(1.5\times10^{10})^2}{10^{17}}
+\approx 2.3\times10^{3}\,\mathrm{cm^{-3}}
+\end{equation*}
+
+(b) 式\ref{eq1.5}で正孔の項を無視して
+\begin{equation*}
+\sigma = e n \mu_n = 1.602\times10^{-19}\times10^{17}\times1350
+\approx 22\,\mathrm{S/cm}\ (= 2.2\times10^{3}\,\mathrm{S/m})
+\end{equation*}
+
+%%--- 章末問題 1.3 ---
+\item[\ref{ex1.3}]
+(a) SI単位に直すと$N_a = N_d = 10^{22}\,\mathrm{m^{-3}}$，
+$\varepsilon = 11.7\times8.854\times10^{-12} = 1.04\times10^{-10}$\,F/m。
+式\ref{eq1.11}より
+\begin{eqnarray}
+d &=& \sqrt{\frac{2\times1.04\times10^{-10}\times0.70}{1.602\times10^{-19}}
+\times\left(\frac{1}{10^{22}}+\frac{1}{10^{22}}\right)} \nonumber\\
+&\approx& \sqrt{1.8\times10^{-13}} \approx 4.3\times10^{-7}\,\mathrm{m}
+= 0.43\,\mathrm{\mu m} \nonumber
+\end{eqnarray}
+
+(b)
+\begin{equation*}
+\mathcal{E}_{\max} = \frac{2V_{bi}}{d} = \frac{2\times0.70}{4.3\times10^{-7}}
+\approx 3.3\times10^{6}\,\mathrm{V/m}
+\end{equation*}
+絶縁破壊電界$3\times10^7$\,V/mの約$1/9$であり，拡散電位だけでは降伏しない。
+逆バイアス$V$を加えると障壁は$V_{bi}+V$に増え，
+$\mathcal{E}_{\max}$もそれに応じて大きくなる。
+最大電場が絶縁破壊電界に達する電圧が，その接合の耐圧である（3章）。
+
+%%--- 章末問題 1.4 ---
+\item[\ref{ex1.4}]
+(a) 空乏層全体を囲む閉曲面にガウスの法則を使う。
+空乏層の外に電場がないなら閉曲面を貫く電場はゼロで，内部の総電荷もゼロである。
+よって$eN_a x_p = eN_d x_n$，すなわち$N_a x_p = N_d x_n$。
+
+(b) 式\ref{eq1.8}を$x = -x_p$（$\mathcal{E} = 0$）から積分する。
+p形側（$\rho = -eN_a$）では電場の大きさが傾き$eN_a/\varepsilon$で直線的に増え，
+$x = 0$で最大値
+\begin{equation*}
+\mathcal{E}_{\max} = \frac{eN_a x_p}{\varepsilon} = \frac{eN_d x_n}{\varepsilon}
+\end{equation*}
+に達する（2つ目の等号は(a)による）。
+n形側（$\rho = +eN_d$）では傾き$eN_d/\varepsilon$で直線的に減り，
+$x = x_n$でゼロに戻る。電場の分布は底辺$d = x_p + x_n$の三角形になる。
+
+(c) 電位差は電場の分布を積分した面積，つまり三角形の面積だから
+$V_{bi} = \frac{1}{2}\mathcal{E}_{\max}d$。
+(b)より$x_p = \dfrac{\varepsilon\mathcal{E}_{\max}}{eN_a}$，
+$x_n = \dfrac{\varepsilon\mathcal{E}_{\max}}{eN_d}$なので
+\begin{equation*}
+d = x_p + x_n = \frac{\varepsilon\mathcal{E}_{\max}}{e}
+\left(\frac{1}{N_a}+\frac{1}{N_d}\right)
+\end{equation*}
+すなわち
+$\mathcal{E}_{\max} = \dfrac{ed}{\varepsilon}
+\left(\dfrac{1}{N_a}+\dfrac{1}{N_d}\right)^{-1}$である。
+これを$V_{bi} = \frac{1}{2}\mathcal{E}_{\max}d$に代入すると
+\begin{equation*}
+V_{bi} = \frac{ed^2}{2\varepsilon}\left(\frac{1}{N_a}+\frac{1}{N_d}\right)^{-1}
+\quad\Rightarrow\quad
+d = \sqrt{\frac{2\varepsilon V_{bi}}{e}\left(\frac{1}{N_a}+\frac{1}{N_d}\right)}
+\end{equation*}
+となり，式\ref{eq1.11}が得られる。
+
+%%--- 章末問題 1.5 ---
+\item[\ref{ex1.5}]
+(a) 真性キャリア濃度の観点：
+バンドギャップが大きいほど，熱で価電子帯から伝導帯へ上がる電子は
+指数関数的に少なくなる（章末問題\ref{ex1.1}）。
+真性キャリア濃度が小さいので，オフ状態の漏れ電流が小さく，
+高温になってもドーピングで作ったキャリア数が熱生成キャリアに埋もれない。
+つまり高温環境（自動車・産業機器）でも確実にオフを保てる。
+
+(b) 絶縁破壊電界の観点：
+バンドギャップが大きい材料は絶縁破壊電界も大きい
+（SiCはシリコンの約10倍）。
+同じ耐圧を得るのに必要な空乏層（ドリフト層）を薄く，
+かつ高濃度にできるため，例題\ref{rei1.2}で見たドリフト層の抵抗，
+すなわちオン抵抗を大幅に下げられる。
+耐圧とオン抵抗のトレードオフそのものが材料の性質で緩和される。
+これがSiC・GaNが「高耐圧と低損失の両立」を実現できる理由である（3章）。
+
 \end{enumerate}
