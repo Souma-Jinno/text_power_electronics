@@ -1,4 +1,80 @@
 \answer
 \begin{enumerate}
-\item （解答整備予定）
+
+%%--- 章末問題 4.1 ---
+\item[\ref{ex4.1}]
+定理\ref{th4.1}のボルト秒平衡より
+\begin{equation*}
+DT\,V_0 + (T - DT)(V_0 - V_1) = 0
+\end{equation*}
+これを整理すると$TV_0 = (1-D)TV_1$，よって
+\begin{equation*}
+V_1 = \frac{V_0}{1-D}
+\end{equation*}
+$0 < D < 1$では$V_1 > V_0$，すなわち\textbf{出力電圧が入力より高くなる}。
+オン期間に蓄えた磁気エネルギーを，オフ期間に入力電圧へ上乗せして送り出すためである。
+これが昇圧チョッパ（5章）の原理である。
+
+%%--- 章末問題 4.2 ---
+\item[\ref{ex4.2}]
+オン期間のインダクタ電圧は$v_L = V_0 - V_1 = (1-D)V_0$で一定だから，
+式\ref{eq4.5}より電流はオン期間$DT$の間に
+\begin{equation*}
+\mathit{\Delta}i_L = \frac{1}{L}(1-D)V_0 \times DT = \frac{D(1-D)V_0 T}{L}
+\end{equation*}
+だけ直線的に増える。これが$I_{\max} - I_{\min}$である。
+数値を代入すると，$T = 1/f_{\mathrm{SW}} = 10\,\mathrm{\mu s}$だから
+\begin{equation*}
+\mathit{\Delta}i_L = \frac{0.5\times0.5\times12\times10\times10^{-6}}{100\times10^{-6}}
+= 0.3\,\mathrm{A}
+\end{equation*}
+リプルは$L$に反比例し，$f_{\mathrm{SW}}$を上げても小さくなる。
+また$D(1-D)$は$D = 0.5$のとき最大になるから，この数値は最悪条件での値である。
+
+%%--- 章末問題 4.3 ---
+\item[\ref{ex4.3}]
+オン期間のキャパシタ電流は$i_C = I_0 - I_1 = (1-D)I_0$で一定だから，
+式\ref{eq4.9}より電圧はオン期間$DT$の間に
+\begin{equation*}
+\mathit{\Delta}v_C = \frac{1}{C}(1-D)I_0 \times DT = \frac{D(1-D)I_0 T}{C}
+\end{equation*}
+だけ直線的に上がる。数値を代入して
+\begin{equation*}
+\mathit{\Delta}v_C = \frac{0.5\times0.5\times2\times10\times10^{-6}}{10\times10^{-6}}
+= 0.5\,\mathrm{V}
+\end{equation*}
+章末問題\ref{ex4.2}の式で$V_0 \to I_0$，$L \to C$，
+$\mathit{\Delta}i_L \to \mathit{\Delta}v_C$と読み替えたものにちょうど一致する。
+インダクタの電流リプルとキャパシタの電圧リプルは双対（\TABref{tab4.1}）であり，
+片方を導けばもう片方は読み替えだけで得られる。
+
+%%--- 章末問題 4.4 ---
+\item[\ref{ex4.4}]
+(a) 式\ref{eq4.4}と式\ref{eq4.8}より
+\begin{equation*}
+W_L = \frac{1}{2}\times100\times10^{-6}\times10^2 = 5\,\mathrm{mJ}，\qquad
+W_C = \frac{1}{2}\times100\times10^{-6}\times400^2 = 8\,\mathrm{J}
+\end{equation*}
+(b) 1周期は$T = 10\,\mathrm{\mu s}$だから，毎周期$5$\,mJを受け渡すと平均電力は
+\begin{equation*}
+P = W_L f_{\mathrm{SW}} = 5\times10^{-3}\times10^{5} = 500\,\mathrm{W}
+\end{equation*}
+1回に蓄えられる量はわずか$5$\,mJでも，受け渡しを毎秒10万回繰り返せば
+$500$\,Wもの電力を運べる。
+スイッチング周波数を高くするほど，同じインダクタ（あるいはもっと小さなインダクタ）で
+大きな電力を扱える ― 電源装置の小型化が高周波化とともに進んできた理由である。
+
+%%--- 章末問題 4.5 ---
+\item[\ref{ex4.5}]
+（シミュレーションの確認ポイント）
+(a) 出力電圧の平均は$DV_0 = 6$\,Vに落ち着く。
+起動直後は振動（過渡状態）が見えるが，やがて定常状態に収束する。
+波形の平均を取る区間は定常状態に入った後に選ぶこと。
+(b) リプル電圧はほぼ$C$に反比例するから，$C = 100\,\mathrm{\mu F}$では
+約$1/10$になる。
+(c) $f_{\mathrm{SW}} = 5$\,kHzは$f_0 = 1/(2\pi\sqrt{LC}) \approx 5.0$\,kHzとほぼ一致し，
+スイッチング成分が共振で増幅されて出力は大きく振動する。
+「$f_0 \ll f_{\mathrm{SW}}$」というフィルタ設計の条件（式\ref{eq4.13}）が
+崩れるとどうなるかを目で確かめられる。
+
 \end{enumerate}
