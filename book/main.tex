@@ -18,6 +18,10 @@
 
 \usepackage{lawenv}     %% 「法則」環境（公理＝出発点の基本法則用）
 
+%% a5update.sty が amsmath の \tagform@ を再定義し \eqref が壊れるため上書き
+%% （この環境では \ref が式番号を括弧付きで返す）
+\renewcommand*{\eqref}[1]{\ref{#1}}
+
 %% 書名・著者
 \title{パワーエレクトロニクス ― エネルギーの蓄えと放出で読み解く電力変換}
 \author{神野崇馬}
