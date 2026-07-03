@@ -1,4 +1,55 @@
 \answer
 \begin{enumerate}
-\item （解答整備予定）
+
+%% 11章 問1（11.2節）
+\item[11.2節 問1]
+式\ref{eq11.4}より，Si：$f_2 = 1/(\pi \times 40\times10^{-9}) \approx 8$\,MHz，
+GaN：$f_2 = 1/(\pi \times 4\times10^{-9}) \approx 80$\,MHz。
+$-20$\,dB/decの緩い減衰で残る帯域が1桁高い周波数まで広がる。
+波長は$\lambda = c_0/f$より，$100$\,kHz：$3$\,km，$30$\,MHz：$10$\,m，$300$\,MHz：$1$\,m。
+GaNの$f_2 = 80$\,MHz付近では$\lambda \approx 3.7$\,mだから，
+$1$\,mのケーブルは$\lambda/4$程度 ― 立派なアンテナになり得る。
+
+%% 11章 問2（11.3節）
+\item[11.3節 問2]
+対数の中身は$V/(1\,\mathrm{\mu V})$，すなわち電圧を電圧で割った量だから無次元であり，
+対数を取ってよい（対数・指数の引数は必ず無次元でなければならない）。
+$V = 1\,\mathrm{V} = 10^6\,\mathrm{\mu V}$のとき
+\begin{equation*}
+20 \log_{10} \frac{1\,\mathrm{V}}{1\,\mathrm{\mu V}} = 20 \log_{10} 10^6 = 20 \times 6
+= 120\,\mathrm{dB\mu V}
+\end{equation*}
+となり，定義\ref{def11.3}の対応と一致する。
+
+%% 11章 問3（11.4節）
+\item[11.4節 問3]
+$L \approx 1\,\mathrm{nH/mm} \times 40\,\mathrm{mm} = 40$\,nH。
+$|Z| = 2\pi \times 10^8 \times 40\times10^{-9} \approx 25\,\Omega$。
+低周波では無視できる数cmの配線が，ノイズの周波数帯では数十$\Omega$の立派な素子になる。
+
+%% 11章 問4（11.5節）
+\item[11.5節 問4]
+式\ref{eq11.11}より
+\begin{equation*}
+v = L_p \frac{di}{dt} = 100\times10^{-9} \times \frac{20}{50\times10^{-9}} = 40\,\mathrm{V}
+\end{equation*}
+わずか10\,cm程度の配線でも，電源電圧に匹敵するサージ電圧が発生し得る。
+スイッチの耐圧選定（3章）に余裕が必要な理由の一つである。
+
+%% 11章 問5（11.6節）
+\item[11.6節 問5]
+式\ref{eq11.10}より$i = 100\times10^{-12} \times 10^9 = 0.1$\,A。
+コモンモード電流は$dv/dt$に比例するから$1/10$になり，
+電圧（電流）比$1/10$は$-20$\,dBである。
+すなわちこの変更はコモンモードノイズを約$20$\,dB減らす
+（ただしスイッチング損失は増える ― 3章のトレードオフ）。
+
+%% 11章 問6（11.7節）
+\item[11.7節 問6]
+\begin{equation*}
+i = 2\pi f C V = 2\pi \times 60 \times 4.7\times10^{-9} \times 100
+\approx 1.8\times10^{-4}\,\mathrm{A} \approx 0.18\,\mathrm{mA}
+\end{equation*}
+容量を10倍にすれば漏れ電流も10倍になり，許容値を超えてしまう。
+コモンモード対策をYコンデンサだけに頼れない理由である。
 \end{enumerate}
