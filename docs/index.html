@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>パワーエレクトロニクス｜執筆ダッシュボード</title>
+<style>
+body{font-family:"Hiragino Mincho ProN","Yu Mincho",serif;max-width:860px;margin:24px auto;padding:0 16px;color:#222;line-height:1.75}
+h1{font-size:1.5em;border-bottom:3px double #2a5db0;padding-bottom:6px}
+h2{font-size:1.15em;border-left:6px solid #2a5db0;padding-left:8px;margin-top:1.8em}
+.asof{color:#888;font-size:.85em}
+.cards{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0}
+.card{flex:1;min-width:140px;background:#eef3fb;border:1px solid #c5d5ee;border-radius:8px;padding:10px 14px;text-align:center}
+.card .num{font-size:1.5em;font-weight:bold;color:#2a5db0}
+.card .lbl{font-size:.8em;color:#555}
+table{border-collapse:collapse;width:100%;font-size:.92em}
+td,th{border:1px solid #ccc;padding:6px 9px}
+.badge{display:inline-block;padding:1px 8px;border-radius:9px;font-size:.78em;color:#fff}
+.p-high{background:#c0392b}.p-mid{background:#e67e22}.p-low{background:#888}
+.done-b{background:#3a6b3a}
+details.done{margin:12px 0;color:#3a6b3a}
+.pg{color:#888;white-space:nowrap}
+a{color:#2a5db0}
+</style></head><body>
+<h1>パワーエレクトロニクス ― エネルギーの蓄えと放出で読み解く電力変換</h1>
+<p style="color:#666">森北出版 提案企画 ― 校正用Webプレビュー＋執筆ダッシュボード（コロナ社corona-a5組版）</p>
+<p class="asof">更新日：2026-07-03（プロジェクト立ち上げ）</p>
+
+<div class="cards">
+<div class="card"><div class="num">1/12</div><div class="lbl">章 執筆済み（序章＋11章中）</div></div>
+<div class="card"><div class="num">3部</div><div class="lbl">デバイスの物理／電力変換／EMC</div></div>
+<div class="card"><div class="num">14回</div><div class="lbl">講義スライド（素材）</div></div>
+</div>
+
+<h2>執筆状況</h2>
+<table>
+<tr><th>章</th><th>タイトル</th><th>状況</th><th>素材</th></tr>
+<tr><td>序章</td><td><a href="ch00.html">電力変換はエネルギーの受け渡しである</a></td><td><span class="badge done-b">脱稿</span></td><td>講義1・企画書要旨</td></tr>
+<tr><td>第1章</td><td>半導体の物理</td><td><span class="badge p-high">執筆中</span></td><td>講義2・講義テキストch02</td></tr>
+<tr><td>第2章</td><td>パワー半導体の動作原理</td><td>未着手</td><td>講義3・ch03</td></tr>
+<tr><td>第3章</td><td>デバイス特性とデバイス選択</td><td>未着手</td><td>講義1,3</td></tr>
+<tr><td>第4章</td><td>リアクティブ素子とエネルギー</td><td>未着手</td><td>講義4・ch04</td></tr>
+<tr><td>第5章</td><td>直流-直流変換(1) 非絶縁型</td><td>未着手</td><td>講義5・ch05・LTspice</td></tr>
+<tr><td>第6章</td><td>直流-直流変換(2) 絶縁型</td><td>未着手</td><td>講義6・ch06・LTspice</td></tr>
+<tr><td>第7章</td><td>直流-直流変換(3) リニアレギュレータ</td><td>未着手</td><td>講義7・ch07</td></tr>
+<tr><td>第8章</td><td>交流-直流変換 整流回路</td><td>未着手</td><td>講義9,10</td></tr>
+<tr><td>第9章</td><td>直流-交流変換 インバータ</td><td>未着手</td><td>講義11,12</td></tr>
+<tr><td>第10章</td><td>交流-交流変換</td><td>未着手</td><td>講義13</td></tr>
+<tr><td>第11章</td><td>電力変換で生じる電磁ノイズとEMC</td><td>未着手</td><td>講義14</td></tr>
+</table>
+
+<h2>本書の理念（企画書より）</h2>
+<ol>
+<li>素子が「なぜそう動くか」から機能を導く（読める→作れるへ）</li>
+<li>「エネルギーをどう蓄え、どう放出するか」の一貫視点で全変換回路を串刺し</li>
+<li>仮定（理想スイッチ・定常状態・小リプル）を毎回明示</li>
+<li>目標リプル→L・C値という設計手順まで下ろす</li>
+<li>LTspiceで全回路を再現可能に</li>
+</ol>
+
+<h2>残された課題</h2>
+<table class="tasks">
+<tr><td><span class="badge p-high">高</span></td><td>第1章（半導体の物理）パイロット章の完成と著者レビュー（体裁・文体・図の品質確定）</td></tr>
+<tr><td><span class="badge p-high">高</span></td><td>第2〜11章の量産（パイロット確定後）</td></tr>
+<tr><td><span class="badge p-mid">中</span></td><td>LTspice波形→matplotlib再描画のワークフロー確立（5章で最初に必要）</td></tr>
+<tr><td><span class="badge p-mid">中</span></td><td>回路図のTikZ部品ライブラリ整備（スイッチ・ダイオード・L・C・トランス記号の統一）</td></tr>
+<tr><td><span class="badge p-low">低</span></td><td>森北出版へのテンプレート確認（コロナ社テンプレ流用の可否・最終組版の相談）</td></tr>
+</table>
+
+<details class="done" open><summary>対応済み（2026-07-03）</summary>
+<ul>
+<li>リポジトリに出版体制を構築（corona-a5テンプレ・main.tex・執筆規約WRITING_GUIDE・CLAUDE.md）</li>
+<li>序章「電力変換はエネルギーの受け渡しである」を執筆（電力変換の地図 図0.1・3人の登場人物・本書の約束）</li>
+<li>ビルドパイプライン確認（platexエラー0）</li>
+</ul>
+</details>
+
+<h2>関連リンク</h2>
+<ul>
+<li><a href="https://souma-jinno.github.io/text_electromagnetic_theory/">姉妹書：電磁回路理論（執筆ダッシュボード）</a></li>
+</ul>
+</body></html>
