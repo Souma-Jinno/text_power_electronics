@@ -1,4 +1,63 @@
 \answer
 \begin{enumerate}
-\item （解答整備予定）
+
+%% 3章 問1（3.1節）
+\item[3.1節 問1]
+アバランシェ降伏は，電場で加速されたキャリアが価電子帯の電子を
+伝導帯へたたき上げる衝突電離の連鎖で起こる。
+1回の衝突電離で電子正孔対を作るには，
+キャリアがバンドギャップ$E_g$以上の運動エネルギーをもつ必要がある。
+$E_g$が大きい材料では，衝突と衝突の間の短い距離で
+それだけのエネルギーをキャリアに与えるために，
+より強い電場が必要になる。
+したがって$E_g$が大きいほど絶縁破壊電界$\mathcal{E}_c$は大きい。
+
+%% 3章 問2（3.2節）
+\item[3.2節 問2]
+分母$\varepsilon\mu_n\mathcal{E}_c^3$の単位は
+\begin{equation*}
+\frac{\mathrm{F}}{\mathrm{m}}\times\frac{\mathrm{m^2}}{\mathrm{V\cdot s}}
+\times\frac{\mathrm{V^3}}{\mathrm{m^3}}
+= \frac{\mathrm{F\cdot V^2}}{\mathrm{s\cdot m^2}}
+\end{equation*}
+$1\,\mathrm{F} = 1$\,C/Vより$\mathrm{F\cdot V^2} = \mathrm{C\cdot V}$，
+さらに$\mathrm{C/s} = \mathrm{A}$だから，分母の単位は
+$\mathrm{A\cdot V/m^2}$となる。
+分子$4V_B^2$の単位は$\mathrm{V^2}$なので，右辺全体では
+\begin{equation*}
+\frac{\mathrm{V^2}}{\mathrm{A\cdot V/m^2}} = \frac{\mathrm{V}}{\mathrm{A}}\,\mathrm{m^2}
+= \Omega\cdot\mathrm{m^2}
+\end{equation*}
+となり，特性オン抵抗（抵抗$\times$面積）の単位と一致する。
+
+%% 3章 問3（3.3節）
+\item[3.3節 問3]
+$\frac{1}{2}VI(t_{\mathrm{on}}+t_{\mathrm{off}})$の単位は
+$\mathrm{V}\times\mathrm{A}\times\mathrm{s} = \mathrm{W\cdot s} = \mathrm{J}$であり，
+1回の切り替えで失われるエネルギーを表す。
+これに周波数$f_{\mathrm{sw}}$（単位$\mathrm{s^{-1}}$）を掛けると
+$\mathrm{J/s} = \mathrm{W}$となり，左辺（平均電力）と一致する。
+
+%% 3章 問4（3.4節）
+\item[3.4節 問4]
+導通損失が等しくなるのは$R_{\mathrm{on}}I^2 = V_{\mathrm{CE(sat)}}I$のときだから
+\begin{equation*}
+I^* = \frac{V_{\mathrm{CE(sat)}}}{R_{\mathrm{on}}} = \frac{1.5}{0.1} = 15\,\mathrm{A}
+\end{equation*}
+15\,Aより小さい電流ではMOSFET（電圧降下$R_{\mathrm{on}}I$が
+$V_{\mathrm{CE(sat)}}$より小さい）を，
+15\,Aより大きい電流ではIGBTを選ぶのが導通損失の点で有利である。
+実際にはこれにスイッチング損失（周波数）の軸が加わり，
+高周波ではより広い電流範囲でMOSFETが選ばれる。
+
+%% 3章 問5（3.5節）
+\item[3.5節 問5]
+式\ref{eq3.4}より
+\begin{equation*}
+W_{\mathrm{GaN}} = \frac{2\times1200}{3.3\times10^8}
+\approx 7.3\times10^{-6}\,\mathrm{m} = 7.3\,\mathrm{\mu m}
+\end{equation*}
+シリコンの$80\,\mathrm{\mu m}$（例題\ref{rei3.3}）の約11分の1である。
+絶縁破壊電界が11倍大きい分だけ，同じ耐圧を受け持つ層は11分の1に薄くできる。
+
 \end{enumerate}

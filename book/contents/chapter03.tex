@@ -1,4 +1,747 @@
 \chapter{デバイス特性とデバイス選択}
 \label{chap3}
 
-（執筆予定）
+1章では半導体の物理を，2章ではパワー半導体デバイスがスイッチとして動くしくみを学んだ。
+本章はその結実点である。
+バンドギャップ・絶縁破壊電界・移動度といった材料の物理量が，
+耐圧・オン抵抗・スイッチング速度というデバイスの特性を\textbf{どのように，どこまで}決めるのかを
+式で導き，最後に「どの素子をいつ選ぶか」という設計の出発点までつなげる。
+
+MOSFETは高周波向き，IGBTは大電力向き，という結論だけなら表で覚えられる。
+本章はその表を\textbf{物理から作る}。
+ワイドギャップ半導体（SiC・GaN）がなぜ注目されるのかも，
+流行としてではなく，材料定数の違いの必然として導かれる。
+
+\begin{screen}
+\noindent\textbf{本章の問いは3つである}\\[3pt]
+\begin{箇条書}
+\item 素子はどこまで電圧に耐えられるか，その代償は何か（\ref{sec3.1}節，\ref{sec3.2}節）
+\item なぜ速く切り替えるほど損失が増えるのか（\ref{sec3.3}節）
+\item では，どの素子をどう選ぶか（\ref{sec3.4}節，\ref{sec3.5}節）
+\end{箇条書}
+\end{screen}
+
+%%======================================================================
+\section{物理特性が回路特性を決める}
+\label{sec3.1}
+
+\subsection{回路から見た3つの性能}
+
+回路設計者がデバイスに求める性能は，突き詰めれば3つである。
+
+\begin{箇条書}
+\item \textbf{耐圧}：オフのとき，どれだけ高い電圧に耐えられるか
+\item \textbf{損失}：オンのとき，どれだけ小さい抵抗（電圧降下）で電流を流せるか
+\item \textbf{速度}：オンとオフを，どれだけ速く切り替えられるか
+\end{箇条書}
+
+理想スイッチ（序章）はこの3つがすべて無限に良いが，
+実際のデバイスはどれも有限で，しかも\textbf{互いに両立しない}。
+3つの性能が材料のどの物理量から来るのかを対応づけたのが\FIGref{fig3.1}である。
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[clip]{figures/fig3.1.eps}
+\end{center}
+\caption{物理特性からデバイス特性を経て回路の性能へ。1章で学んだ材料の量が本章でデバイスの性能に翻訳され，5章以降の回路設計に効いてくる。中央列の耐圧とオン抵抗は同じドリフト層で決まるため，トレードオフの関係にある}
+\label{fig3.1}
+\end{figure}
+
+\subsection{耐圧 ― 空乏層が電圧を受け持つ}
+
+1章で見たとおり，pn接合に逆バイアスをかけると空乏層が広がり，
+電圧はほぼすべて空乏層が受け持つ。
+空乏層内の電場には材料ごとの上限
+\index{ぜつえんはかいでんかい@絶縁破壊電界}\textbf{絶縁破壊電界}$\mathcal{E}_c$があり，
+これを超えるとキャリアがなだれのように増えて電流が急増する。
+
+\begin{定義}[耐圧（降伏電圧）]
+\label{def3.1}
+逆バイアスを増やしていったとき，空乏層内の最大電場が$\mathcal{E}_c$に達して
+電流が急増し始める電圧を\index{こうふく@降伏}\textbf{降伏}電圧といい，
+デバイスが破壊されずに耐えられる電圧の上限，すなわち
+\index{たいあつ@耐圧}\textbf{耐圧}$V_B$を与える。
+市販の素子では余裕を見込んだ
+\index{ていかくでんあつ@定格電圧}\textbf{定格電圧}が表示される。
+\end{定義}
+
+降伏のしくみを1章の言葉で確かめておこう。
+空乏層の中のキャリアは電場で加速され，
+電場が強いと，次の衝突までに\textbf{価電子帯の電子を伝導帯へたたき上げる}のに
+十分な運動エネルギー，すなわちバンドギャップ$E_g$を超えるエネルギーを得る。
+これを\index{しょうとつでんり@衝突電離}\textbf{衝突電離}といい，
+生まれた電子正孔対がまた加速されて次の対を作る連鎖で
+なだれのようにキャリアが増える降伏を
+\index{あばらんしぇこうふく@アバランシェ降伏}\textbf{アバランシェ降伏}という。
+
+ここで重要な因果関係が1つ手に入る。
+衝突電離を起こすにはキャリアに$E_g$以上のエネルギーを与えねばならないから，
+\textbf{バンドギャップが大きい材料ほど絶縁破壊電界が大きい}。
+シリコン（$E_g \approx 1.1$\,eV）の$\mathcal{E}_c$は約$3\times10^7$\,V/mだが，
+バンドギャップが約3倍のSiCやGaNでは$\mathcal{E}_c$が約10倍にもなる。
+この1けたの差が本章の最後で主役になる（\ref{sec3.5}節）。
+
+\subsection{損失と速度}
+
+オン状態の損失を決めるのは，1章で学んだ導電率$\sigma = e n \mu_n$である。
+キャリア濃度$n$と移動度$\mu_n$が大きいほど抵抗は小さいが，
+濃度を決めるドーピングは耐圧の要請から自由に選べない。
+ここに本章最大のトレードオフが潜んでいる（\ref{sec3.2}節）。
+速度を決めるのは，ゲート容量や接合容量といったデバイスの容量（2章）である。
+容量の充放電には時間がかかるから，スイッチングは一瞬では終わらず，
+その間の電圧と電流の重なりが損失を生む（\ref{sec3.3}節）。
+さらにバンドギャップ$E_g$は，オフ状態の質も決めている。
+1章で見たとおり，$E_g$が大きいほど熱で生まれるキャリアが指数関数的に少なく，
+\index{もれでんりゅう@漏れ電流}\textbf{漏れ電流}が小さく高温動作に強い。
+
+\begin{問}
+\item バンドギャップ$E_g$が大きい材料ほど絶縁破壊電界$\mathcal{E}_c$が
+大きくなる理由を，衝突電離の観点から説明せよ。
+\end{問}
+
+%%======================================================================
+\section{耐圧とオン抵抗のトレードオフ}
+\label{sec3.2}
+
+\subsection{ドリフト層 ― 電圧を受け持つ層}
+
+パワーデバイスの内部には，耐圧を受け持つための低濃度の層が必ずある。
+これを\index{どりふとそう@ドリフト層}\textbf{ドリフト層}という。
+2章で見たパワーMOSFETのn$^-$層，IGBTのn$^-$ベース層がそれである。
+本節では，このドリフト層の設計が耐圧とオン抵抗を同時に決めてしまうことを式で導く。
+
+モデルとして，p$^+$n$^-$接合の片側だけに空乏層が広がる場合を考える
+（1章で見たとおり，空乏層は濃度の低い側に深く広がるから，
+高濃度のp$^+$側にはほとんど伸びない）。
+仮定を明示しておく：
+逆バイアス$V$が拡散電位より十分大きく，
+空乏層はドリフト層（ドナー濃度$N_d$，厚さ$W$）の中だけに広がり，
+降伏の瞬間にちょうど層全体が空乏化するものとする。
+
+空乏層内にはドナーイオンの固定電荷$\rho = eN_d$が一様に分布するから，
+1章の章末問題で導いたとおり，ガウスの法則より電場は直線的に変化し，
+接合面で最大となる三角形の分布になる（\FIGref{fig3.2}）。
+最大電場は
+\begin{equation}
+\mathcal{E}_{\max} = \frac{eN_dW}{\varepsilon}
+\label{eq3.1}
+\end{equation}
+である。
+電圧は電場の分布を積分したもの，つまり三角形の面積だから
+\begin{equation}
+V = \frac{1}{2}\mathcal{E}_{\max}W
+\label{eq3.2}
+\end{equation}
+となる。
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[clip]{figures/fig3.2.eps}
+\end{center}
+\caption{ドリフト層の電界分布と耐圧。電場は接合面で最大の三角形分布になり，面積が耐圧$V_B$，高さの上限が絶縁破壊電界$\mathcal{E}_c$である。高い耐圧を得るには(b)のように低濃度で厚い層が必要になり，その層がオン状態では抵抗になる}
+\label{fig3.2}
+\end{figure}
+
+\subsection{耐圧が決めるドリフト層の設計}
+
+降伏は$\mathcal{E}_{\max}$が絶縁破壊電界$\mathcal{E}_c$に達したときに起こる。
+式\ref{eq3.2}で$\mathcal{E}_{\max} = \mathcal{E}_c$とおけば，耐圧は
+\begin{equation}
+V_B = \frac{1}{2}\mathcal{E}_c W
+\label{eq3.3}
+\end{equation}
+と書ける。逆に解くと，耐圧$V_B$を得るのに必要なドリフト層の厚さは
+\begin{equation}
+W = \frac{2V_B}{\mathcal{E}_c}
+\label{eq3.4}
+\end{equation}
+である。
+また式\ref{eq3.1}で$\mathcal{E}_{\max} = \mathcal{E}_c$とおいて
+式\ref{eq3.4}を代入すると，許されるドーピング濃度は
+\begin{equation}
+N_d = \frac{\varepsilon\mathcal{E}_c}{eW} = \frac{\varepsilon\mathcal{E}_c^2}{2eV_B}
+\label{eq3.5}
+\end{equation}
+と定まる。
+耐圧を決めた瞬間に，ドリフト層の\textbf{厚さも濃度も自動的に決まってしまう}のである。
+高耐圧ほど層は厚く（$W \propto V_B$），濃度は薄く（$N_d \propto 1/V_B$）なる。
+
+\subsection{オン抵抗 ― 高耐圧化の宿命}
+
+オン状態では，このドリフト層がそのまま直列抵抗になる。
+断面積$A$，厚さ$W$，導電率$\sigma = e\mu_n N_d$の層の抵抗は
+$R_{\mathrm{on}} = W/(\sigma A)$だから（1章の例題で見積もった量そのものである），
+
+\begin{定義}[特性オン抵抗]
+\label{def3.2}
+\index{おんていこう@オン抵抗}\textbf{オン抵抗}$R_{\mathrm{on}}$と
+チップ面積$A$の積
+\begin{equation}
+R_{\mathrm{on}}A = \frac{W}{e\mu_n N_d}
+\label{eq3.6}
+\end{equation}
+を\index{とくせいおんていこう@特性オン抵抗}\textbf{特性オン抵抗}という
+（単位は$\Omega\cdot\mathrm{m^2}$，実用上はm$\Omega\cdot$cm$^2$）。
+面積によらない材料と設計の良さの指標であり，
+同じ$R_{\mathrm{on}}A$なら面積を2倍にすれば抵抗は半分になる。
+\end{定義}
+
+式\ref{eq3.6}に，耐圧が決めた$W$（式\ref{eq3.4}）と$N_d$（式\ref{eq3.5}）を代入しよう。
+まず$N_d = \varepsilon\mathcal{E}_c/(eW)$を使うと
+\begin{eqnarray}
+R_{\mathrm{on}}A &=& \frac{W}{e\mu_n N_d}
+= \frac{W}{e\mu_n}\cdot\frac{eW}{\varepsilon\mathcal{E}_c}
+= \frac{W^2}{\varepsilon\mu_n\mathcal{E}_c} \nonumber
+\end{eqnarray}
+ここで$W = 2V_B/\mathcal{E}_c$を代入して
+\begin{equation}
+R_{\mathrm{on}}A = \frac{4V_B^2}{\varepsilon\mu_n\mathcal{E}_c^3}
+\label{eq3.7}
+\end{equation}
+を得る。これが本章で最も重要な式である。
+
+\begin{箇条書}
+\item $R_{\mathrm{on}}A \propto V_B^2$：\textbf{耐圧を2倍にするとオン抵抗は4倍}になる。
+高耐圧化が損失増を招くこの宿命は，設計の工夫では消せない
+\item 分母は材料定数だけ：$\varepsilon\mu_n\mathcal{E}_c^3$が大きい材料ほど，
+同じ耐圧を低いオン抵抗で実現できる。特に$\mathcal{E}_c$は\textbf{3乗}で効く
+\end{箇条書}
+
+材料を決めれば，式\ref{eq3.7}は耐圧と特性オン抵抗の平面上に1本の限界線を引く
+（\FIGref{fig3.3}）。
+シリコンの線は\index{しりこんげんかい@シリコン限界}\textbf{シリコン限界}と呼ばれ，
+どんなに設計を磨いても，通常の構造のシリコンデバイスはこの線より下（低抵抗側）へは行けない。
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[clip]{figures/fig3.3.eps}
+\end{center}
+\caption{耐圧と特性オン抵抗のトレードオフ（式\ref{eq3.7}による材料限界線）。傾きは$V_B^2$に比例し，材料の限界線より下へは行けない。SiC・GaNは$\mathcal{E}_c$が約10倍大きいため，限界線が2桁半ほど下にある}
+\label{fig3.3}
+\end{figure}
+
+\begin{例題}[600\,V シリコンMOSFETのドリフト層設計]
+\label{rei3.1}
+シリコンで耐圧$V_B = 600$\,Vのデバイスを作りたい。
+ドリフト層の(a)厚さ$W$，(b)ドーピング濃度$N_d$，
+(c)特性オン抵抗$R_{\mathrm{on}}A$を求めよ。
+シリコンの$\mathcal{E}_c = 3\times10^7$\,V/m，
+$\varepsilon = 11.7\varepsilon_0 = 1.04\times10^{-10}$\,F/m，
+$\mu_n = 1350\,\mathrm{cm^2/(V\cdot s)} = 0.135\,\mathrm{m^2/(V\cdot s)}$とする。
+\begin{解答}
+(a) 式\ref{eq3.4}より
+\begin{equation*}
+W = \frac{2\times600}{3\times10^7} = 4\times10^{-5}\,\mathrm{m} = 40\,\mathrm{\mu m}
+\end{equation*}
+(b) 式\ref{eq3.5}より
+\begin{equation*}
+N_d = \frac{1.04\times10^{-10}\times(3\times10^7)^2}{2\times1.602\times10^{-19}\times600}
+\approx 4.9\times10^{20}\,\mathrm{m^{-3}} = 4.9\times10^{14}\,\mathrm{cm^{-3}}
+\end{equation*}
+シリコンの原子密度$5\times10^{22}\,\mathrm{cm^{-3}}$に対して1億分の1という薄い濃度である。
+(c) 式\ref{eq3.7}より
+\begin{eqnarray}
+R_{\mathrm{on}}A &=& \frac{4\times600^2}{1.04\times10^{-10}\times0.135\times(3\times10^7)^3}
+\nonumber\\
+&\approx& 3.8\times10^{-6}\,\Omega\cdot\mathrm{m^2} = 38\,\mathrm{m\Omega\cdot cm^2} \nonumber
+\end{eqnarray}
+チップ面積を$0.5\,\mathrm{cm^2}$とすればオン抵抗は約$76$\,m$\Omega$である。
+10\,Aを流すと導通損失は$R_{\mathrm{on}}I^2 \approx 7.6$\,Wにもなる。
+600\,V級ですでにこの値だから，シリコンのMOSFETが高耐圧の用途で使いにくい理由がわかる。
+\end{解答}
+\end{例題}
+
+\begin{注意}
+式\ref{eq3.7}は「降伏の瞬間にちょうど全層が空乏化する」仮定で導いた。
+実際の設計では，電場分布を台形にする（パンチスルー設計）ことで
+同じ耐圧を約2割薄い層で実現できるが，$V_B^2$に比例する宿命は変わらない。
+また実際のオン抵抗にはドリフト層のほかにチャネル・基板・パッケージの抵抗が加わるので，
+式\ref{eq3.7}はあくまで下限（これより小さくできない値）である。
+\end{注意}
+
+なお，2章で学んだIGBTは，この宿命を\index{でんどうどへんちょう@伝導度変調}\textbf{伝導度変調}で
+回避する素子である。
+オン状態でp$^+$コレクタから少数キャリアを注入して
+ドリフト層のキャリア濃度をドーピング濃度よりけた違いに増やし，
+低濃度の厚い層でも低い電圧降下で電流を流す。
+代償は，詰め込んだ少数キャリアを掃き出すまでオフできないことである（次節）。
+
+\begin{問}
+\item 式\ref{eq3.7}の右辺の単位が$\Omega\cdot\mathrm{m^2}$になることを確かめよ。
+誘電率はF/m，移動度は$\mathrm{m^2/(V\cdot s)}$，電界はV/mとし，
+$1\,\mathrm{F} = 1$\,C/V，$1\,\mathrm{A} = 1$\,C/sを使ってよい。
+\end{問}
+
+%%======================================================================
+\section{スイッチング速度と損失}
+\label{sec3.3}
+
+\subsection{なぜ一瞬で切り替えられないのか}
+
+理想スイッチは一瞬でオンとオフを切り替えるが，実際のデバイスには準備がいる。
+
+\begin{箇条書}
+\item \textbf{容量の充放電}：MOSFETのゲートに反転層を作るには，
+ゲート容量に\index{げーとでんか@ゲート電荷}\textbf{ゲート電荷}$Q_g$を出し入れする必要がある。
+駆動回路が流せる電流$i_g$には限りがあるから，充電には$Q_g/i_g$程度の時間がかかる。
+ドレイン側にも空乏層の伸び縮みに伴う
+\index{しゅつりょくようりょう@出力容量}\textbf{出力容量}$C_{\mathrm{oss}}$があり，
+電圧が変わるたびに充放電される
+\item \textbf{少数キャリアの掃き出し}：IGBTやpnダイオードでは，
+オン中にドリフト層へ注入された少数キャリアが，オフの際に消えるまで電流が流れ続ける。
+IGBTの\index{てーるでんりゅう@テール電流}\textbf{テール電流}，
+ダイオードの\index{ぎゃくかいふく@逆回復}\textbf{逆回復}（2章）がこれである
+\end{箇条書}
+
+その結果，切り替えには有限の
+\index{たーんおんじかん@ターンオン時間}\textbf{ターンオン時間}$t_{\mathrm{on}}$と
+\index{たーんおふじかん@ターンオフ時間}\textbf{ターンオフ時間}$t_{\mathrm{off}}$がかかる。
+MOSFETで数十ns，IGBTでは少数キャリアの掃き出しがあるため数百ns〜$\mathrm{\mu}$s級である。
+
+\subsection{切り替えの瞬間に電圧と電流が重なる}
+
+なぜ切り替えに時間がかかると損失になるのか。
+オフ状態では電圧$V$がかかるが電流はゼロ，オン状態では電流$I$が流れるが電圧はほぼゼロだから，
+どちらの状態でも消費電力$p = vi$はほぼゼロである。
+ところが切り替えの途中では，\textbf{電圧と電流が同時にゼロでない}期間が必ずでき，
+その間$p = vi > 0$の電力がデバイスの中で熱になる（\FIGref{fig3.4}）。
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[clip]{figures/fig3.4.eps}
+\end{center}
+\caption{スイッチング波形と損失。切り替えの途中では電圧と電流が同時に存在し，瞬時電力$p=vi$の山ができる。山の面積が1回あたりのスイッチング損失$E_{\mathrm{on}}$，$E_{\mathrm{off}}$である。オン期間中も小さな導通損失$R_{\mathrm{on}}I^2$が出続ける}
+\label{fig3.4}
+\end{figure}
+
+\begin{定義}[スイッチング損失と導通損失]
+\label{def3.3}
+切り替えの過渡期間に生じる損失を
+\index{すいっちんぐそんしつ@スイッチング損失}\textbf{スイッチング損失}，
+オン状態の電圧降下によって生じる損失を
+\index{どうつうそんしつ@導通損失}\textbf{導通損失}という。
+\end{定義}
+
+スイッチング損失を計算しよう。
+インダクタを含む回路（5章以降のすべての変換回路）では，
+インダクタが電流を保とうとするため，切り替えは2段階で進む。
+ターンオンでは，まず電圧が$V$のまま電流が$0$から$I$まで立ち上がり，
+続いて電流が$I$のまま電圧が$V$から0へ下がる。
+それぞれの区間の長さを$t_1$，$t_2$とし，変化は直線とみなす。
+
+第1段階では$v = V$，$i = I t/t_1$だから，失われるエネルギーは
+\begin{eqnarray}
+E_1 &=& \int_0^{t_1} vi\,dt = \int_0^{t_1} V I \frac{t}{t_1}\,dt
+= VI\left[\frac{t^2}{2t_1}\right]_0^{t_1} = \frac{1}{2}VIt_1 \nonumber
+\end{eqnarray}
+第2段階では$v = V(1 - t/t_2)$，$i = I$だから
+\begin{eqnarray}
+E_2 &=& \int_0^{t_2} V\left(1-\frac{t}{t_2}\right) I\,dt
+= VI\left[t - \frac{t^2}{2t_2}\right]_0^{t_2} = \frac{1}{2}VIt_2 \nonumber
+\end{eqnarray}
+両者を合わせ，$t_{\mathrm{on}} = t_1 + t_2$とおくと，ターンオン1回の損失は
+\begin{equation}
+E_{\mathrm{on}} = \frac{1}{2}VIt_{\mathrm{on}}
+\label{eq3.8}
+\end{equation}
+となる。ターンオフも同じ計算で
+\begin{equation}
+E_{\mathrm{off}} = \frac{1}{2}VIt_{\mathrm{off}}
+\label{eq3.9}
+\end{equation}
+である。
+
+\subsection{高周波化の限界}
+
+スイッチは1秒間に$f_{\mathrm{sw}}$回オンオフを繰り返す。
+この$f_{\mathrm{sw}}$を\index{すいっちんぐしゅうはすう@スイッチング周波数}\textbf{スイッチング周波数}という。
+1回の切り替えごとに$E_{\mathrm{on}} + E_{\mathrm{off}}$のエネルギーが失われるから，
+平均のスイッチング損失電力は
+\begin{equation}
+P_{\mathrm{sw}} = \frac{1}{2}VI(t_{\mathrm{on}} + t_{\mathrm{off}})f_{\mathrm{sw}}
+\label{eq3.10}
+\end{equation}
+となる。一方，導通損失はデューティ比$D$（オンしている時間の割合，序章）を使って
+\begin{equation}
+P_{\mathrm{cond}} = R_{\mathrm{on}}I^2 D
+\label{eq3.11}
+\end{equation}
+であり（IGBTでは$V_{\mathrm{CE(sat)}}ID$，\ref{sec3.4}節），デバイスの総損失は
+\begin{equation}
+P_{\mathrm{total}} = P_{\mathrm{cond}} + P_{\mathrm{sw}}
+\label{eq3.12}
+\end{equation}
+となる。
+
+式\ref{eq3.10}が示す構図は単純で強力である。
+
+\begin{箇条書}
+\item $P_{\mathrm{sw}} \propto f_{\mathrm{sw}}$：\textbf{周波数を上げた分だけ損失は正比例で増える}。
+導通損失は周波数によらないから，高周波では必ずスイッチング損失が支配的になる
+\item $P_{\mathrm{sw}} \propto (t_{\mathrm{on}} + t_{\mathrm{off}})$：
+同じ周波数なら，切り替えの速い素子ほど損失が小さい。
+逆にいえば，\textbf{切り替えを10倍速くできれば，同じ損失で周波数を10倍にできる}
+\end{箇条書}
+
+それでもなぜ高周波化したいのか。
+4章以降で見るように，変換回路のインダクタとキャパシタの大きさは
+おおむね$1/f_{\mathrm{sw}}$で決まり，周波数を10倍にできれば装置は10分の1のLとCで済む。
+\textbf{小型化と高効率の綱引き}こそ，スイッチング周波数を選ぶという設計行為の正体である。
+
+\begin{例題}[導通損失とスイッチング損失]
+\label{rei3.2}
+$V = 100$\,V，$I = 10$\,Aを切り替えるMOSFETがある。
+$R_{\mathrm{on}} = 50$\,m$\Omega$，$t_{\mathrm{on}} = t_{\mathrm{off}} = 50$\,ns，
+$D = 0.5$とする。
+(a) $f_{\mathrm{sw}} = 100$\,kHzのときの導通損失とスイッチング損失，
+(b) $f_{\mathrm{sw}} = 1$\,MHzのときのスイッチング損失を求めよ。
+\begin{解答}
+(a) 導通損失は式\ref{eq3.11}より
+\begin{equation*}
+P_{\mathrm{cond}} = 0.05\times10^2\times0.5 = 2.5\,\mathrm{W}
+\end{equation*}
+1回の切り替えの損失は式\ref{eq3.8}，\ref{eq3.9}より
+\begin{equation*}
+E_{\mathrm{on}} + E_{\mathrm{off}} = \frac{1}{2}\times100\times10\times(50+50)\times10^{-9}
+= 50\,\mathrm{\mu J}
+\end{equation*}
+だから，$f_{\mathrm{sw}} = 100$\,kHzでは
+\begin{equation*}
+P_{\mathrm{sw}} = 50\times10^{-6}\times10^5 = 5\,\mathrm{W}
+\end{equation*}
+総損失は$7.5$\,Wで，スイッチング損失がすでに導通損失を上回っている。
+(b) $f_{\mathrm{sw}} = 1$\,MHzでは$P_{\mathrm{sw}} = 50$\,Wとなり，
+導通損失の20倍に達する。
+このままでは冷却が追いつかない。
+高周波化には切り替え時間そのものを短くするしかない ―
+ワイドギャップ半導体への期待がここにある（\ref{sec3.5}節）。
+\end{解答}
+\end{例題}
+
+\begin{注意}
+係数$1/2$は直線変化を仮定した近似で，波形が変われば変わる
+（電圧と電流が同時に直線変化する抵抗負荷では$1/6$）。
+実務ではデータシートの実測値$E_{\mathrm{on}}$，$E_{\mathrm{off}}$に
+$f_{\mathrm{sw}}$を掛けて見積もる。
+式\ref{eq3.10}の価値は係数ではなく，損失が$V$，$I$，切り替え時間，
+周波数のそれぞれに比例するという\textbf{構造}にある。
+\end{注意}
+
+なお，スイッチング損失には容量に由来する成分もある。
+出力容量$C_{\mathrm{oss}}$に蓄えられたエネルギー$\frac{1}{2}C_{\mathrm{oss}}V^2$は
+ターンオンのたびにデバイス内で熱になり，
+ゲートの充放電エネルギー$Q_gV_g$も1周期ごとに駆動回路で消費される。
+これらも周波数に比例する（章末問題\ref{ex3.3}）。
+
+\begin{問}
+\item 式\ref{eq3.10}の右辺の単位がW（ワット）になることを確かめよ。
+$1\,\mathrm{W} = 1$\,V$\cdot$A $= 1$\,J/sを使ってよい。
+\end{問}
+
+%%======================================================================
+\section{デバイス選択の軸}
+\label{sec3.4}
+
+\subsection{選択の4軸}
+
+ここまでの物理を，素子を選ぶための軸に翻訳しよう。軸は4つである。
+
+\begin{箇条書}
+\item \textbf{耐圧}：回路がオフ時に素子へかける電圧に，余裕をもって耐えるか（\ref{sec3.2}節）
+\item \textbf{電流と導通損失}：オン特性が抵抗性（$R_{\mathrm{on}}I^2$）か
+定電圧性（$V_{\mathrm{CE(sat)}}I$）か，流す電流でどちらが得か
+\item \textbf{速度}：必要なスイッチング周波数で，スイッチング損失を許容できるか（\ref{sec3.3}節）
+\item \textbf{駆動性}：オンオフさせるのに必要な駆動回路が簡単か
+\end{箇条書}
+
+駆動性は見落とされやすいが実務では重要である。
+MOSFETとIGBTはゲート\textbf{電圧}をかけるだけでよく
+（\index{でんあつくどう@電圧駆動}\textbf{電圧駆動}），定常的な駆動電流がほとんど要らない。
+バイポーラトランジスタはオンの間じゅうベース\textbf{電流}を流し続ける必要があり
+（\index{でんりゅうくどう@電流駆動}\textbf{電流駆動}），駆動損失も回路規模も大きい。
+主役がMOS系（MOSFET・IGBT，2章）に移った理由の半分はこの駆動性にある。
+
+\subsection{各素子の位置づけ}
+
+2章で学んだ各素子を4軸で整理すると\TABref{tab3.1}になる。
+
+\begin{table}[h]
+\begin{center}
+\caption{主なパワー半導体素子の位置づけ。数値は代表的な目安である}
+\label{tab3.1}
+{\footnotesize
+\begin{tabular}{l|l|l|l|l}
+\hline
+素子 & 耐圧の目安 & 周波数の目安 & オン特性 & 駆動 \\
+\hline
+pnダイオード & 〜数kV & 受動 & 定電圧性〜1\,V & 不要 \\
+ショットキー & 〜200\,V & 受動・高速 & 定電圧性0.3〜0.4\,V & 不要 \\
+MOSFET & 〜900\,V & 〜MHz級 & 抵抗性 $R_{\mathrm{on}}\propto V_B^2$ & 電圧・容易 \\
+IGBT & 0.6〜6.5\,kV & 〜20\,kHz & 定電圧性1〜2\,V & 電圧・容易 \\
+サイリスタ & 〜10\,kV級 & 商用周波数 & 定電圧性1〜2\,V & 電流・転流 \\
+\hline
+\end{tabular}
+}
+\end{center}
+\end{table}
+
+各行の「なぜ」はすべて本章と2章の物理から説明できる。
+
+\begin{箇条書}
+\item \textbf{MOSFET}：多数キャリアだけで動く
+\index{ゆにぽーらでばいす@ユニポーラデバイス}\textbf{ユニポーラデバイス}で，
+少数キャリアの掃き出しがないから速い。
+しかし式\ref{eq3.7}の$V_B^2$則を受け，高耐圧では$R_{\mathrm{on}}$が急増する。
+低耐圧・高周波が主戦場になる
+\item \textbf{IGBT}：少数キャリア注入を使う
+\index{ばいぽーらでばいす@バイポーラデバイス}\textbf{バイポーラデバイス}で，
+伝導度変調により高耐圧でも低いオン電圧
+（\index{ほうわでんあつ@飽和電圧}\textbf{飽和電圧}$V_{\mathrm{CE(sat)}}$）を保つ。
+代償はテール電流による遅さで，高耐圧・大電流・中周波数を受け持つ
+\item \index{さいりすた@サイリスタ}\textbf{サイリスタ}：一度オンすると
+ゲートではオフできない（2章）ため，電流が自然にゼロになる商用周波数の交流専用だが，
+耐圧と電流容量は最大で，直流送電や電鉄など最大級の電力を受け持つ
+\item \index{しょっときーばりあだいおーど@ショットキーバリアダイオード}%
+\textbf{ショットキーバリアダイオード}：多数キャリアだけで整流するため
+逆回復がなく（1章，2章），高周波の還流用に適する。
+耐圧を上げると漏れ電流が増え，シリコンでは低圧用に限られる
+\end{箇条書}
+
+\subsection{MOSFETとIGBTの境界}
+
+オン特性の違いは，導通損失の電流依存性の違いになる。
+同じ電流$I$を流すときの電圧降下は，MOSFETが$R_{\mathrm{on}}I$（電流に比例），
+IGBTが$V_{\mathrm{CE(sat)}}$（ほぼ一定）だから，両者の導通損失が等しくなる電流
+\begin{equation*}
+I^* = \frac{V_{\mathrm{CE(sat)}}}{R_{\mathrm{on}}}
+\end{equation*}
+を境に，小電流ではMOSFET，大電流ではIGBTが有利になる。
+これに周波数の軸（MOSFETは速い，IGBTは遅い）を重ねると，
+周波数-電力平面での素子のすみ分けの地図ができあがる（\FIGref{fig3.5}）。
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[clip]{figures/fig3.5.eps}
+\end{center}
+\caption{デバイス選択の地図。スイッチング周波数と電力容量の平面で，各素子は物理の必然としてすみ分ける。SiC・GaNは同じ平面の右上（高周波・大電力側）へ適用範囲を広げつつある}
+\label{fig3.5}
+\end{figure}
+
+この地図は暗記するものではない。
+左上（大電力・低周波）にバイポーラ系，右下（小電力・高周波）にMOSFETというすみ分けは，
+「伝導度変調は導通損失を減らすがスイッチングを遅くする」
+という1つのトレードオフの必然である。
+
+\begin{問}
+\item $R_{\mathrm{on}} = 100$\,m$\Omega$のMOSFETと
+$V_{\mathrm{CE(sat)}} = 1.5$\,VのIGBTがある。
+導通損失が等しくなる電流$I^*$を求め，
+それより小さい電流・大きい電流でどちらを選ぶべきか述べよ。
+\end{問}
+
+%%======================================================================
+\section{なぜワイドギャップ半導体か}
+\label{sec3.5}
+
+\subsection{材料定数を比べる}
+
+1章で見たとおり，SiCとGaNはシリコンの約3倍のバンドギャップをもつ
+\index{わいどぎゃっぷはんどうたい@ワイドギャップ半導体}\textbf{ワイドギャップ半導体}である。
+パワーデバイスの観点で効く物性を\TABref{tab3.2}にまとめる。
+
+\begin{table}[h]
+\begin{center}
+\caption{Si・4H-SiC・GaNの物性比較（室温の代表値）}
+\label{tab3.2}
+{\small
+\begin{tabular}{l|c|c|c}
+\hline
+物性 & Si & 4H-SiC & GaN \\
+\hline
+バンドギャップ $E_g$ [eV] & 1.12 & 3.26 & 3.39 \\
+絶縁破壊電界 $\mathcal{E}_c$ [V/m] & $3\times10^7$ & $2.5\times10^8$ & $3.3\times10^8$ \\
+電子移動度 $\mu_n$ [cm$^2$/(V$\cdot$s)] & 1350 & 1000 & 1200 \\
+比誘電率 $\varepsilon_r$ & 11.7 & 9.7 & 9.0 \\
+熱伝導率 [W/(cm$\cdot$K)] & 1.5 & 4.9 & 2.0 \\
+\hline
+\end{tabular}
+}
+\end{center}
+\end{table}
+
+注目すべきは絶縁破壊電界$\mathcal{E}_c$の\textbf{約10倍}の差である。
+これは偶然ではない。
+\ref{sec3.1}節で見たとおり，衝突電離にはバンドギャップ$E_g$以上のエネルギーが要るから，
+$E_g$が約3倍大きい材料でアバランシェ降伏を起こすには，はるかに強い電場が要る。
+バンドギャップの差が，絶縁破壊電界の差として増幅されて現れるのである。
+
+\subsection{同じ耐圧を薄く濃く ― オン抵抗が2桁半下がる}
+
+$\mathcal{E}_c$が10倍になると何が起こるか。\ref{sec3.2}節の式がそのまま答えてくれる。
+
+\begin{箇条書}
+\item ドリフト層の厚さ（式\ref{eq3.4}）：$W = 2V_B/\mathcal{E}_c$ →
+同じ耐圧を\textbf{10分の1の厚さ}で受け止められる
+\item ドーピング濃度（式\ref{eq3.5}）：$N_d = \varepsilon\mathcal{E}_c^2/(2eV_B)$ →
+$\mathcal{E}_c^2$に比例して\textbf{約100倍濃く}できる
+\item 特性オン抵抗（式\ref{eq3.7}）：$R_{\mathrm{on}}A = 4V_B^2/(\varepsilon\mu_n\mathcal{E}_c^3)$ →
+$\mathcal{E}_c^3$に反比例して\textbf{約1000分の1}になる
+\end{箇条書}
+
+薄くなった分と濃くなった分が掛け合わさって，$\mathcal{E}_c$は3乗で効く。
+移動度と誘電率の差を含めても，限界線は\ref{fig3.3}のとおり2桁半下へ移る。
+
+\begin{定義}[バリガ性能指数]
+\label{def3.4}
+式\ref{eq3.7}の分母
+\begin{equation}
+\mathrm{BFOM} = \varepsilon\mu_n\mathcal{E}_c^3
+\label{eq3.13}
+\end{equation}
+を\index{ばりがせいのうしすう@バリガ性能指数}\textbf{バリガ性能指数}
+（Baliga's figure of merit）といい，
+同じ耐圧でどれだけ低いオン抵抗を実現できるかという材料の潜在能力を表す。
+\end{定義}
+
+\begin{例題}[Si-MOSFETとSiC-MOSFETのオン抵抗比較]
+\label{rei3.3}
+耐圧$V_B = 1200$\,Vのドリフト層を，シリコンと4H-SiCで設計する。
+それぞれの(a)厚さ$W$，(b)特性オン抵抗$R_{\mathrm{on}}A$を求めて比較せよ。
+物性値は\ref{tab3.2}を使い，
+$\varepsilon = \varepsilon_r\varepsilon_0$，$\varepsilon_0 = 8.854\times10^{-12}$\,F/mとする。
+\begin{解答}
+(a) 式\ref{eq3.4}より
+\begin{eqnarray}
+W_{\mathrm{Si}} &=& \frac{2\times1200}{3\times10^7} = 80\,\mathrm{\mu m} \nonumber\\
+W_{\mathrm{SiC}} &=& \frac{2\times1200}{2.5\times10^8} = 9.6\,\mathrm{\mu m} \nonumber
+\end{eqnarray}
+(b) シリコンは$\varepsilon = 1.04\times10^{-10}$\,F/m，$\mu_n = 0.135\,\mathrm{m^2/(V\cdot s)}$で
+\begin{eqnarray}
+R_{\mathrm{on}}A|_{\mathrm{Si}}
+&=& \frac{4\times1200^2}{1.04\times10^{-10}\times0.135\times(3\times10^7)^3} \nonumber\\
+&\approx& 1.5\times10^{-5}\,\Omega\cdot\mathrm{m^2} = 152\,\mathrm{m\Omega\cdot cm^2} \nonumber
+\end{eqnarray}
+4H-SiCは$\varepsilon = 9.7\times8.854\times10^{-12} = 8.6\times10^{-11}$\,F/m，
+$\mu_n = 0.10\,\mathrm{m^2/(V\cdot s)}$で
+\begin{eqnarray}
+R_{\mathrm{on}}A|_{\mathrm{SiC}}
+&=& \frac{4\times1200^2}{8.6\times10^{-11}\times0.10\times(2.5\times10^8)^3} \nonumber\\
+&\approx& 4.3\times10^{-8}\,\Omega\cdot\mathrm{m^2} = 0.43\,\mathrm{m\Omega\cdot cm^2} \nonumber
+\end{eqnarray}
+同じ耐圧で\textbf{約360分の1}である。
+シリコンで$152\,\mathrm{m\Omega\cdot cm^2}$という値は，
+1\,cm$^2$の大きなチップでも$152$\,m$\Omega$ ―
+50\,A流せば導通損失380\,Wという非現実的な値であり，
+1200\,V級のシリコンではMOSFETをあきらめてIGBTを使うしかなかった。
+SiCはこの領域を\textbf{速いユニポーラデバイスのまま}カバーする。
+これがSiC-MOSFETの本質的な意味である。
+\end{解答}
+\end{例題}
+
+\begin{注意}
+市販のSiC-MOSFETの特性オン抵抗は数m$\Omega\cdot$cm$^2$であり，
+例題\ref{rei3.3}の理論限界0.43\,m$\Omega\cdot$cm$^2$より1けた大きい。
+ドリフト層以外の抵抗（特にMOS界面のチャネル抵抗）が残っているためで，
+その差は年々縮まりつつある。
+限界線は「そこまで行ける」という保証ではなく「そこより先へは行けない」という壁である。
+\end{注意}
+
+\subsection{速く，熱く，小さく}
+
+ワイドギャップ半導体の利点はオン抵抗だけではない。
+本章の残り2つの軸でも効いてくる。
+
+\textbf{速度}：同じ耐圧・同じオン抵抗ならチップ面積を数百分の1にできるから，
+面積に比例するゲート容量や出力容量も小さく，充放電が速く終わり，
+$t_{\mathrm{on}}$，$t_{\mathrm{off}}$が短くなる。
+式\ref{eq3.10}のとおり，\textbf{同じ損失のままスイッチング周波数を1けた上げられる}。
+さらにIGBTの高耐圧領域をユニポーラのMOSFETで置き換えるため，
+テール電流そのものが消える。
+
+\textbf{熱}：バンドギャップが大きいと漏れ電流が指数関数的に小さく（1章），
+高温でも確実にオフを保てる。
+くわえてSiCの熱伝導率はシリコンの約3倍で（\ref{tab3.2}），
+損失で生じた熱を素早く逃がせるから，冷却器ごと変換器を小さくできる。
+
+\textbf{GaNの横型構造}：GaNでは，AlGaN/GaN界面に生じる高濃度・高移動度の
+\index{02じげんでんしがす@2次元電子ガス}\textbf{2次元電子ガス}をチャネルに使う
+\index{へむと@HEMT}\textbf{HEMT}が作れる。
+電流が基板表面に平行に流れる横型デバイスで容量がきわめて小さく，MHz級の動作に向く。
+現在は耐圧650\,V程度までの小型・高周波電源でGaN，
+1200\,V以上の大電力でSiCというすみ分けが進んでいる（\ref{fig3.5}）。
+
+\begin{COLUMN}[ワイドギャップ半導体は電気自動車から広がった]
+SiC-MOSFET普及のきっかけは電気自動車である。
+2010年代後半に量産車の駆動用インバータへ採用され，
+損失が減った分だけ電池を減らせるため，
+素子の価格差を電池のコスト減で回収できる構図が初めて成立した。
+一方GaNは，スマートフォンの急速充電器から普及が始まった。
+MHz級のスイッチングで受動部品を小さくし，
+手のひらに載る65\,W充電器を実現したのはGaN HEMTである。
+どちらも出発点は式\ref{eq3.7} ― 絶縁破壊電界の3乗というたった1つの物理である。
+\end{COLUMN}
+
+\begin{問}
+\item 耐圧1200\,Vのドリフト層をGaNで設計すると，厚さ$W$は何$\mathrm{\mu m}$になるか。
+\ref{tab3.2}の値を使い，例題\ref{rei3.3}のシリコンの結果と比較せよ。
+\end{問}
+
+これで第I部が完結した。
+半導体の物理（1章）から素子の動作原理（2章）を導き，
+本章で「性能はどこまで出せるか」「どの素子を選ぶか」まで下りてきた。
+次章からは第II部 ― これらのスイッチにインダクタとキャパシタを組み合わせ，
+エネルギーの蓄えと放出を設計する電力変換回路の世界に入る。
+
+%%======================================================================
+\begin{章末問題}
+\item \label{ex3.1}
+耐圧$V_B = 3.3$\,kVのドリフト層をシリコンと4H-SiCで設計する。
+\ref{tab3.2}の物性値を用いよ。
+\begin{enumerate}
+\item[(a)] それぞれの厚さ$W$と特性オン抵抗$R_{\mathrm{on}}A$を求めよ。
+\item[(b)] (a)の結果から，シリコン時代に3.3\,kV級の変換器（鉄道など）で
+MOSFETではなくIGBTが使われてきた理由，
+およびSiCがその状況をどう変えるかを説明せよ。
+\end{enumerate}
+
+\item \label{ex3.2}
+電気自動車のインバータで，$V = 400$\,V，$I = 100$\,A，$D = 0.5$の条件で
+スイッチが動作している。
+\begin{enumerate}
+\item[(a)] IGBT（$V_{\mathrm{CE(sat)}} = 1.5$\,V，
+$t_{\mathrm{on}} + t_{\mathrm{off}} = 1\,\mathrm{\mu s}$）を
+$f_{\mathrm{sw}} = 10$\,kHzで使うときの導通損失，スイッチング損失，総損失を求めよ。
+\item[(b)] (a)のIGBTのまま$f_{\mathrm{sw}} = 50$\,kHzに上げると総損失はいくらになるか。
+\item[(c)] SiC-MOSFET（$R_{\mathrm{on}} = 10$\,m$\Omega$，
+$t_{\mathrm{on}} + t_{\mathrm{off}} = 100$\,ns）を$f_{\mathrm{sw}} = 50$\,kHzで
+使うときの総損失を求め，(b)と比較せよ。
+\end{enumerate}
+
+\item \label{ex3.3}
+スイッチング損失には容量に由来する成分もある。
+$f_{\mathrm{sw}} = 100$\,kHzで動作するMOSFETについて次を求めよ。
+\begin{enumerate}
+\item[(a)] 出力容量$C_{\mathrm{oss}} = 100$\,pFが電圧$V = 800$\,Vまで充電され，
+ターンオンのたびにそのエネルギー$\frac{1}{2}C_{\mathrm{oss}}V^2$が素子内で失われる。
+この損失電力を求めよ。
+\item[(b)] ゲート電荷$Q_g = 100$\,nCをゲート電圧$V_g = 15$\,Vで充放電するとき，
+駆動回路の損失$P_g = Q_gV_gf_{\mathrm{sw}}$を求めよ。
+\item[(c)] (a)(b)の結果を例題\ref{rei3.2}の$P_{\mathrm{sw}}$と比べ，
+どの成分が支配的かを述べよ。
+\end{enumerate}
+
+\item \label{ex3.4}
+次の3つの用途それぞれについて，\ref{tab3.1}と\ref{fig3.5}を参考に
+適切なスイッチング素子を選び，耐圧・電流・周波数・駆動性の4軸から理由を述べよ。
+\begin{enumerate}
+\item[(a)] ノートPC用ACアダプタ（入力AC100\,V，出力65\,W，数百kHz動作）
+\item[(b)] 電気自動車の駆動用インバータ（電池800\,V，最大出力150\,kW）
+\item[(c)] 直流送電の変換所（数百kV・GW級，商用周波数）
+\end{enumerate}
+
+\item \label{ex3.5}
+\ref{tab3.2}の物性値から，4H-SiCとGaNのバリガ性能指数（式\ref{eq3.13}）が
+シリコンの何倍になるかを計算せよ。
+また，市販デバイスの特性オン抵抗が
+この比率ほどには下がっていない理由を考察せよ。
+\end{章末問題}

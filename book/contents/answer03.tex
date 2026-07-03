@@ -1,4 +1,127 @@
 \answer
 \begin{enumerate}
-\item （解答整備予定）
+
+%%--- 章末問題 3.1 ---
+\item[\ref{ex3.1}]
+(a) シリコン（$\mathcal{E}_c = 3\times10^7$\,V/m）：式\ref{eq3.4}より
+\begin{equation*}
+W = \frac{2\times3300}{3\times10^7} = 2.2\times10^{-4}\,\mathrm{m} = 220\,\mathrm{\mu m}
+\end{equation*}
+式\ref{eq3.7}より
+\begin{equation*}
+R_{\mathrm{on}}A = \frac{4\times3300^2}{1.04\times10^{-10}\times0.135\times(3\times10^7)^3}
+\approx 1.1\times10^{-4}\,\Omega\cdot\mathrm{m^2} = 1.1\,\Omega\cdot\mathrm{cm^2}
+\end{equation*}
+4H-SiC（$\mathcal{E}_c = 2.5\times10^8$\,V/m，$\varepsilon = 8.6\times10^{-11}$\,F/m，
+$\mu_n = 0.10\,\mathrm{m^2/(V\cdot s)}$）：
+\begin{equation*}
+W = \frac{2\times3300}{2.5\times10^8} \approx 26\,\mathrm{\mu m}
+\end{equation*}
+\begin{equation*}
+R_{\mathrm{on}}A = \frac{4\times3300^2}{8.6\times10^{-11}\times0.10\times(2.5\times10^8)^3}
+\approx 3.2\,\mathrm{m\Omega\cdot cm^2}
+\end{equation*}
+
+(b) シリコンでは$1\,\Omega\cdot\mathrm{cm^2}$を超え，
+現実的なチップ面積では大電流を流せるオン抵抗にならない。
+そこでシリコン時代は，伝導度変調でドリフト層の抵抗を桁違いに下げられる
+IGBT（バイポーラデバイス）が3.3\,kV級を独占してきた。
+代償はテール電流によるスイッチングの遅さである。
+SiCなら同じ耐圧をユニポーラのMOSFETで数m$\Omega\cdot$cm$^2$級で実現できるため，
+テール電流のない高速スイッチングと低導通損失を両立でき，
+鉄道用変換器などの小型化・高効率化が進んでいる。
+
+%%--- 章末問題 3.2 ---
+\item[\ref{ex3.2}]
+(a) 導通損失は
+$P_{\mathrm{cond}} = V_{\mathrm{CE(sat)}}ID = 1.5\times100\times0.5 = 75$\,W。
+スイッチング損失は式\ref{eq3.10}より
+\begin{equation*}
+P_{\mathrm{sw}} = \frac{1}{2}\times400\times100\times1\times10^{-6}\times10^4 = 200\,\mathrm{W}
+\end{equation*}
+総損失は$P_{\mathrm{total}} = 75 + 200 = 275$\,W。
+
+(b) $P_{\mathrm{sw}}$は周波数に比例するから$200\times5 = 1000$\,Wとなり，
+$P_{\mathrm{total}} = 1075$\,W。
+損失は4倍近くに跳ね上がり，冷却が現実的でなくなる。
+IGBTのインバータが数十kHz以下で運転される理由である。
+
+(c) 導通損失は
+$P_{\mathrm{cond}} = R_{\mathrm{on}}I^2D = 0.01\times100^2\times0.5 = 50$\,W。
+スイッチング損失は
+\begin{equation*}
+P_{\mathrm{sw}} = \frac{1}{2}\times400\times100\times100\times10^{-9}\times5\times10^4
+= 100\,\mathrm{W}
+\end{equation*}
+総損失は$150$\,Wで，(b)の約7分の1である。
+切り替え時間が10分の1になったことで，
+周波数を5倍に上げてなお損失を減らせる。
+これがワイドギャップ半導体による高周波化の定量的な意味である。
+
+%%--- 章末問題 3.3 ---
+\item[\ref{ex3.3}]
+(a)
+\begin{equation*}
+P = \frac{1}{2}C_{\mathrm{oss}}V^2f_{\mathrm{sw}}
+= \frac{1}{2}\times100\times10^{-12}\times800^2\times10^5 = 3.2\,\mathrm{W}
+\end{equation*}
+
+(b)
+\begin{equation*}
+P_g = Q_gV_gf_{\mathrm{sw}} = 100\times10^{-9}\times15\times10^5 = 0.15\,\mathrm{W}
+\end{equation*}
+
+(c) 例題\ref{rei3.2}の電圧・電流の重なりによる損失（$P_{\mathrm{sw}} = 5$\,W）が
+最も大きく，次いで出力容量の損失（3.2\,W），
+ゲート駆動損失（0.15\,W）の順である。
+ただし出力容量の損失は$V^2$に比例するため，
+高電圧・高周波・軽負荷（$I$が小さい）の条件では支配的になりうる。
+ゲート駆動損失は素子自体ではなく駆動回路で消費されるが，
+これも周波数に比例して増える点は同じである。
+
+%%--- 章末問題 3.4 ---
+\item[\ref{ex3.4}]
+(a) \textbf{MOSFET（GaN HEMTを含む）}。
+整流後の電圧は200\,V弱で耐圧600〜650\,V級が適し，
+電流は1\,A程度と小さいから抵抗性のオン特性で十分である。
+数百kHzのスイッチングはIGBTでは損失が大きすぎる。
+電圧駆動で駆動回路も小さくできる。
+小型化を重視するならGaN HEMTが最有力である。
+
+(b) \textbf{SiC-MOSFETまたはIGBT}。
+電池800\,Vに対し耐圧1200\,V級が必要で，電流は数百Aに達する。
+シリコンではIGBT（伝導度変調で低飽和電圧）が定番だったが，
+SiC-MOSFETなら同じ耐圧でテール電流なしに数十kHzで動作でき，
+損失低減の分だけ電池を小さくできる（章末問題\ref{ex3.2}）。
+
+(c) \textbf{サイリスタ}。
+数百kV・GW級は他の素子では容量がまったく足りず，
+多数直列にしたサイリスタバルブが使われる。
+商用周波数の交流に同期して電流が自然にゼロになるため，
+ゲートでオフできないサイリスタでも運用できる。
+電流駆動と転流の制約は，この電力規模では受け入れるしかない。
+
+%%--- 章末問題 3.5 ---
+\item[\ref{ex3.5}]
+シリコンを基準にすると，バリガ性能指数の比は
+\begin{equation*}
+\frac{\mathrm{BFOM_{SiC}}}{\mathrm{BFOM_{Si}}}
+= \frac{9.7}{11.7}\times\frac{1000}{1350}\times\left(\frac{2.5\times10^8}{3\times10^7}\right)^3
+\approx 0.83\times0.74\times579 \approx 360
+\end{equation*}
+\begin{equation*}
+\frac{\mathrm{BFOM_{GaN}}}{\mathrm{BFOM_{Si}}}
+= \frac{9.0}{11.7}\times\frac{1200}{1350}\times\left(\frac{3.3\times10^8}{3\times10^7}\right)^3
+\approx 0.77\times0.89\times1331 \approx 910
+\end{equation*}
+理論上，同じ耐圧の特性オン抵抗はSiCで約360分の1，GaNで約900分の1になる。
+
+市販デバイスがこの比率ほど下がっていないのは，
+式\ref{eq3.7}がドリフト層だけの抵抗だからである。
+実デバイスにはMOS界面のチャネル抵抗（SiCでは界面の欠陥により移動度が
+バルク値より大幅に低い），基板やパッケージの抵抗が直列に加わる。
+また信頼性の余裕を見て理論限界より厚め・低濃度めに設計される。
+それでも限界線が2桁半下にあるという事実が，
+改良の余地がまだ大きいことを保証している。
+
 \end{enumerate}
