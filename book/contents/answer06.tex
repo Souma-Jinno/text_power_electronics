@@ -1,4 +1,88 @@
 \answer
 \begin{enumerate}
-\item （解答整備予定）
+
+%%--- 章末問題 6.1 ---
+\item[\ref{ex6.1}]
+(a) 式\ref{eq6.12}より
+\begin{equation*}
+V_o = \frac{N_2}{N_1}DV_{in} = \frac{1}{6}\times0.375\times48 = 3.0\,\mathrm{V}
+\end{equation*}
+(b) 周期は$T = 1/f_{sw} = 10\,\mathrm{\mu s}$。
+オフ期間$(1-D)T = 6.25\,\mathrm{\mu s}$の間，$v_L = -V_o$だから
+\begin{equation*}
+\mathit{\Delta}i_L = \frac{V_o}{L}(1-D)T \le 0.2\,\mathrm{A}
+\end{equation*}
+これを$L$について解くと
+\begin{equation*}
+L \ge \frac{V_o(1-D)T}{\mathit{\Delta}i_L}
+= \frac{3.0\times6.25\times10^{-6}}{0.2} \approx 94\,\mathrm{\mu H}
+\end{equation*}
+となる。たとえば$100\,\mathrm{\mu H}$を選べばよい。
+リプルの式は5章の降圧チョッパと同形であり，
+出力段が降圧チョッパそのものであることの表れである。
+
+%%--- 章末問題 6.2 ---
+\item[\ref{ex6.2}]
+(a) 式\ref{eq6.15}に$N_3/N_1 = 1/2$を代入して
+\begin{equation*}
+D \le \frac{1}{1 + 1/2} = \frac{2}{3}
+\end{equation*}
+(b) リセット期間のスイッチ電圧は電源電圧と1次巻線電圧の和だから
+\begin{equation*}
+v_{sw} = V_{in} + \frac{N_1}{N_3}V_{in} = V_{in} + 2V_{in} = 3V_{in}
+\end{equation*}
+(c) 利点：デューティ比の上限が$0.5$から$2/3$へ広がり，
+入力電圧が低いときも必要な出力を出しやすくなる。
+代償：リセットが急ぐ分だけ1次巻線の跳ね返り電圧が大きくなり，
+スイッチに要求される耐圧が$2V_{in}$から$3V_{in}$へ上がる。
+
+%%--- 章末問題 6.3 ---
+\item[\ref{ex6.3}]
+(a) 式\ref{eq6.20}に$N_2/N_1 = 1$，$V_o = V_{in} = 12$\,Vを代入すると
+$\dfrac{D}{1-D} = 1$，よって$D = 0.5$。
+(b) $N_2/N_1 = 2$より
+\begin{equation*}
+\frac{D}{1-D} = \frac{N_1}{N_2}\cdot\frac{V_o}{V_{in}}
+= \frac{1}{2}\times\frac{48}{12} = 2
+\qquad\Rightarrow\qquad D = \frac{2}{3} \approx 0.67
+\end{equation*}
+昇圧の一部を巻数比（$\times2$）が受け持つことで，
+$D$を極端に大きくせずに4倍の昇圧ができている。
+
+%%--- 章末問題 6.4 ---
+\item[\ref{ex6.4}]
+周期は$T = 1/f_{sw} = 50\,\mathrm{\mu s}$，オン時間は$DT = 15\,\mathrm{\mu s}$である。
+(a) 式\ref{eq6.4}より，励磁電流はオン期間に傾き$V_{in}/L_m$で増えるから
+\begin{equation*}
+I_{pk} = \frac{V_{in}}{L_m}DT
+= \frac{100}{10\times10^{-3}}\times15\times10^{-6} = 0.15\,\mathrm{A}
+\end{equation*}
+(b)
+\begin{equation*}
+W = \frac{1}{2}L_m I_{pk}^2
+= \frac{1}{2}\times10\times10^{-3}\times0.15^2 \approx 0.11\,\mathrm{mJ}
+\end{equation*}
+(c) 式\ref{eq6.14}より$t_r = (N_3/N_1)DT = 15\,\mathrm{\mu s}$。
+オフ期間は$(1-D)T = 35\,\mathrm{\mu s}$だから，リセットは余裕をもって完了する
+（式\ref{eq6.15}の条件$D \le 0.5$も満たしている）。
+(d) 励磁電流を戻す道がなくなるので，毎周期$0.15$\,Aずつ積み上がる。
+磁束が増え続け，鉄心は数周期のうちに磁気飽和して
+励磁インダクタンスを失い，1次電流が急増してスイッチを破壊する。
+トランスに「蓄えっぱなし」が許されないことの数値例である。
+
+%%--- 章末問題 6.5 ---
+\item[\ref{ex6.5}]
+(a) 理論値は式\ref{eq6.20}より
+\begin{equation*}
+V_o = \frac{0.2941}{1-0.2941}\times12 \approx 5.0\,\mathrm{V}
+\end{equation*}
+シミュレーションでも平均約$5$\,V（小さなリプル付き）となり一致する。
+(b) $D = 0.5$では$V_o \approx 12$\,V（等倍），
+$D = 0.7059$，$V_{in} = 5$\,Vでは$V_o \approx 12$\,V（2.4倍の昇圧）となる。
+同じ回路がデューティ比だけで降圧にも昇圧にもなることが確認できる。
+(c) スイッチが切れる瞬間，1次電流はピーク値から一気にゼロへ落ち，
+同時に2次電流が$({N_1}/{N_2})I_{pk}$（$L_1 = L_2$なら同じ値）から
+流れ始める。電流の担い手が1次巻線から2次巻線へ乗り換えても，
+磁束（巻数$\times$電流）は連続であることが波形から読み取れる。
+
 \end{enumerate}

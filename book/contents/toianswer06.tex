@@ -1,4 +1,53 @@
 \answer
 \begin{enumerate}
-\item （解答整備予定）
+
+%% 6章 問1（6.1節）
+\item[6.1節 問1]
+$V_o = DV_{in}$より
+\begin{equation*}
+D = \frac{V_o}{V_{in}} = \frac{5}{141} \approx 0.035
+\end{equation*}
+周期は$T = 1/f_{sw} = 10\,\mathrm{\mu s}$だから，オン時間は
+$t_{on} = DT \approx 0.35\,\mathrm{\mu s} = 350$\,nsしかない。
+スイッチの切替えに数十\,nsかかるとすれば，
+オン時間のかなりの部分が切替えの途中の状態で占められ，
+オン時間を正確に制御できないうえ，スイッチング損失の割合も大きくなる。
+大比率の変換をデューティ比だけで受け持たせるのは現実的でない
+（巻数比に受け持たせる絶縁型が有利になる）。
+
+%% 6章 問2（6.2節）
+\item[6.2節 問2]
+式\ref{eq6.1}の右辺：$N_1$は無次元だから，単位は
+$\dfrac{\mathrm{Wb}}{\mathrm{s}} = \dfrac{\mathrm{V\cdot s}}{\mathrm{s}}
+= \mathrm{V}$となり，左辺（電圧）と一致する。
+式\ref{eq6.4}の右辺：
+$\mathrm{H}\times\dfrac{\mathrm{A}}{\mathrm{s}}
+= \dfrac{\mathrm{V\cdot s}}{\mathrm{A}}\times\dfrac{\mathrm{A}}{\mathrm{s}}
+= \mathrm{V}$となり，こちらも左辺と一致する。
+
+%% 6章 問3（6.3節）
+\item[6.3節 問3]
+リセット期間には$\mathrm{D_3}$が導通し，リセット巻線が電源につながれるから，
+1次巻線の電圧は式\ref{eq6.13}より
+$v_1 = -({N_1}/{N_3})V_{in} = -V_{in}$（$N_3 = N_1$）である。
+スイッチの両端電圧は電源電圧と1次巻線電圧（の大きさ）の和だから
+\begin{equation*}
+v_{sw} = V_{in} + \frac{N_1}{N_3}V_{in} = 2V_{in}
+\end{equation*}
+となる。フォワードコンバータのスイッチには入力の2倍の電圧がかかるので，
+たとえば$V_{in} = 141$\,Vなら$282$\,Vに余裕を見た耐圧の素子を選ぶ必要がある。
+
+%% 6章 問4（6.4節）
+\item[6.4節 問4]
+$W = \frac{1}{2}L_m I_{pk}^2$の右辺：
+$\mathrm{H}\times\mathrm{A^2}
+= \dfrac{\mathrm{V\cdot s}}{\mathrm{A}}\times\mathrm{A^2}
+= \mathrm{V\cdot A\cdot s} = \mathrm{W\cdot s} = \mathrm{J}$となり，
+エネルギーの単位と一致する。
+$P = Wf_{sw}$の右辺：
+$\mathrm{J}\times\dfrac{1}{\mathrm{s}} = \mathrm{J/s} = \mathrm{W}$となり，
+電力の単位と一致する。
+「1回に運ぶエネルギー$\times$毎秒の回数＝電力」という
+フライバックの動作そのものを表す検算である。
+
 \end{enumerate}
