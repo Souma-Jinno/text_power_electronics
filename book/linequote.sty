@@ -1,0 +1,41 @@
+% LEFT-LINE QUOTE STYLE - Released 04 Janualy 1997
+%    by Masaki Sudoh <GFB01751@niftyserve.or.jp>
+ 
+\newbox\@LQboxa
+\newbox\@LQboxb
+\newif\if@LQcnt
+\newdimen\@LQht
+\newdimen\linequoteindent \linequoteindent3zw
+ 
+\def\linequote{\vskip\baselineskip\@LQht\baselineskip
+ \setbox\@LQboxb\vtop\bgroup\advance\linewidth-\linequoteindent
+ \columnwidth\linewidth\textwidth\linewidth
+ \hsize\linewidth\hbox{}\par}
+ 
+\def\LQ@split{\@tempdimb\ht\@LQboxb
+ \advance\@tempdimb\dp\@LQboxb
+ \setbox\@LQboxa\vsplit\@LQboxb to\z@
+ \setbox\@LQboxa\vtop{\unvbox\@LQboxa}%
+ \setbox\@tempboxa\vtop{\copy\@LQboxa\copy\@LQboxb}%
+ \advance\@tempdimb-\ht\@tempboxa
+ \advance\@tempdimb-\dp\@tempboxa}
+ 
+\def\LQ@addskipdp{\@tempdima\dp\@LQboxa
+ \advance\@tempdima\@tempdimb
+ \dp\@LQboxa\@tempdima}
+ 
+\def\LQ@line{\leavevmode\kern\linequoteindent\hbox{\kern-4.2\p@
+ \vrule\@width.4\p@\kern-.2\p@\kern4\p@\box\@LQboxa}\par}
+ 
+\def\endlinequote{\egroup
+ \ifhmode\par\fi{\@LQcnttrue\baselineskip\z@\lineskiplimit\z@
+ \lineskip\z@\vfuzz\maxdimen
+ \noindent\LQ@split\LQ@addskipdp
+ \ifvoid\@LQboxb
+ \else\loop
+  \noindent\LQ@split\LQ@addskipdp\leavevmode
+  \ifvoid\@LQboxb\@LQcntfalse\LQ@line\else\LQ@line\fi
+  \if@LQcnt\repeat
+ \fi\vskip\@LQht\par}\vskip.2\baselineskip}
+ 
+\endinput

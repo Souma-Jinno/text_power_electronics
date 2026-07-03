@@ -1,0 +1,13 @@
+\ProvidesPackage{fix_for_tl2021}
+\NeedsTeXFormat{pLaTeX2e}
+
+%% TeXLive2021 で目次の生成の仕様が変わっているようです．
+%% その部分だけバックポートすることで回避できるはずなので，
+%% そうしてみます．
+
+
+\def\contentsline#1#2#3{\csname l@#1\endcsname{#2}{#3}}
+
+
+
+\endinput

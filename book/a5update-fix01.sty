@@ -1,0 +1,42 @@
+\NeedsTeXFormat{pLaTeX2e}
+\ProvidesPackage{a5update-fix}[2018/03/04 v1.0 Fixing a5update for corona publishing]
+
+\AtBeginDocument{%
+\renewcommand{\theProgCTR}{\thechapter.\@arabic\c@ProgCTR}
+\def\endPROGRAMbreakbox{\egroup
+\ifhmode\par\fi{\noindent%\PROGRAMbk@lcnt\@ne 
+\@PROGRAMbkconttrue\baselineskip\z@\lineskiplimit\z@
+\lineskip\z@\vfuzz\maxdimen
+\PROGRAMbk@split\PROGRAMbk@addfsepht\PROGRAMbk@addskipdp
+\ifvoid\PROGRAMbk@bxb      % Only one line
+\def\PROGRAMbk@fstln{\PROGRAMbk@addfsepdp
+\vbox{\hrule\@height\fboxrule\PROGRAMbk@line\hrule\@height\fboxrule}}%
+\else               % More than one line
+%\def\PROGRAMbk@fstln{\vbox{\hrule\@height\fboxrule\PROGRAMbk@line}\hfil
+\def\PROGRAMbk@fstln{\ifMoji\vbox{\noindent\hrulefill\smash{\raisebox{-1mm}{\small\bfseries
+\ プログラム\theProgCTR{\rm\bkboxtitle}\ }}\hrulefill\par%
+\noindent\PROGRAMbk@line}\hfil%\bkboxtitle
+%\vbox{\hrule\@height\fboxrule\PROGRAMbk@line}\hfil
+\else
+%\vbox{\hrule\@height\fboxrule\PROGRAMbk@line}\hfil
+\vbox{\hsize\linewidth
+\noindent\hrulefill\smash{\raisebox{-1mm}{\small\bfseries \ プログラム\theProgCTR\ }}\hrulefill\par%
+\noindent\PROGRAMbk@line}\hfil%
+\fi
+%%
+\advance\PROGRAMbk@lcnt\@ne
+\loop 
+ \PROGRAMbk@split\PROGRAMbk@addskipdp\leavevmode
+\ifvoid\PROGRAMbk@bxb      % The last line
+ \@PROGRAMbkcontfalse\PROGRAMbk@addfsepdp
+ \vtop{\PROGRAMbk@line\hrule\@height\fboxrule}%
+\else               % 2,...,(n-1)
+ \PROGRAMbk@line
+\fi
+ \hfil\advance\PROGRAMbk@lcnt\@ne
+\if@PROGRAMbkcont\repeat}%
+\fi
+\leavevmode\PROGRAMbk@fstln\par}\vskip\PROGRAMbreakboxskip\relax}%
+}%
+
+

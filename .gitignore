@@ -1,3 +1,11 @@
-.DS_Store
-*.swp
-.claude/
+book/*.aux
+book/*.dvi
+book/*.log
+book/*.toc
+book/*.idx
+book/*.ind
+book/*.ilg
+book/figures/scripts/*.aux
+book/figures/scripts/*.dvi
+book/figures/scripts/*.log
+book/figures/scripts/*.build.log

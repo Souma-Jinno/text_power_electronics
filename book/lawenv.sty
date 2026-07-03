@@ -1,0 +1,42 @@
+%% lawenv.sty — 「法則」環境（公理＝出発点として置く基本法則用）
+%% corona-a5-1.1.cls の「定義」環境(\newenvironment{定義})を雛形に，
+%% 同じ罫線囲み様式で「法則 N.M」を出す。cls 本体は改変しない方針のため別styで定義。
+\ProvidesPackage{lawenv}[2026/06/20 v1.0 law (axiom) environment for corona-a5]
+\makeatletter
+
+\newcounter{HOUSOKUcount}[chapter]
+\renewcommand{\theHOUSOKUcount}{\thechapter.\@arabic\c@HOUSOKUcount}
+
+\def\HOUSOKUmoto{\@ifnextchar[{\HOUSOKUhikisu}{\HOUSOKUno}}
+\def\endHOUSOKUmoto{\nopagebreak}
+
+\long\def\HOUSOKUhikisu[#1]{\par\refstepcounter{HOUSOKUcount}%
+\noindent\mbox{{\bfseries 法則\theHOUSOKUcount\hskip1zw\nobreak{\mc\rm(#1)}}}\par}
+\let\endHOUSOKUhikisu\endtrivlist
+
+\long\def\HOUSOKUno{\par\refstepcounter{HOUSOKUcount}%
+\noindent\mbox{{\bfseries 法則\theHOUSOKUcount}}\hskip1zw\par\nopagebreak}
+\let\endHOUSOKUno\endtrivlist
+
+\newenvironment{法則}{%
+\par\noindent\leavevmode\leaders\hrule height2pt\hfill\kern\z@\par\vskip-5.5mm
+\noindent\leavevmode\leaders\hrule height.12mm\hfill\kern\z@\par
+\bgroup
+\setlength{\leftmargin}{1zw}%
+  \setlength{\rightmargin}{1zw}%
+  \advance\linewidth -\leftmargin
+  \advance\linewidth -\rightmargin
+  \advance\@totalleftmargin\leftmargin
+  \@setpar{{\@@par}}%
+  \parshape 1 \@totalleftmargin \linewidth
+  \ignorespaces
+\begin{HOUSOKUmoto}
+}{\par\end{HOUSOKUmoto}%
+\egroup
+\vskip-2.125mm
+\noindent\leavevmode\leaders\hrule height.12mm\hfill\kern\z@\par
+\vskip-5mm
+\noindent\leavevmode\leaders\hrule height2pt\hfill\kern\z@\par
+}
+
+\makeatother

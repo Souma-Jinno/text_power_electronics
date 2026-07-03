@@ -1,0 +1,4131 @@
+%%% 
+%% 1 プログラム環境 A
+%%    
+
+\typeout{*** a5update.sty 2008/11/30 v1.1 pLaTeX class ALL Rights reserved
+Copyright SANBI Co., Ltd. for CORONA PUBLISHING CO., Ltd.}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\newif\ifMoji \Mojifalse
+
+
+%%% プログラム環境のタイトルの両脇に ( ) を表示させるための分岐
+\newif\ifParren \Parrenfalse
+
+
+\define@key{ProgA}{count}[true]{\csname PROGRAMbkcount#1\endcsname\Mojifalse\PROGRAMbk@lcnt\@ne}
+
+
+\define@key{ProgA}{setcounter}{\PROGRAMbk@lcnt=#1}
+
+\define@key{ProgA}{title}{\Mojitrue\Parrenfalse
+%\def\bkboxtitle{\setbox0=\hbox{#1}\copy0}}
+%\ifMoji
+\gdef\bkboxtitle{ ({#1})}
+%\else
+%\fi
+}
+
+
+\define@key{ProgA}{parren}[true]{\Mojifalse}
+
+
+\def\endProgA{
+\endPROGRAMbreakbox
+}
+
+
+\def\ProgA{%
+   \@ifnextchar[%]
+      {\main@ProgA}
+      {\main@ProgA[]}
+%\PROGRAMbreakbox%
+}
+
+\def\main@ProgA[#1]{%
+   \setkeys{ProgA}{count=false,title=\Mojifalse,parren}%\@undefined%
+   \setkeys{ProgA}{#1}
+\PROGRAMbreakbox%
+}
+
+
+
+\newdimen\PROGRAMfboxsep
+
+\PROGRAMfboxsep=3.25mm
+
+
+
+\newbox\PROGRAMbk@bxb
+\newbox\PROGRAMbk@bxa
+\newif\if@PROGRAMbkcont 
+\newif\ifPROGRAMbkcount
+\newcount\PROGRAMbk@lcnt
+
+
+
+\def\PROGRAMbreakboxskip{2pt}
+\def\PROGRAMbreakboxparindent{1zw}%{1.8em}
+
+\def\PROGRAMbreakbox{\vskip\PROGRAMbreakboxskip
+\relax
+\setbox\PROGRAMbk@bxb\vbox\bgroup
+\advance\linewidth -2\fboxrule
+\advance\linewidth -2\PROGRAMfboxsep
+\ifPROGRAMbkcount
+\advance\linewidth -2.25zw
+\else\fi
+\hsize\linewidth\@parboxrestore
+\parindent\PROGRAMbreakboxparindent\relax}
+
+% \@tempdimb: amount of vertical skip 
+% between the first line (\PROGRAMbk@bxa) and the rest (\PROGRAMbk@bxb)
+\def\PROGRAMbk@split{%
+\@tempdimb\ht\PROGRAMbk@bxb % height of original box
+\advance\@tempdimb\dp\PROGRAMbk@bxb 
+\setbox\PROGRAMbk@bxa\vsplit\PROGRAMbk@bxb to\z@ % split it
+\setbox\PROGRAMbk@bxa\vbox{\unvbox\PROGRAMbk@bxa}% recover height & depth of \PROGRAMbk@bxa
+\setbox\@tempboxa\vbox{\copy\PROGRAMbk@bxa\copy\PROGRAMbk@bxb}% naive concatenation
+\advance\@tempdimb-\ht\@tempboxa 
+\advance\@tempdimb-\dp\@tempboxa}% gap between two boxes
+ 
+
+% \@tempdima: height of the first line (\PROGRAMbk@bxa) + PROGRAMfboxsep
+%%% 一番上の罫線と、1行目の空き
+\def\PROGRAMbk@addfsepht{%
+%     \setbox\PROGRAMbk@bxa\vbox{\vskip\PROGRAMfboxsep\box\PROGRAMbk@bxa}}
+     \setbox\PROGRAMbk@bxa\vbox{\vskip25H\box\PROGRAMbk@bxa}}
+
+\def\PROGRAMbk@addskipht{%
+     \setbox\PROGRAMbk@bxa\vbox{\vskip\@tempdimb\box\PROGRAMbk@bxa}}
+
+% \@tempdima: depth of the first line (\PROGRAMbk@bxa) + PROGRAMfboxsep
+\def\PROGRAMbk@addfsepdp{%
+     \@tempdima\dp\PROGRAMbk@bxa
+     \advance\@tempdima\PROGRAMfboxsep
+     \dp\PROGRAMbk@bxa\@tempdima}
+
+% \@tempdima: depth of the first line (\PROGRAMbk@bxa) + vertical skip
+\def\PROGRAMbk@addskipdp{%
+     \@tempdima\dp\PROGRAMbk@bxa
+     \advance\@tempdima\@tempdimb
+     \dp\PROGRAMbk@bxa\@tempdima}
+
+
+
+%% 本物
+\def\PROGRAMbk@line{%
+\ifPROGRAMbkcount
+%    \hbox to \linewidth{\scriptsize\ifPROGRAMbkcount\smash{\rlap{\ \texttt{\the\PROGRAMbk@lcnt}\ }}\fi
+    \hbox to \linewidth{%
+\scriptsize\ifPROGRAMbkcount\smash{\pushtowall{\hspace*{6mm}%{6.25mm}%
+\llap{\ \texttt{\the\PROGRAMbk@lcnt}\ }}}\fi
+    \vrule \@width\fboxrule\hskip8.25mm%6.5mm%2\PROGRAMfboxsep
+    \box\PROGRAMbk@bxa\hfil
+    \hskip\PROGRAMfboxsep\vrule \@width\fboxrule}
+%%%
+\else%%%%
+%%%
+%    \hbox to \linewidth{\scriptsize\ifPROGRAMbkcount\smash{\rlap{\ \texttt{\the\PROGRAMbk@lcnt}\ }}\fi
+    \hbox to \linewidth{\scriptsize\ifPROGRAMbkcount\smash{\llap{\ \texttt{\the\PROGRAMbk@lcnt}\ }}\fi
+    \vrule \@width\fboxrule\hskip\PROGRAMfboxsep
+    \box\PROGRAMbk@bxa\hfil
+    \hskip\PROGRAMfboxsep\vrule \@width\fboxrule}
+%%%
+\fi
+}
+
+
+
+
+\def\endPROGRAMbreakbox{\egroup
+\ifhmode\par\fi{\noindent%\PROGRAMbk@lcnt\@ne 
+\@PROGRAMbkconttrue\baselineskip\z@\lineskiplimit\z@
+\lineskip\z@\vfuzz\maxdimen
+\PROGRAMbk@split\PROGRAMbk@addfsepht\PROGRAMbk@addskipdp
+\ifvoid\PROGRAMbk@bxb      % Only one line
+\def\PROGRAMbk@fstln{\PROGRAMbk@addfsepdp
+\vbox{\hrule\@height\fboxrule\PROGRAMbk@line\hrule\@height\fboxrule}}%
+\else               % More than one line
+%\def\PROGRAMbk@fstln{\vbox{\hrule\@height\fboxrule\PROGRAMbk@line}\hfil
+\def\PROGRAMbk@fstln{\ifMoji\vbox{\noindent\hrulefill\smash{\raisebox{-1mm}{\small\bfseries
+\ プログラム\theProgCTR{\rm\bkboxtitle}\ }}\hrulefill\par%
+\noindent\PROGRAMbk@line}\hfil%\bkboxtitle
+%\vbox{\hrule\@height\fboxrule\PROGRAMbk@line}\hfil
+\else
+%\vbox{\hrule\@height\fboxrule\PROGRAMbk@line}\hfil
+\vbox{\noindent\hrulefill\smash{\raisebox{-1mm}{\small\bfseries \ プログラム\theProgCTR\ }}\hrulefill\par%
+\noindent\PROGRAMbk@line}\hfil%
+\fi
+%%
+\advance\PROGRAMbk@lcnt\@ne
+\loop 
+ \PROGRAMbk@split\PROGRAMbk@addskipdp\leavevmode
+\ifvoid\PROGRAMbk@bxb      % The last line
+ \@PROGRAMbkcontfalse\PROGRAMbk@addfsepdp
+ \vtop{\PROGRAMbk@line\hrule\@height\fboxrule}%
+\else               % 2,...,(n-1)
+ \PROGRAMbk@line
+\fi
+ \hfil\advance\PROGRAMbk@lcnt\@ne
+\if@PROGRAMbkcont\repeat}%
+\fi
+\leavevmode\PROGRAMbk@fstln\par}\vskip\PROGRAMbreakboxskip\relax}
+
+
+%%% 
+%% 1 プログラム環境 A
+%%   footnotesize 11 Q X 15H
+
+
+
+\newcounter{LineCTR}%% プログラムの行番号
+
+
+\newcounter{ProgCTR}[chapter]%% プログラム環境の番号
+\renewcommand{\theProgCTR}{\thechapter-\@arabic\c@ProgCTR}
+
+
+\newenvironment{PROGRAMA}{\par%
+%%%% verbatim のとき、1行目が、カウンタだけの行となるのを防ぐ
+\def\@verbatim{\vspace*{-1\Cvs}%
+\trivlist \item\relax
+  \if@minipage\else \vskip-\parskip
+\fi
+  \leftskip\@totalleftmargin\rightskip\z@skip
+  \parindent\z@\parfillskip\@flushglue\parskip\z@skip
+  \@@par
+  \@tempswafalse
+  \def\par{%
+    \if@tempswa
+      \leavevmode \null \@@par\penalty\interlinepenalty
+    \else
+      \@tempswatrue
+      \ifhmode\@@par\penalty\interlinepenalty\fi
+    \fi}%
+  \let\do\@makeother \dospecials
+  \obeylines \verbatim@font \@noligs
+  \hyphenchar\font\m@ne
+  \everypar \expandafter{\the\everypar \unpenalty}%
+\vskip1.5mm}
+\def\verbatim{\@verbatim \frenchspacing\@vobeyspaces \@xverbatim}
+\def\endverbatim{\if@newlist
+\leavevmode\fi\endtrivlist\vskip-3.75mm%-.5\Cvs%\vspace*{-1\Cvs}
+}
+%%%
+\footnotesize\refstepcounter{ProgCTR}\vskip.5\Cvs\begin{ProgA}}{\end{ProgA}\vskip.5\Cvs}
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+%\newif\ifMoji \Mojifalse
+
+
+%%% プログラム環境のタイトルの両脇に ( ) を表示させるための分岐
+%\newif\ifParren \Parrenfalse
+
+
+\define@key{ProgB}{count}[true]{\csname PROGRAMBbkcount#1\endcsname\Mojifalse\PROGRAMBbk@lcnt\@ne}
+
+\newcounter{ProgLinecnt}
+
+\define@key{ProgB}{setcounter}{\PROGRAMBbk@lcnt=#1}
+
+\define@key{ProgB}{title}{\Mojitrue\Parrenfalse
+%\def\bkboxtitle{\setbox0=\hbox{#1}\copy0}}
+%\ifMoji
+\gdef\bkboxtitle{ ({#1})}
+%\else
+%\fi
+}
+
+
+\define@key{ProgB}{parren}[true]{\Mojifalse}
+
+
+\def\endProgB{
+\endPROGRAMBbreakbox
+}
+
+
+\def\ProgB{%
+   \@ifnextchar[%]
+      {\main@ProgB}
+      {\main@ProgB[]}
+%\PROGRAMBbreakbox%
+}
+
+\def\main@ProgB[#1]{%
+   \setkeys{ProgB}{count=false,title=\Mojifalse,parren}%\@undefined%
+   \setkeys{ProgB}{#1}
+\PROGRAMBbreakbox%
+}
+
+
+
+ \newdimen\PROGRAMBfboxsep
+ 
+ \PROGRAMBfboxsep=0mm%3.25mm
+
+
+
+\newbox\PROGRAMBbk@bxb
+\newbox\PROGRAMBbk@bxa
+\newif\if@PROGRAMBbkcont 
+\newif\ifPROGRAMBbkcount
+\newcount\PROGRAMBbk@lcnt
+%\newcounter{PROGRAMBbk@lcnt}
+
+
+\def\PROGRAMBbreakboxskip{2pt}
+\def\PROGRAMBbreakboxparindent{1zw}%{1.8em}
+
+\def\PROGRAMBbreakbox{\vskip\PROGRAMBbreakboxskip
+\relax
+\setbox\PROGRAMBbk@bxb\vbox\bgroup
+\advance\linewidth -2\fboxrule
+\advance\linewidth -2\PROGRAMBfboxsep
+\ifPROGRAMBbkcount
+\advance\linewidth -2.625zw%x-1.25zw
+\else\fi
+\hsize\linewidth\@parboxrestore
+\parindent\PROGRAMBbreakboxparindent\relax}
+
+% \@tempdimb: amount of vertical skip 
+% between the first line (\PROGRAMBbk@bxa) and the rest (\PROGRAMBbk@bxb)
+\def\PROGRAMBbk@split{%
+\@tempdimb\ht\PROGRAMBbk@bxb % height of original box
+\advance\@tempdimb\dp\PROGRAMBbk@bxb 
+\setbox\PROGRAMBbk@bxa\vsplit\PROGRAMBbk@bxb to\z@ % split it
+\setbox\PROGRAMBbk@bxa\vbox{\unvbox\PROGRAMBbk@bxa}% recover height & depth of \PROGRAMBbk@bxa
+\setbox\@tempboxa\vbox{\copy\PROGRAMBbk@bxa\copy\PROGRAMBbk@bxb}% naive concatenation
+\advance\@tempdimb-\ht\@tempboxa 
+\advance\@tempdimb-\dp\@tempboxa}% gap between two boxes
+ 
+
+% \@tempdima: height of the first line (\PROGRAMBbk@bxa) + PROGRAMBfboxsep
+%%% 一番上の罫線と、1行目の空き
+\def\PROGRAMBbk@addfsepht{%
+%     \setbox\PROGRAMBbk@bxa\vbox{\vskip\PROGRAMBfboxsep\box\PROGRAMBbk@bxa}}
+     \setbox\PROGRAMBbk@bxa\vbox{\vskip25H\box\PROGRAMBbk@bxa}}
+
+\def\PROGRAMBbk@addskipht{%
+     \setbox\PROGRAMBbk@bxa\vbox{\vskip\@tempdimb\box\PROGRAMBbk@bxa}}
+
+% \@tempdima: depth of the first line (\PROGRAMBbk@bxa) + PROGRAMBfboxsep
+\def\PROGRAMBbk@addfsepdp{%
+     \@tempdima\dp\PROGRAMBbk@bxa
+     \advance\@tempdima\PROGRAMBfboxsep
+     \dp\PROGRAMBbk@bxa\@tempdima}
+
+% \@tempdima: depth of the first line (\PROGRAMBbk@bxa) + vertical skip
+\def\PROGRAMBbk@addskipdp{%
+     \@tempdima\dp\PROGRAMBbk@bxa
+     \advance\@tempdima\@tempdimb
+     \dp\PROGRAMBbk@bxa\@tempdima}
+
+
+
+%% 本物
+\def\PROGRAMBbk@line{%
+\ifPROGRAMBbkcount
+%    \hbox to \linewidth{\scriptsize\ifPROGRAMBbkcount\smash{\rlap{\ \texttt{\the\PROGRAMBbk@lcnt}\ }}\fi
+    \hbox to \linewidth{%
+\scriptsize\ifPROGRAMBbkcount\smash{\pushtowall{\hspace*{5mm}%
+\llap{\ \texttt{\the\PROGRAMBbk@lcnt}\ }}}\fi
+    \vrule \@width\fboxrule\hskip7.25mm%6.5mm%2\PROGRAMBfboxsep
+    \box\PROGRAMBbk@bxa\hfil
+    \hskip\PROGRAMBfboxsep\vrule \@width\fboxrule}
+%%%
+\else%%%%
+%%%
+%    \hbox to \linewidth{\scriptsize\ifPROGRAMBbkcount\smash{\rlap{\ \texttt{\the\PROGRAMBbk@lcnt}\ }}\fi
+    \hbox to \linewidth{\scriptsize\ifPROGRAMBbkcount\smash{\llap{\ \texttt{\the\PROGRAMBbk@lcnt}\ }}\fi
+    \vrule \@width\fboxrule\hskip\PROGRAMBfboxsep
+    \box\PROGRAMBbk@bxa\hfil
+    \hskip\PROGRAMBfboxsep\vrule \@width\fboxrule}
+%%%
+\fi
+}
+
+
+
+
+\def\endPROGRAMBbreakbox{\egroup
+\ifhmode\par\fi{\noindent\PROGRAMBbk@lcnt\@ne 
+\@PROGRAMBbkconttrue\baselineskip\z@\lineskiplimit\z@
+\lineskip\z@\vfuzz\maxdimen
+\PROGRAMBbk@split\PROGRAMBbk@addfsepht\PROGRAMBbk@addskipdp
+\ifvoid\PROGRAMBbk@bxb      % Only one line
+\def\PROGRAMBbk@fstln{\PROGRAMBbk@addfsepdp
+\vbox{\hrule\@height\fboxrule\PROGRAMBbk@line\hrule\@height\fboxrule}}%
+\else               % More than one line
+%\def\PROGRAMBbk@fstln{\vbox{\hrule\@height\fboxrule\PROGRAMBbk@line}\hfil
+\def\PROGRAMBbk@fstln{\ifMoji\vbox{\noindent\hrulefill\smash{\raisebox{-1mm}{\small\bfseries
+\ プログラム\theProgCTR{\rm\bkboxtitle}\ }}\hrulefill\par%
+\noindent\PROGRAMBbk@line}\hfil%\bkboxtitle
+%\vbox{\hrule\@height\fboxrule\PROGRAMBbk@line}\hfil
+\else
+%\vbox{\hrule\@height\fboxrule\PROGRAMBbk@line}\hfil
+\vbox{\noindent\hrulefill\smash{\raisebox{-1mm}{%
+%%
+\fboxsep1mm\fboxrule0mm\colorbox{AMIxx}{%
+%%
+\small\bfseries \ プログラム\theProgCTR\ }}%
+}%
+%%
+\hrulefill\par%
+\noindent\PROGRAMBbk@line}\hfil%
+\fi
+%%
+\advance\PROGRAMBbk@lcnt\@ne
+\loop 
+ \PROGRAMBbk@split\PROGRAMBbk@addskipdp\leavevmode
+\ifvoid\PROGRAMBbk@bxb      % The last line
+ \@PROGRAMBbkcontfalse\PROGRAMBbk@addfsepdp
+ \vtop{\PROGRAMBbk@line\hrule\@height\fboxrule}%
+\else               % 2,...,(n-1)
+ \PROGRAMBbk@line
+\fi
+ \hfil\advance\PROGRAMBbk@lcnt\@ne
+\if@PROGRAMBbkcont\repeat}%
+\fi
+\leavevmode\PROGRAMBbk@fstln\par}\vskip\PROGRAMBbreakboxskip\relax}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\def\endPROGRAMBbreakbox{\egroup
+\ifhmode\par\fi{\noindent%\PROGRAMBbk@lcnt\@ne 
+\@PROGRAMBbkconttrue\baselineskip\z@\lineskiplimit\z@
+\lineskip\z@\vfuzz\maxdimen
+\PROGRAMBbk@split\PROGRAMBbk@addfsepht\PROGRAMBbk@addskipdp
+\ifvoid\PROGRAMBbk@bxb      % Only one line
+\def\PROGRAMBbk@fstln{\PROGRAMBbk@addfsepdp
+\vbox{\hrule\@height\fboxrule\PROGRAMBbk@line\hrule\@height\fboxrule}}%
+\else               % More than one line
+%\def\PROGRAMBbk@fstln{\vbox{\hrule\@height\fboxrule\PROGRAMBbk@line}\hfil
+\def\PROGRAMBbk@fstln{\ifMoji\vbox{\noindent\smash{\raisebox{-1mm}{\small\bfseries
+\fboxsep1mm\fboxrule0mm\colorbox{AMIxx}{プログラム\theProgCTR}{\rm\bkboxtitle}}}\hfill\par%
+\noindent\PROGRAMBbk@line}\hfil%\bkboxtitle
+%\vbox{\hrule\@height\fboxrule\PROGRAMBbk@line}\hfil
+\else
+%\vbox{\hrule\@height\fboxrule\PROGRAMBbk@line}\hfil
+\vbox{\noindent\smash{\raisebox{-1mm}{%
+%%
+\fboxsep1mm\fboxrule0mm\colorbox{AMIxx}{%
+%%
+%%\small\bfseries \ プログラム\theProgCTR\ }}%
+\small\bfseries プログラム\theProgCTR}}%
+}%
+%%
+\hfill\par%
+\noindent\PROGRAMBbk@line}\hfil%
+\fi
+%%
+\advance\PROGRAMBbk@lcnt\@ne
+\loop 
+ \PROGRAMBbk@split\PROGRAMBbk@addskipdp\leavevmode
+\ifvoid\PROGRAMBbk@bxb      % The last line
+ \@PROGRAMBbkcontfalse\PROGRAMBbk@addfsepdp
+ \vtop{\PROGRAMBbk@line\hrule\@height\fboxrule}%
+\else               % 2,...,(n-1)
+ \PROGRAMBbk@line
+\fi
+ \hfil\advance\PROGRAMBbk@lcnt\@ne
+\if@PROGRAMBbkcont\repeat}%
+\fi
+\leavevmode\PROGRAMBbk@fstln\par}\vskip\PROGRAMBbreakboxskip\relax}
+
+
+
+
+
+
+
+\def\endPROGRAMBbreakbox{\egroup
+\ifhmode\par\fi{\noindent%\PROGRAMBbk@lcnt\@ne 
+\@PROGRAMBbkconttrue\baselineskip\z@\lineskiplimit\z@
+\lineskip\z@\vfuzz\maxdimen
+\PROGRAMBbk@split\PROGRAMBbk@addfsepht\PROGRAMBbk@addskipdp
+\ifvoid\PROGRAMBbk@bxb      % Only one line
+\def\PROGRAMBbk@fstln{\PROGRAMBbk@addfsepdp
+\vbox{\hrule\@height\fboxrule\PROGRAMBbk@line\hrule\@height\fboxrule}}%
+\else               % More than one line
+%\def\PROGRAMBbk@fstln{\vbox{\hrule\@height\fboxrule\PROGRAMBbk@line}\hfil
+\def\PROGRAMBbk@fstln{\ifMoji\vbox{\noindent%\smash
+{\raisebox{-1mm}{\small\bfseries
+\fboxsep1mm\fboxrule0mm\colorbox{AMIxx}{プログラム\theProgCTR}{\rm\bkboxtitle}}}\hfill\vspace*{-3mm}\par%
+\noindent\PROGRAMBbk@line}\hfil%\bkboxtitle
+%\vbox{\hrule\@height\fboxrule\PROGRAMBbk@line}\hfil
+\else
+%\vbox{\hrule\@height\fboxrule\PROGRAMBbk@line}\hfil
+\vbox{\noindent%\smash
+{\raisebox{-1mm}{%
+%%
+\fboxsep1mm\fboxrule0mm\colorbox{AMIxx}{%
+%%
+%%\small\bfseries \ プログラム\theProgCTR\ }}%
+\small\bfseries プログラム\theProgCTR}}%
+}%
+%%
+\hfill\vspace*{-3mm}\par%
+\noindent\PROGRAMBbk@line}\hfil%
+\fi
+%%
+\advance\PROGRAMBbk@lcnt\@ne
+\loop 
+ \PROGRAMBbk@split\PROGRAMBbk@addskipdp\leavevmode
+\ifvoid\PROGRAMBbk@bxb      % The last line
+ \@PROGRAMBbkcontfalse\PROGRAMBbk@addfsepdp
+ \vtop{\PROGRAMBbk@line\hrule\@height\fboxrule}%
+\else               % 2,...,(n-1)
+ \PROGRAMBbk@line
+\fi
+ \hfil\advance\PROGRAMBbk@lcnt\@ne
+\if@PROGRAMBbkcont\repeat}%
+\fi
+\leavevmode\PROGRAMBbk@fstln\par}\vskip\PROGRAMBbreakboxskip\relax}
+
+
+
+
+
+
+
+
+
+
+%%% 
+%% 1 プログラム環境 B
+%%    
+
+
+%%% Aで設定済み
+%\newcounter{LineCTR}%% プログラムの行番号
+%\newcounter{ProgCTR}[chapter]%% プログラム環境の番号
+%\renewcommand{\theProgCTR}{\thechapter-\@arabic\c@ProgCTR}
+
+
+\newenvironment{PROGRAMB}{\par\fboxrule=0pt%
+%%%% verbatim のとき、1行目が、カウンタだけの行となるのを防ぐ
+\def\@verbatim{\vspace*{-1\Cvs}%
+\trivlist \item\relax
+  \if@minipage\else \vskip-\parskip
+\fi
+  \leftskip\@totalleftmargin\rightskip\z@skip
+  \parindent\z@\parfillskip\@flushglue\parskip\z@skip
+  \@@par
+  \@tempswafalse
+  \def\par{%
+    \if@tempswa
+      \leavevmode \null \@@par\penalty\interlinepenalty
+    \else
+      \@tempswatrue
+      \ifhmode\@@par\penalty\interlinepenalty\fi
+    \fi}%
+  \let\do\@makeother \dospecials
+  \obeylines \verbatim@font \@noligs
+  \hyphenchar\font\m@ne
+  \everypar \expandafter{\the\everypar \unpenalty}%
+\vskip1.5mm}
+\def\verbatim{\@verbatim \frenchspacing\@vobeyspaces \@xverbatim}
+\def\endverbatim{\if@newlist
+\leavevmode\fi\endtrivlist\vskip-3.75mm%-.5\Cvs%\vspace*{-1\Cvs}
+}
+%%%
+\footnotesize\refstepcounter{ProgCTR}\vskip.5\Cvs\begin{ProgB}}{\end{ProgB}%\vskip.5\Cvs
+}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%% 
+%% 1 プログラム環境 C
+%%    
+
+%\newif\ifMoji \Mojifalse
+
+
+%%% プログラム環境のタイトルの両脇に ( ) を表示させるための分岐
+%\newif\ifParren \Parrenfalse
+
+
+\define@key{ProgC}{count}[true]{\csname PROGRAMCbkcount#1\endcsname\Mojifalse\PROGRAMCbk@lcnt\@ne}
+
+%\newcounter{ProgLinecnt}
+
+\define@key{ProgC}{setcounter}{\PROGRAMCbk@lcnt=#1}
+
+\define@key{ProgC}{title}{\Mojitrue\Parrenfalse%
+%\def\bkboxtitle{\setbox0=\hbox{#1}\copy0}}
+%\ifMoji
+\gdef\bkboxtitle{ ({#1})}%
+%\else
+%\fi
+}
+
+
+\define@key{ProgC}{parren}[true]{\Mojifalse}
+
+
+\def\endProgC{%
+\endPROGRAMCbreakbox%
+}
+
+
+\def\ProgC{%
+   \@ifnextchar[%]
+      {\main@ProgC}
+      {\main@ProgC[]}
+%\PROGRAMCbreakbox%
+}
+
+\def\main@ProgC[#1]{%
+   \setkeys{ProgC}{count=false,title=\Mojifalse,parren}%\@undefined%
+   \setkeys{ProgC}{#1}
+\PROGRAMCbreakbox%
+}
+
+
+
+ \newdimen\PROGRAMCfboxsep
+ 
+ \PROGRAMCfboxsep=3.25mm
+
+
+
+\newbox\PROGRAMCbk@bxb
+\newbox\PROGRAMCbk@bxa
+\newif\if@PROGRAMCbkcont 
+\newif\ifPROGRAMCbkcount
+\newcount\PROGRAMCbk@lcnt
+%\newcounter{PROGRAMCbk@lcnt}
+
+
+\def\PROGRAMCbreakboxskip{2pt}
+\def\PROGRAMCbreakboxparindent{1zw}%{1.8em}
+
+
+
+
+
+\def\PROGRAMCbreakbox{%\fboxsep=0mm\fboxrule=0mm
+%%%
+%\ifNumber
+%\let\@verbatim\@Mverbatim%\else\fi
+%%%
+\setbox\PROGRAMCbk@bxb\vbox\bgroup%
+%%%%%%%%%%%%%%
+  \setlength{\leftmargin}{3mm}%
+  \setlength{\rightmargin}{3mm}%
+  \advance\linewidth -\leftmargin
+  \advance\linewidth -\rightmargin
+  \advance\@totalleftmargin\leftmargin
+  \@setpar{{\@@par}}%
+  \parshape 1 \@totalleftmargin \linewidth
+  \ignorespaces
+%%%%%%%%%%%%%%
+%\rule[15mm]{0mm}{2mm}% 上のプログラムの字と、1行目のアキ(2mmという指定)
+\clubpenalty \z@
+\advance\linewidth -2\fboxrule
+\advance\linewidth -2\fboxsep
+\hsize\linewidth\@parboxrestore\ignorespaces}
+
+
+
+
+
+
+
+% \@tempdimb: amount of vertical skip 
+% between the first line (\PROGRAMCbk@bxa) and the rest (\PROGRAMCbk@bxb)
+\def\PROGRAMCbk@split{%
+\@tempdimb\ht\PROGRAMCbk@bxb
+\setbox\PROGRAMCbk@bxa\vsplit\PROGRAMCbk@bxb to\z@
+\setbox\PROGRAMCbk@bxa\vbox{\unvbox\PROGRAMCbk@bxa}%
+\setbox\@tempboxa\vbox{\copy\PROGRAMCbk@bxa\copy\PROGRAMCbk@bxb}%
+\advance\@tempdimb-\ht\@tempboxa}
+
+% \@tempdima: height of the first line (\PROGRAMCbk@bxa) + fboxsep
+\def\PROGRAMCbk@addfsepht{%
+%     \setbox\PROGRAMCbk@bxa\vbox{\vskip\fboxsep\box\PROGRAMCbk@bxa}}
+     \setbox\PROGRAMCbk@bxa\vbox{\box\PROGRAMCbk@bxa}}
+
+\def\PROGRAMCbk@addskipht{%
+     \setbox\PROGRAMCbk@bxa\vbox{\vskip\@tempdimb\box\PROGRAMCbk@bxa}}
+
+% \@tempdima: depth of the first line (\PROGRAMCbk@bxa) + fboxsep
+\def\PROGRAMCbk@addfsepdp{%
+     \@tempdima\dp\PROGRAMCbk@bxa
+%     \advance\@tempdima\fboxsep
+     \dp\PROGRAMCbk@bxa\@tempdima}
+
+% \@tempdima: depth of the first line (\PROGRAMCbk@bxa) + vertical skip
+\def\PROGRAMCbk@addskipdp{%
+     \@tempdima\dp\PROGRAMCbk@bxa
+%     \advance\@tempdima\@tempdimb
+     \dp\PROGRAMCbk@bxa\@tempdima}
+
+
+
+
+
+\newskip\endPROGRAMCskip
+\setlength{\endPROGRAMCskip}{10.5H}
+
+
+
+
+
+%% 本物
+\def\PROGRAMCbk@line{%%
+\ifPROGRAMCbkcount
+%    \hbox to \linewidth{\scriptsize\ifPROGRAMCbkcount\smash{\rlap{\ \texttt{\the\PROGRAMCbk@lcnt}\ }}\fi
+    \hbox to \linewidth{%
+\scriptsize\ifPROGRAMCbkcount\smash{\pushtowall{\hspace*{5mm}%
+\llap{\ \texttt{\the\PROGRAMCbk@lcnt}\ }}}\fi%
+%    \vrule \@width\fboxrule
+{\fboxsep=0pt%\colorbox{AMIxx}
+{\hskip7.25mm%6.5mm%2\PROGRAMCfboxsep
+    \box\PROGRAMCbk@bxa\hspace*{3.25mm}}}\hfil
+    \hskip\PROGRAMCfboxsep%\vrule \@width\fboxrule
+}%
+%%%
+\else%%%%
+%%%
+%    \hbox to \linewidth{\scriptsize\ifPROGRAMCbkcount\smash{\rlap{\ \texttt{\the\PROGRAMCbk@lcnt}\ }}\fi
+    \hbox to \linewidth{\scriptsize\ifPROGRAMCbkcount\smash{\llap{\ \texttt{\the\PROGRAMCbk@lcnt}\ }}\fi%
+%    \vrule \@width\fboxrule
+{\fboxsep=0pt\colorbox{AMIxx}{\hskip3.25mm%\PROGRAMCfboxsep%
+    \box\PROGRAMCbk@bxa\hfil%
+%    \hskip\PROGRAMCfboxsep
+}}%\vrule \@width\fboxrule
+}%
+%%%
+\fi%
+}
+
+
+
+
+
+
+\def\endPROGRAMCbreakbox{\egroup\ignorespaces%
+%\ifhmode\par\fi{\noindent\PROGRAMCbk@lcnt\@ne \clubpenalty\@M
+\ifhmode\par\fi{\noindent \clubpenalty\@M%
+\@PROGRAMCbkconttrue\baselineskip\z@\lineskiplimit\z@%
+\lineskip\z@\vfuzz\maxdimen
+\PROGRAMCbk@split\ifdim\wd\PROGRAMCbk@bxa=\z@\ifdim\ht\PROGRAMCbk@bxa=\z@\PROGRAMCbk@split\fi\fi%
+\PROGRAMCbk@addfsepht\PROGRAMCbk@addskipdp
+\ifvoid\PROGRAMCbk@bxb      % Only one line
+%\setlength{\endPROGRAMCskip}{1H}
+\def\PROGRAMCbk@fstln{\PROGRAMCbk@addfsepdp%
+\vbox{\hbox to\hsize{%%%%\hbox to10mm{\Hrulefillxmm}
+\rule{0mm}{1.5mm}\smash{\raisebox{-.75mm}{\fboxsep1mm\fboxrule0mm{\small\bfseries プログラム\theProgCTR}}}\rule[-3mm]{0mm}{1.5mm}%\Hrulefill
+}%\@height\fboxrule 
+\noindent\colorbox{AMIxx}{%
+\PROGRAMCbk@line}\color{AMIxx}\hrule\@height4H%\fboxrule%
+}}%
+\else               % More than one line
+%\def\PROGRAMCbk@fstln{\vbox{\hrule\@height\fboxrule\PROGRAMCbk@line}\hfil
+%
+%
+\def\PROGRAMCbk@fstln{%
+%
+\ifMoji
+\vbox{%
+\hbox to\hsize{%\Hrulefill%
+\rule{0mm}{1.5mm}%
+%\leavevmode
+\smash{\raisebox{-.75mm}{\fboxsep1mm\fboxrule0mm{\small\bfseries 
+プログラム\theProgCTR}{\rm\bkboxtitle}}}\rule[-3mm]{0mm}{1.5mm}\hfill%\Hrulefill
+}%
+%\hrule\@height\fboxrule
+\ignorespaces\par\noindent\colorbox{AMIxx}{\PROGRAMCbk@line}%
+}\hfil
+\else
+\vbox{%
+\hbox to\hsize{%\Hrulefill%
+\rule{0mm}{1.5mm}%
+%\leavevmode
+\smash{\raisebox{-.75mm}{\fboxsep1mm\fboxrule0mm{\small\bfseries 
+プログラム\theProgCTR}}}\rule[-3mm]{0mm}{1.5mm}\hfill%\Hrulefill
+}%
+%\hrule\@height\fboxrule
+\ignorespaces\par\noindent\colorbox{AMIxx}{\PROGRAMCbk@line}%
+}\hfil
+\fi%
+%%%%%%
+%
+%
+\advance\PROGRAMCbk@lcnt\@ne
+\loop 
+ \PROGRAMCbk@split\PROGRAMCbk@addskipdp\leavevmode
+\ifvoid\PROGRAMCbk@bxb      % The last line
+ \@PROGRAMCbkcontfalse\PROGRAMCbk@addfsepdp
+ \vtop{\noindent\colorbox{AMIxx}{\PROGRAMCbk@line}}\par%\endPROGRAMCskip% 複数
+\else               % 2,...,(n-1)
+ \colorbox{AMIxx}{\PROGRAMCbk@line}%
+%
+\fi%
+ \hfil\advance\PROGRAMCbk@lcnt\@ne
+\if@PROGRAMCbkcont\repeat}%
+\fi%
+\leavevmode\PROGRAMCbk@fstln\par}\color{AMIxx}\hrule\@height4H}
+
+
+
+
+
+
+
+%%% Aで設定済み
+%\newcounter{LineCTR}%% プログラムの行番号
+%\newcounter{ProgCTR}[chapter]%% プログラム環境の番号
+%\renewcommand{\theProgCTR}{\thechapter-\@arabic\c@ProgCTR}
+
+
+\newenvironment{PROGRAMC}{\par\fboxrule=0pt%
+\hbadness10001%
+\fboxsep0pt
+%%%% verbatim のとき、1行目が、カウンタだけの行となるのを防ぐ
+\def\@verbatim{\vspace*{-1\Cvs}%
+\trivlist \item\relax
+  \if@minipage\else \vskip-\parskip
+\fi
+  \leftskip\@totalleftmargin\rightskip\z@skip
+  \parindent\z@\parfillskip\@flushglue\parskip\z@skip
+  \@@par
+  \@tempswafalse
+  \def\par{%
+    \if@tempswa
+      \leavevmode \null \@@par\penalty\interlinepenalty
+    \else
+      \@tempswatrue
+      \ifhmode\@@par\penalty\interlinepenalty\fi
+    \fi}%
+  \let\do\@makeother \dospecials
+  \obeylines \verbatim@font \@noligs
+  \hyphenchar\font\m@ne
+  \everypar \expandafter{\the\everypar \unpenalty}%
+\vskip1.5mm}
+\def\verbatim{\@verbatim \frenchspacing\@vobeyspaces \@xverbatim}
+\def\endverbatim{\if@newlist
+\leavevmode\fi\endtrivlist\vskip-3.75mm%-.5\Cvs%\vspace*{-1\Cvs}
+}
+%%%
+\footnotesize\refstepcounter{ProgCTR}\vskip.5\Cvs
+\begin{ProgC}}{\vskip-2mm%2mm
+\end{ProgC}\vskip.25\Cvs%.5\Cvs
+}
+
+
+
+\newenvironment{PROGRAMCaaa}{%%%
+\hbadness10001%
+\fboxsep0pt
+\parindent2.75mm\par\vskip1\Cvs
+\footnotesize\refstepcounter{ProgCTR}%\topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+%
+%
+%
+\begin{ProgC}%{PROCmoto}
+}{%
+%\ifNumber\let\endPROCmoto\endPROGRAMCbkNumber\else\let\endPROCmoto\endPROGRAMCbk\fi%
+%\topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+\vskip-1\Cvs
+\end{ProgC}%{PROCmoto}%\topsep 10\p@ \@plus1mm \@minus1mm
+}
+
+
+
+
+
+
+\renewenvironment{PROGRAMC}{\par\fboxrule=0pt%
+\hbadness10001%
+\fboxsep0pt
+%%%% verbatim のとき、1行目が、カウンタだけの行となるのを防ぐ
+\def\@verbatim{%\vspace*{-1\Cvs}%
+\trivlist \item\relax
+  \if@minipage\else \vskip-\parskip
+\fi
+  \leftskip\@totalleftmargin\rightskip\z@skip
+  \parindent\z@\parfillskip\@flushglue\parskip\z@skip
+  \@@par
+  \@tempswafalse
+  \def\par{%
+    \if@tempswa
+      \leavevmode \null \@@par\penalty\interlinepenalty
+    \else
+      \@tempswatrue
+      \ifhmode\@@par\penalty\interlinepenalty\fi
+    \fi}%
+  \let\do\@makeother \dospecials
+  \obeylines \verbatim@font \@noligs
+  \hyphenchar\font\m@ne
+  \everypar \expandafter{\the\everypar \unpenalty}%
+\vskip1.5mm}
+\def\verbatim{\@verbatim \frenchspacing\@vobeyspaces \@xverbatim}
+\def\endverbatim{\if@newlist
+\leavevmode\fi\endtrivlist\vskip-3.75mm%-.5\Cvs%\vspace*{-1\Cvs}
+}
+%%%
+\footnotesize\refstepcounter{ProgCTR}\vskip.5\Cvs
+\begin{ProgC}}{\vskip-2mm%2mm
+\end{ProgC}\vskip.25\Cvs%.5\Cvs
+}
+
+
+
+%%% 2. 実行結果 実行例
+%%% 
+
+
+
+\def\itembox{\@ifnextchar[{\@itembox}{\@itembox[c]}}
+\def\@itembox[#1]#2{%
+  \@savetbaselineshift\tbaselineshift\tbaselineshift\z@
+  \par\vspace{.3\baselineskip}%
+  \setbox\@iboxstr=\hbox{#2}\@itemh\ht\@iboxstr\advance\@itemh\dp\@iboxstr
+  \vspace{.5\@itemh}\bgroup\@scw\linewidth
+  \advance\@scw-20pt\@iboxpos={#1}%
+  \setbox\scb@x=\hbox\bgroup\begin{minipage}{\@scw}%
+  \tbaselineshift\@savetbaselineshift% (KN:1998/02/27)
+  \vspace*{.5\@itemh}}%
+\def\enditembox{\end{minipage}\egroup%
+  \setbox\scscb@x=\hbox to\linewidth{\hfil\vbox{\offinterlineskip%
+  \thicklines\setlength{\unitlength}{1pt}%
+  \hbox to\@scw{\if l\the\@iboxpos\else\@hleader\fi
+    \space\vbox to.8pt{\vss\hbox{\box\@iboxstr}\vss}%
+    \space\if r\the\@iboxpos\else \@hleader\fi}\kern9.6pt
+  \@hobox{tl}{tr}{20}\kern-10pt\box\scb@x\@hobox{bl}{br}{20}%
+  \kern-.8pt\hrule height.8pt}\hfil}\dimen0=\ht\scscb@x%
+  \noindent\hbox to\linewidth{\hbox to.6pt{\vbox to\dimen0{\@vrf@{10pt}{.8pt}}%
+  \hss}\box\scscb@x\hbox to.6pt{\hss\vbox to\dimen0{\@vrf@{10pt}{.9pt}}}%
+  \hss}\egroup}
+%%
+
+\newcounter{JIKKOU}[chapter]
+\renewcommand{\theJIKKOU}{\thechapter.\@arabic\c@JIKKOU}
+
+\newenvironment{実行結果}{\footnotesize\refstepcounter{JIKKOU}\begin{itembox}{{\small\bfseries 実行結果\theJIKKOU}}}{\end{itembox}}
+
+
+
+
+%\newcounter{JIKKOU}[chapter]
+%\renewcommand{\theJIKKOU}{\thechapter.\@arabic\c@JIKKOU}
+
+\newenvironment{実行例}
+{\footnotesize\refstepcounter{JIKKOU}\begin{itembox}{{\small\bfseries
+実行例\theJIKKOU}}}{\end{itembox}}
+
+
+
+
+%%%%%%%% itembox 終了
+
+
+
+%%
+%% 節末問題環境 節末問題解答 の定義
+%% 問題環境
+%% 注意
+%% 丸数字
+%% Menumerate
+%% Kenumerate
+
+%% 節末問題環境
+
+\newcounter{SETUMATUMONDAIcount}[section]
+%\renewcommand{\theSETUMATUMONDAIcount}{\thechapter.\@arabic\c@section}
+\renewcommand{\theSETUMATUMONDAIcount}{\@arabic\c@SETUMATUMONDAIcount}
+
+%\def\makeMONDAIhead{\par\nointerlineskip%
+%\noindent\vbox to 75H{\parindent\z@
+%\vfil%
+%\centerline{%
+%{\large\bfseries\mathversion{bold}{\SEVENjidori{問題\theMONDAIcount}}}}
+%\vfil}}
+
+
+\def\makeSETUMATUMONDAIhead{\par%\nointerlineskip%
+\noindent\vbox{\parindent\z@
+\vspace{1\Cvs \@plus.1mm \@minus.5mm}%
+%\centerline{%
+%{\large\bfseries\mathversion{bold}{\SEVENjidori{節末問題
+%\theSETUMATUMONDAIcount}}}}\par
+\centerline{%
+{\large\bfseries\mathversion{bold}{\SEVENjidori{節末問題}}}}\par
+\vspace{1\Cvs \@plus.1mm \@minus.1mm}%
+}}
+
+
+%\def\makeSETUMATUMONDAItoc{{節末問題\theSETUMATUMONDAIcount}}
+\def\makeSETUMATUMONDAItoc{{節末問題}}
+\newenvironment{節末問題}{%
+\addcontentsline{toc}{SETUMATUMONDAI}{\makeSETUMATUMONDAItoc}%
+{\makeSETUMATUMONDAIhead}\nopagebreak%
+\par%\nointerlineskip
+
+\bgroup%\small
+\small\baselineskip20\h
+\renewcommand{\theenumi}{{問\@arabic\c@enumi.}}%
+%\renewcommand{\theenumii}{{\bfseries問\@arabic\c@enumii}}%
+%\renewcommand{\labelenumii}{(\theenumii)}
+\renewcommand{\labelenumi}{{\bfseries\theenumi}}
+\renewcommand{\labelenumii}{{\theenumii}}
+   \ifnum \@enumdepth >3\relax\@toodeep\else
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+%    \edef\@enumctr{\c@SETUMATUMONDAIcount}%
+    \list{\csname label\@enumctr\endcsname}{%
+     \leftmargin27.72026pt%0zw%\z@3.15zw%2zw
+     \labelwidth19.18506pt%0zw2.5zw
+     \labelsep1zw
+     \itemindent\z@%1zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+     \def\makelabel##1{\hss\llap{##1}}}%
+    \fi%
+\let\enumerate\MMenumerate
+}{\endlist\egroup}
+
+
+
+
+
+
+
+%\define@key{節末問題counter}{setcounter}{\setcounter{SETUMATUMONDAIcount}{#1}}
+\define@key{節末問題counter}{setcounter}{\setcounter{enumi}{#1}}
+
+\def\節末問題counter{%
+   \@ifnextchar[%]
+      {\main@節末問題counter}
+      {\main@節末問題counter[]}
+}
+
+\def\main@節末問題counter[#1]{%
+   \setkeys{節末問題counter}{setcounter=false}%
+   \setkeys{節末問題counter}{#1}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewenvironment{節末問題}{%
+\addcontentsline{toc}{SETUMATUMONDAI}{\makeSETUMATUMONDAItoc}%
+{\makeSETUMATUMONDAIhead}\nopagebreak%
+\par%\nointerlineskip
+\bgroup%\small
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\normal@item{%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[\@itemlabel%(\@arabic\c@SETUMATUMONDAIcount)%\theSETUMATUMONDAIcount%
+]}
+}
+\def\special@item<##1>{%
+\setkeys{節末問題counter}{##1}%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[\@itemlabel%(\@arabic\c@SETUMATUMONDAIcount)%\theSETUMATUMONDAIcount%
+]}
+}
+%
+\def\item{%
+\@ifnextchar<{\special@item}{\normal@item}%
+}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\small\baselineskip20\h
+\renewcommand{\theenumi}{{問\@arabic\c@enumi.}}%
+%\renewcommand{\theenumii}{{\bfseries問\@arabic\c@enumii}}%
+%\renewcommand{\labelenumii}{(\theenumii)}
+\renewcommand{\labelenumi}{{\bfseries\theenumi}}
+\renewcommand{\labelenumii}{{\theenumii}}
+   \ifnum \@enumdepth >3\relax\@toodeep\else
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+%    \edef\@enumctr{\c@SETUMATUMONDAIcount}%
+    \list{\csname label\@enumctr\endcsname}{%
+     \leftmargin27.72026pt%0zw%\z@3.15zw%2zw
+     \labelwidth19.18506pt%0zw2.5zw
+     \labelsep1zw
+     \itemindent\z@%1zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+     \def\makelabel##1{\hss\llap{##1}}}%
+    \fi%
+\let\enumerate\MMenumerate
+}{\endlist\egroup}
+
+
+
+
+%%
+%% Menumerate環境
+%% 
+\define@key{MMenumeratecounter}{setcounter}{\setcounter{enumii}{#1}}
+
+\def\MMenumeratecounter{%
+   \@ifnextchar[%]
+      {\main@MMenumeratecounter}
+      {\main@MMenumeratecounter[]}
+}
+
+\def\main@MMenumeratecounter[#1]{%
+   \setkeys{MMenumeratecounter}{setcounter=false}%
+   \setkeys{MMenumeratecounter}{#1}
+}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% (1) (2). 
+\newenvironment{MMenumerate}
+  {%% <
+\renewcommand{\theenumii}{(\@arabic\c@enumii)}
+%%
+\def\normal@item{%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[\@itemlabel]}}
+
+\def\special@item<##1>{%
+\setkeys{MMenumeratecounter}{##1}%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[\@itemlabel]}}
+
+%
+\def\item{%
+\@ifnextchar<{\special@item}{\normal@item}%
+}%
+%%
+   \ifnum \@enumdepth >3\relax\@toodeep\else
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+    \list{\csname label\@enumctr\endcsname}{%
+     \leftmargin20.22397pt%19.47594pt%18.47032pt%27.72026pt%2.5zw
+     \labelwidth2zw
+     \labelsep1zw
+     \itemindent\z@%1zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+     \def\makelabel##1{\hss\llap{##1}}}%
+    \fi}{\endlist}
+
+
+
+
+
+
+
+\newcommand*{\l@SETUMATUMONDAI}   {\@dottedtocline{1}{1.5zw}{3.2em}}
+
+
+
+%% 丸数字
+%%%%%%%%%%%%% \MARU %%%%%%%%%%%%%%%%%%%
+\def\MARU#1{\raisebox{0.1zh}{{\rm\ooalign{\hfil 
+\lower.168ex\hbox{#1}\hfil\crcr\mathhexbox20D}}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%
+%% Menumerate環境
+%% 
+
+%%%% (1) (2). 
+\newenvironment{Menumerate}
+  {%% <
+\renewcommand{\theenumii}{\@arabic\c@enumii}
+   \ifnum \@enumdepth >3\relax\@toodeep\else
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+    \list{\csname label\@enumctr\endcsname}{%
+     \leftmargin20.22397pt%19.47594pt%18.47032pt%27.72026pt%2.5zw
+     \labelwidth2zw
+     \labelsep1zw
+     \itemindent\z@%1zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+     \def\makelabel##1{\hss\llap{##1}}}%
+    \fi}{\endlist}
+
+
+%%
+%% Kenumerate環境
+%% 
+
+%%%% (1) (2). 
+\newenvironment{Kenumerate}
+  {%% <
+\renewcommand{\labelenumi}{\theenumi}
+\renewcommand{\theenumi}{(\@arabic\c@enumi)}
+   \ifnum \@enumdepth >3\relax\@toodeep\else
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+    \list{\csname label\@enumctr\endcsname}{%
+     \leftmargin2.5zw
+     \labelwidth2zw
+     \labelsep1zw
+     \itemindent\z@%1zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+     \def\makelabel##1{\hss\llap{##1}}}%
+    \fi}{\endlist}
+
+
+
+
+
+
+%%%% 
+
+
+
+
+
+%% 節末問題解答
+
+\newcounter{ANSchap}
+
+\def\TOI{\refstepcounter{ANSchapVAL}}
+
+\newcommand{\answerF}{\refstepcounter{ANSchapVAL}%
+\setcounter{ANSchapter}{1}%
+%\ifnum\the\value{ANSchapVAL}<2
+\ifnum\the\value{ANSchapter}=1\vskip1\Cvs
+\else
+%
+\fi
+\par\noindent{%
+%\refstepcounter{ANSchapter}
+\normalsize\bfseries \theANSchapter.\theANSchapVAL 節}\nopagebreak
+}
+
+
+\newcommand{\answerいらない}{\refstepcounter{ANSchapVAL}%
+%\setcounter{ANSchapter}{1}%
+%\ifnum\the\value{ANSchapVAL}<2
+\ifnum\the\value{ANSchapter}=1\vskip1\Cvs
+\else
+%\vskip1\Cvs
+\fi
+\par\noindent{%
+%\refstepcounter{ANSchapter}
+\normalsize\bfseries \theANSchapter.\theANSchapVAL  節}\nopagebreak
+%%% 再校のとき、2008.5.15に、少しかえた。
+%%%% ANSchapter ではなく、純粋に、章番号をとることにした。
+%\normalsize\bfseries \thechapter.\theANSchapVAL  節}\nopagebreak
+}
+
+
+
+
+
+%%%% 問題の答のダミーカウンタ
+
+
+\newcommand{\answerOF問題の答}{\refstepcounter{ANSchapVAL}%
+%\setcounter{ANSchapter}{1}%
+\ifnum\the\value{ANSchapVAL}<2
+\else
+\vskip1\Cvs
+\fi
+%\refstepcounter{ANSchapter}
+%%%
+\ifnum\the\value{ANSchapter}>1
+\vskip1\Cvs
+\else
+%\vskip1\Cvs
+\fi
+%%%
+\par\noindent{%
+\normalsize\bfseries \theANSchapter.\theANSchapVAL  節}\nopagebreak
+%%% 再校のとき、2008.5.15に、少しかえた。
+%%%% ANSchapter ではなく、純粋に、章番号をとることにした。
+%\normalsize\bfseries \thechapter.\theANSchapVAL  節}\nopagebreak
+}
+
+\newcommand{\ANSWERi}{%\refstepcounter{ANSchapVAL}%
+\setcounter{ANSchapVAL}{0}%
+%\setcounter{ANSchapter}{1}%
+\ifnum\the\value{ANSchapter}>1
+\vskip1\Cvs
+\else
+%\vskip1\Cvs
+\fi
+%\par\noindent{%
+\refstepcounter{ANSchapter}
+%\normalsize\bfseries \theANSchapter 章}\nopagebreak
+%\addtocounter{ANSchapter}{1}
+%\par\noindent{%
+%\refstepcounter{ANSchapter}
+%\normalsize\bfseries \theANSchapter.\theANSchapVAL  節}\nopagebreak
+%%% 再校のとき、2008.5.15に、少しかえた。
+}
+
+
+\newenvironment{ANSWER}{\ANSWERi}{}
+
+
+
+
+\newcommand{\answerTOI}{%
+\setcounter{ANSchapVAL}{0}%
+\refstepcounter{ANSchapVAL}%
+\ifnum\the\value{ANSchapVAL}<0
+\else
+\vskip1\Cvs
+\fi
+\par\noindent{%
+\refstepcounter{ANSchapter}%
+\normalsize\bfseries 問題\theANSchapter.\theANSchapVAL}\nopagebreak
+}
+
+%%% 2-2
+\newcommand{\answerTOIii}{%
+\setcounter{ANSchapVAL}{1}%
+\refstepcounter{ANSchapVAL}%
+\ifnum\the\value{ANSchapVAL}<0
+\else
+\vskip1\Cvs
+\fi
+\par\noindent{%
+\refstepcounter{ANSchapter}%
+\normalsize\bfseries 問題\theANSchapter.\theANSchapVAL}\nopagebreak
+}
+
+
+
+
+
+
+
+
+
+
+%%%% 節末問題解答 環境の中で、箇条書が、横の短い数式が続くようなパターン
+%%%%   この環境は、現時点では、暫定的なものです。
+%+\newcounter{YokoenumiiSETUMATU}[enumii]
+
+%+\renewcommand{\theYokoenumiiSETUMATU}{\theenumii(\@arabic\c@YokoenumiiSETUMATU)}
+
+%+\newcommand{\YitemSETUMATU}{\noindent\refstepcounter{YokoenumiiSETUMATU}(\@arabic\c@YokoenumiiSETUMATU)}
+
+%+\newenvironment{YenumerateSETUMATU}{%
+%+\let\item\YitemSETUMATU%
+%+}{}
+
+
+
+
+%%%%
+\newcounter{YokoenumiiSETUMATU}[enumii]
+
+\renewcommand{\theYokoenumiiSETUMATU}{\theenumii(\@arabic\c@YokoenumiiSETUMATU)}
+
+%\newcommand{\YitemSETUMATU}{\noindent\refstepcounter{YokoenumiiSETUMATU}(\@arabic\c@YokoenumiiSETUMATU)}
+
+\newenvironment{YenumerateSETUMATU}{%
+\let\item\YitemSETUMATU%
+}{}
+
+%% >
+\define@key{SETUKAIcounterYokoenumii}{setcounter}{\setcounter{YokoenumiiSETUMATU}{#1}}
+
+
+\def\SETUKAIcounterYokoenumii{%
+   \@ifnextchar[%]
+      {\main@SETUKAIcounterYokoenumii}
+      {\main@SETUKAIcounterYokoenumii[]}
+}
+
+
+\def\main@SETUKAIcounterYokoenumii[#1]{%
+   \setkeys{SETUKAIcounterYokoenumii}{setcounter=false}%
+   \setkeys{SETUKAIcounterYokoenumii}{#1}
+}
+
+
+\def\normal@YitemSETUMATU{%
+\noindent\refstepcounter{YokoenumiiSETUMATU}(\@arabic\c@YokoenumiiSETUMATU)
+}
+
+\def\special@YitemSETUMATU<#1>{%
+\setkeys{SETUKAIcounterYokoenumii}{#1}%
+\noindent\refstepcounter{YokoenumiiSETUMATU}(\@arabic\c@YokoenumiiSETUMATU)
+}
+
+\def\YitemSETUMATU{%
+\@ifnextchar<{\special@YitemSETUMATU}{\normal@YitemSETUMATU}%
+}%%
+%%%%
+
+
+
+
+
+
+
+
+\def\Item{\item \mbox{}}
+
+
+
+
+\define@key{ANSenumeratecounter}{setcounter}{\setcounter{enumi}{#1}}
+
+\def\ANSenumeratecounter{%
+   \@ifnextchar[%]
+      {\main@ANSenumeratecounter}
+      {\main@ANSenumeratecounter[]}
+}
+
+\def\main@ANSenumeratecounter[#1]{%
+   \setkeys{ANSenumeratecounter}{setcounter=false}%
+   \setkeys{ANSenumeratecounter}{#1}
+}
+
+
+
+
+\define@key{ANSenumerateIIcounter}{setcounter}{\setcounter{enumii}{#1}}
+
+\def\ANSenumerateIIcounter{%
+   \@ifnextchar[%]
+      {\main@ANSenumerateIIcounter}
+      {\main@ANSenumerateIIcounter[]}
+}
+
+\def\main@ANSenumerateIIcounter[#1]{%
+   \setkeys{ANSenumerateIIcounter}{setcounter=false}%
+   \setkeys{ANSenumerateIIcounter}{#1}
+}
+
+
+
+
+\newenvironment{ANSenumerate}
+  {%% <
+%
+%\ifnum \theenumi %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%
+%\renewcommand{\labelenumi}{\theenumi..}
+%   \ifnum \@enumdepth >3\relax\@toodeep\else
+   \ifnum \@enumdepth =3\relax\@toodeep\else
+%%%
+\ifnum %\theenumi
+\@enumdepth=0
+%%%
+\setcounter{ANSchapVAL}{0}%
+%\setcounter{ANSchapter}{1}%
+%%%%%%%% \ifnum\the\value{ANSchapter}>1
+%\vskip1\Cvs
+%%%%%%%% \else
+%\vskip1\Cvs
+%%%%%%%%% \fi
+%\par\noindent{%
+%\refstepcounter{ANSchapVAL}%
+\refstepcounter{ANSchapter}
+%%
+\def\normal@item{%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[\@itemlabel]}}
+
+\def\special@item<##1>{%
+\setkeys{ANSenumeratecounter}{##1}%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[\@itemlabel]}}
+
+%
+\def\item{%
+\@ifnextchar<{\special@item}{\normal@item}%
+}%
+%%
+\newcommand{\labelenumi}{\theenumi}
+%\renewcommand{\theenumi}{(\@arabic\c@enumi)}
+%%
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+    \list{\csname label\@enumctr\endcsname}{\vskip1\Cvs%
+\renewcommand{\theenumi}%{\@arabic\c@enumi}
+{{%\bfseries 
+%問\@arabic\c@enumi.
+%\@arabic\c@chapter\theANSchapter.\@arabic\c@enumi 節
+\thechapter.\@arabic\c@enumi 節
+}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     \leftmargin27.72026pt%0zw%\z@
+     \labelwidth19pt%19.18506pt%0zw
+     \labelsep1zw
+     \itemindent0zw
+     \itemsep1\Cvs
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@%\itemsep\z@
+%     \topsep1\Cvs
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+    \def\makelabel##1{{\bfseries##1}}}
+\else
+%%%
+\ifnum %\theenumi
+\@enumdepth=1
+%%%
+\def\normal@item{%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[\@itemlabel]}}
+%
+\def\special@item<##1>{%
+\setkeys{ANSenumerateIIcounter}{##1}%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[\@itemlabel]}}
+%
+%
+\def\item{%
+\@ifnextchar<{\special@item}{\normal@item}%
+}%
+%%%
+\renewcommand{\theenumi}{}
+\renewcommand{\labelenumii}{\theenumii}
+%\renewcommand{\theenumi}{(\@arabic\c@enumi)}
+%%
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+    \list{\csname label\@enumctr\endcsname}{%
+\renewcommand{\theenumii}%{\@arabic\c@enumi}
+{{%\bfseries 
+問\@arabic\c@enumii.}}
+%\renewcommand{\p@enumiii}{\theenumi(\theenumii)}
+\renewcommand{\p@enumiii}{\theenumii}
+     \leftmargin0zw%27.72026pt%0zw%\z@
+     \labelwidth19pt%19.18506pt%0zw
+     \labelsep1zw
+     \itemindent0zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+    \def\makelabel##1{{\bfseries##1}}}
+\else
+\ifnum %\theenumi
+\@enumdepth=2
+\renewcommand{\labelenumiii}{\theenumiii}
+\renewcommand{\theenumiii}{(\@arabic\c@enumiii)}
+\renewcommand{\theYokoenumii}{\theenumii(\@arabic\c@Yokoenumii)}
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+   \list{\csname label\@enumctr\endcsname}{%
+%
+     \leftmargin2.42zw%\z@
+     \labelwidth0zw
+     \labelsep1zw%.75zw
+     \itemindent-1.39zw%-1.245zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+    \def\makelabel##1{{##1}\hss}}
+\else
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+   \list{\csname label\@enumctr\endcsname}{%
+     \leftmargin12zw%\z@
+     \labelwidth2zw
+     \labelsep1zw
+     \itemindent1zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+    \def\makelabel##1{{##1}}}
+\fi\fi
+\fi%
+\fi%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+}{\endlist}
+
+
+
+
+
+
+
+\renewenvironment{ANSenumerate}
+  {%% <
+%
+%\ifnum \theenumi %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%
+%\renewcommand{\labelenumi}{\theenumi..}
+%   \ifnum \@enumdepth >3\relax\@toodeep\else
+   \ifnum \@enumdepth =3\relax\@toodeep\else
+%%%
+\ifnum %\theenumi
+\@enumdepth=0
+%%%
+\setcounter{ANSchapVAL}{0}%
+%\setcounter{ANSchapter}{1}%
+%%%%%%%% \ifnum\the\value{ANSchapter}>1
+%\vskip1\Cvs
+%%%%%%%% \else
+%\vskip1\Cvs
+%%%%%%%%% \fi
+%\par\noindent{%
+%\refstepcounter{ANSchapVAL}%
+\refstepcounter{ANSchapter}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+\def\normal@item{%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[\@itemlabel]}}
+
+\def\special@item<##1>{%
+\setkeys{ANSenumeratecounter}{##1}%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[\@itemlabel]}}
+
+%
+\def\item{%
+\@ifnextchar<{\special@item}{\normal@item}%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+\renewcommand{\labelenumi}{\theenumi}
+%\renewcommand{\theenumi}{(\@arabic\c@enumi)}
+%%
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+    \list{\csname label\@enumctr\endcsname}{\vskip1\Cvs%
+\renewcommand{\theenumi}%{\@arabic\c@enumi}
+{{%\bfseries 
+%問\@arabic\c@enumi.
+%\@arabic\c@chapter\theANSchapter.\@arabic\c@enumi 節
+\theANSchapter.\@arabic\c@enumi 節
+}}
+     \leftmargin27.72026pt%0zw%\z@
+     \labelwidth19pt%19.18506pt%0zw
+     \labelsep1zw
+     \itemindent0zw
+     \itemsep1\Cvs
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@%\itemsep\z@
+%     \topsep1\Cvs
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+    \def\makelabel##1{{\bfseries##1}}}
+\else
+%%%
+\ifnum %\theenumi
+\@enumdepth=1
+%%%
+%%%
+\def\normal@item{%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[\@itemlabel]}}
+%
+\def\special@item<##1>{%
+\setkeys{ANSenumerateIIcounter}{##1}%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[\@itemlabel]}}
+%
+%
+\def\item{%
+\@ifnextchar<{\special@item}{\normal@item}%
+}%
+%%%
+\renewcommand{\theenumi}{}
+\renewcommand{\labelenumii}{\theenumii}
+%\renewcommand{\theenumi}{(\@arabic\c@enumi)}
+%%
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+    \list{\csname label\@enumctr\endcsname}{%
+\renewcommand{\theenumii}%{\@arabic\c@enumi}
+{{%\bfseries 
+問\@arabic\c@enumii.}}
+%\renewcommand{\p@enumiii}{\theenumi(\theenumii)}
+\renewcommand{\p@enumiii}{\theenumii}
+     \leftmargin0zw%27.72026pt%0zw%\z@
+     \labelwidth19pt%19.18506pt%0zw
+     \labelsep1zw
+     \itemindent0zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+    \def\makelabel##1{{\bfseries##1}}}
+\else
+\ifnum %\theenumi
+\@enumdepth=2
+\renewcommand{\labelenumiii}{\theenumiii}
+\renewcommand{\theenumiii}{(\@arabic\c@enumiii)}
+\renewcommand{\theYokoenumii}{\theenumii(\@arabic\c@Yokoenumii)}
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+   \list{\csname label\@enumctr\endcsname}{%
+%
+     \leftmargin2.42zw%\z@
+     \labelwidth0zw
+     \labelsep1zw%.75zw
+     \itemindent-1.39zw%-1.245zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+    \def\makelabel##1{{##1}\hss}}
+\else
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+   \list{\csname label\@enumctr\endcsname}{%
+     \leftmargin12zw%\z@
+     \labelwidth2zw
+     \labelsep1zw
+     \itemindent1zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+    \def\makelabel##1{{##1}}}
+\fi\fi
+\fi%
+\fi%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+}{\endlist}
+
+
+
+
+
+
+
+\newenvironment{節末問題解答}{\hangwidth=15.64893pt%2zw%%\QandA%
+%\@addtoreset{equation}{ANSchapter}
+\@addtoreset{equation}{ANSchapter}
+  \renewcommand{\theequation}{(\@arabic\c@equation)}%
+  \setcounter{figure}{0}%
+\@addtoreset{figure}{ANSchapter}
+\renewcommand{\thefigure}{%
+  \ifnum\c@chapter>\z@ 解図\theANSchapter.\fi\@arabic\c@figure%
+}
+\@addtoreset{table}{ANSchapter}
+\renewcommand{\thetable}{%
+  \ifnum\c@chapter>\z@ 解表\theANSchapter.\fi\@arabic\c@table}
+%\renewcommand{\theYokoenumii}{\theenumii(\@arabic\c@Yokoenumii)}
+%
+%
+%\leftmargin3zw
+%\renewcommand{\labelenumi}{\theenumi}
+%\renewcommand{\theenumi}{\<【\@arabic\c@enumi】}
+%\def\@schapter##1{%
+%\refstepcounter{chapter}%
+%  \@makeAPPschapterhead{##1}\@afterheading
+%}
+%  \if@openright\clearpage\else\clearpage\fi
+\addtocontents{toc}{\protect\addvspace{3\h}}%
+\chapter*{節末問題解答}\addcontentsline{toc}{TUKIMONOchapter}{節末問題解答}%
+\addtocontents{toc}{\protect\addvspace{3\h}}%
+\thispagestyle{CHAPheadings}
+\@mkboth{節末問題解答}{節末問題解答}
+%
+%\let\enumerate=\Senumerate
+\let\enumerate=\ANSenumerate
+\let\Yenumerate=\YenumerateSETUMATU
+\let\節=\answer
+\bgroup\small\vspace*{-1\Cvs}}{\egroup\clearpage}
+
+
+
+%% 節末問題の箇条書の設定 SETSUenumerate 
+\newenvironment{SETSUenumerate}
+  {%% <
+%\ifnum \theenumi %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%
+%\renewcommand{\labelenumi}{\theenumi..}
+%   \ifnum \@enumdepth >3\relax\@toodeep\else
+   \ifnum \@enumdepth =2\relax\@toodeep\else
+\ifnum %\theenumi
+\@enumdepth=0
+%%%
+\renewcommand{\labelenumi}{\theenumi}
+%\renewcommand{\theenumi}{(\@arabic\c@enumi)}
+%%
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+    \list{\csname label\@enumctr\endcsname}{%
+\renewcommand{\theenumi}%{\@arabic\c@enumi}
+{{%\bfseries 
+問\@arabic\c@enumi.}}
+     \leftmargin27.72026pt%0zw%\z@
+     \labelwidth19pt%19.18506pt%0zw
+     \labelsep1zw
+     \itemindent0zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+    \def\makelabel##1{{\bfseries##1}}}
+\else
+\ifnum %\theenumi
+\@enumdepth=1
+\renewcommand{\labelenumii}{\theenumii}
+\renewcommand{\theenumii}{(\@arabic\c@enumii)}
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+   \list{\csname label\@enumctr\endcsname}{%
+%
+     \leftmargin2.42zw%\z@
+     \labelwidth0zw
+     \labelsep1zw%.75zw
+     \itemindent-1.39zw%-1.245zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+    \def\makelabel##1{{##1}\hss}}
+\else
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+   \list{\csname label\@enumctr\endcsname}{%
+     \leftmargin12zw%\z@
+     \labelwidth2zw
+     \labelsep1zw
+     \itemindent1zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+    \def\makelabel##1{{##1}}}
+\fi\fi
+%
+\fi%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+}{\endlist}
+
+
+
+
+
+
+
+\define@key{SETSUenumeratecounter}{setcounter}{\setcounter{enumi}{#1}}
+
+\def\SETSUenumeratecounter{%
+   \@ifnextchar[%]
+      {\main@SETSUenumeratecounter}
+      {\main@SETSUenumeratecounter[]}
+}
+
+\def\main@SETSUenumeratecounter[#1]{%
+   \setkeys{SETSUenumeratecounter}{setcounter=false}%
+   \setkeys{SETSUenumeratecounter}{#1}
+}
+
+
+
+
+\define@key{SETSUenumerateIIcounter}{setcounter}{\setcounter{enumii}{#1}}
+
+\def\SETSUenumerateIIcounter{%
+   \@ifnextchar[%]
+      {\main@SETSUenumerateIIcounter}
+      {\main@SETSUenumerateIIcounter[]}
+}
+
+\def\main@SETSUenumerateIIcounter[#1]{%
+   \setkeys{SETSUenumerateIIcounter}{setcounter=false}%
+   \setkeys{SETSUenumerateIIcounter}{#1}
+}
+
+
+
+
+
+%% 節末問題の箇条書の設定 SETSUenumerate 
+\renewenvironment{SETSUenumerate}
+  {%% <
+%\ifnum \theenumi %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%
+%\renewcommand{\labelenumi}{\theenumi..}
+%   \ifnum \@enumdepth >3\relax\@toodeep\else
+   \ifnum \@enumdepth =2\relax\@toodeep\else
+\ifnum %\theenumi
+\@enumdepth=0
+%%%
+%%
+\def\normal@item{%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[\@itemlabel]}}
+
+\def\special@item<##1>{%
+\setkeys{SETSUenumeratecounter}{##1}%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[\@itemlabel]}}
+
+%
+\def\item{%
+\@ifnextchar<{\special@item}{\normal@item}%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\labelenumi}{\theenumi}
+%\renewcommand{\theenumi}{(\@arabic\c@enumi)}
+%%
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+    \list{\csname label\@enumctr\endcsname}{%
+\renewcommand{\theenumi}%{\@arabic\c@enumi}
+{{%\bfseries 
+問\@arabic\c@enumi.}}
+     \leftmargin27.72026pt%0zw%\z@
+     \labelwidth19pt%19.18506pt%0zw
+     \labelsep1zw
+     \itemindent0zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+    \def\makelabel##1{{\bfseries##1}}}
+\else
+\ifnum %\theenumi
+\@enumdepth=1
+%%
+\def\normal@item{%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[\@itemlabel]}}
+%
+\def\special@item<##1>{%
+\setkeys{SETSUenumerateIIcounter}{##1}%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[\@itemlabel]}}
+%
+%
+\def\item{%
+\@ifnextchar<{\special@item}{\normal@item}%
+}%
+%%%%%
+\renewcommand{\labelenumii}{\theenumii}
+\renewcommand{\theenumii}{(\@arabic\c@enumii)}
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+   \list{\csname label\@enumctr\endcsname}{%
+%
+     \leftmargin2.42zw%\z@
+     \labelwidth0zw
+     \labelsep1zw%.75zw
+     \itemindent-1.39zw%-1.245zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+    \def\makelabel##1{{##1}\hss}}
+\else
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+   \list{\csname label\@enumctr\endcsname}{%
+     \leftmargin12zw%\z@
+     \labelwidth2zw
+     \labelsep1zw
+     \itemindent1zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+    \def\makelabel##1{{##1}}}
+\fi\fi
+%
+\fi%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+}{\endlist}
+
+
+
+
+
+%% 問題環境
+
+\newcounter{MONDAIcount}[chapter]
+\renewcommand{\theMONDAIcount}{\thechapter.\@arabic\c@section}
+
+
+
+%\def\makeMONDAIhead{\par\nointerlineskip%
+%\noindent\vbox to 75H{\parindent\z@
+%\vfil%
+%\centerline{%
+%{\large\bfseries\mathversion{bold}{\SEVENjidori{問題\theMONDAIcount}}}}
+%\vfil}}
+
+
+\def\makeMONDAIhead{\par%\nointerlineskip%
+\noindent\vbox{\parindent\z@
+\vspace{1\Cvs \@plus.1mm \@minus.5mm}%
+\centerline{%
+{\large\bfseries\mathversion{bold}{\SEVENjidori{問題\theMONDAIcount}}}}\par
+\vspace{1\Cvs \@plus.1mm \@minus.1mm}%
+}}
+
+
+\def\makeMONDAItoc{{問題\theMONDAIcount}}
+
+
+\newenvironment{問題}{%
+\refstepcounter{MONDAIcount}%
+%\addcontentsline{toc}{MONDAI}{\makeMONDAItoc}%
+{\makeMONDAIhead}\nopagebreak%
+\par%\nointerlineskip
+\bgroup%\small
+\small\baselineskip20\h
+\renewcommand{\theenumi}{\bfseries{問\@arabic\c@enumi}}
+   \ifnum \@enumdepth >3\relax\@toodeep\else
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+    \list{\csname label\@enumctr\endcsname}{%
+     \leftmargin27.72026pt%0zw%\z@3.15zw%2zw
+     \labelwidth19.18506pt%0zw2.5zw
+     \labelsep1zw
+     \itemindent\z@%1zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+     \def\makelabel##1{\hss\llap{##1}}}%
+    \fi%
+\let\enumerate\Menumerate
+}{\endlist\egroup}
+
+
+%%% \newcommand*{\l@MONDAI}   {\@dottedtocline{1}{1.5zw}{3.2em}}
+
+
+%% 問の解答 の設定 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newif\ifKAIZU
+\KAIZUfalse
+
+%% 
+\newcommand{\問の解答QandA}{\par
+\hangwidth=15.64893pt%2zw%
+%  \setcounter{chapter}{0}%
+%  \setcounter{section}{0}%
+%  \setcounter{equation}{0}%
+%  \setcounter{figure}{0}%
+%  \setcounter{table}{0}%
+%  \renewcommand{\thechapter}{\@Alph\c@chapter}
+%  \renewcommand{\thesection}{\@Alph\c@section.}
+%  \renewcommand{\thesection}{\ifnum\c@chapter>\z@
+%  \thechapter.\@arabic\c@section  \else  A.\c@section\fi}
+%\renewcommand{\thesection}{\ifnum\c@chapter<\z@ A \else\thechapter\fi}
+%  \renewcommand{\theequation}{(\ifnum\c@section>\z@ \thesection\else
+%  \@arabic\c@equation\fi)}%
+\@addtoreset{figure}{ANSchapter}
+\renewcommand{\thefigure}{%
+%\ifnum\c@figure=1
+%  \ifnum\c@chapter>\z@ 
+%{\bfseries 図\thechapter.\fi\@arabic\c@figure}%
+%\else
+  \ifnum\c@chapter>\z@ 解図\theANSchapter.\fi\@arabic\c@figure%
+%\fi%
+}
+\@addtoreset{table}{ANSchapter}
+\renewcommand{\thetable}{%
+  \ifnum\c@chapter>\z@ 解表\theANSchapter.\fi\@arabic\c@table}
+\@addtoreset{equation}{ANSchapter}
+  \renewcommand{\theequation}{(\@arabic\c@equation)}%
+}
+
+
+
+
+
+
+
+
+
+\newcommand{\Tanswer}{\refstepcounter{ANSchapVAL}%
+%\setcounter{ANSchapter}{1}%
+\ifnum\the\value{ANSchapVAL}<2
+\else
+\vskip1\Cvs
+\fi
+\par\noindent{%
+\refstepcounter{ANSchapter}
+\normalsize\bfseries \theANSchapter 章}\nopagebreak
+}
+
+\newenvironment{問の解答}{\bgroup%\KAIZUtrue
+\問の解答QandA%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\answerF}{\refstepcounter{ANSchapVAL}%
+%
+\ifnum\the\value{ANSchapVAL}<2
+\else
+\vskip1\Cvs
+\fi
+\par\noindent{%
+\refstepcounter{ANSchapter}
+\normalsize\bfseries \theANSchapter 章}\nopagebreak
+}
+\let\answer\Tanswer
+\setcounter{ANSchapter}{0}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%\leftmargin3zw
+%\renewcommand{\labelenumi}{\theenumi}
+%\renewcommand{\theenumi}{\<【\@arabic\c@enumi】}
+%\def\@schapter##1{%
+%\refstepcounter{chapter}%
+%  \@makeAPPschapterhead{##1}\@afterheading
+%}
+%  \if@openright\clearpage\else\clearpage\fi
+\addtocontents{toc}{\protect\addvspace{3\h}}%
+\chapter*{問の解答}\addcontentsline{toc}{TUKIMONOchapter}{問の解答}%
+\vspace{-\baselineskip}
+\addtocontents{toc}{\protect\addvspace{3\h}}%
+\thispagestyle{CHAPheadings}
+\@mkboth{問の解答}{問の解答}
+%
+\let\enumerate=\SETSUenumerate
+\bgroup\small%\vskip-1\Cvs
+}{\egroup\egroup\clearpage}
+
+
+
+
+%%%% 問の解答 環境の中で、箇条書が、横の短い数式が続くようなパターン
+%%%%   この環境は、現時点では、暫定的なものです。
+\newcounter{Yokoenumii}[enumi]
+
+\renewcommand{\theYokoenumii}{\theenumi(\@arabic\c@Yokoenumii)}
+
+%% \newcommand{\Yitem}{\noindent\refstepcounter{Yokoenumii}(\@arabic\c@Yokoenumii)}
+
+
+%% ---->
+\define@key{TOIKAIcounterYokoenumii}{setcounter}{\setcounter{Yokoenumii}{#1}}
+
+\def\TOIKAIcounterYokoenumii{%
+   \@ifnextchar[%]
+      {\main@TOIKAIcounterYokoenumii}
+      {\main@TOIKAIcounterYokoenumii[]}
+}
+
+\def\main@TOIKAIcounterYokoenumii[#1]{%
+   \setkeys{TOIKAIcounterYokoenumii}{setcounter=false}%
+   \setkeys{TOIKAIcounterYokoenumii}{#1}
+}
+
+
+\def\normal@Yitem{%
+\noindent\refstepcounter{Yokoenumii}(\@arabic\c@Yokoenumii)
+}
+
+\def\special@Yitem<#1>{%
+\setkeys{TOIKAIcounterYokoenumii}{#1}%
+\noindent\refstepcounter{Yokoenumii}(\@arabic\c@Yokoenumii)
+}
+
+
+\def\Yitem{%
+\@ifnextchar<{\special@Yitem}{\normal@Yitem}%
+}%%
+%% ---->
+
+
+\newenvironment{Yenumerate}{%
+\let\item\Yitem%
+}{}
+
+%%   
+%%  問4. (1) x+y  (2) x-y ....
+%%  のように、横に箇条書にしたいとき
+%%
+%%  \item -----> 問4. の階層
+%%    \begin{Yenumerate}  -----> その下の横の箇条書の階層 空行をいれな
+%%    いように。
+%%     \item \label{yoko1}$\displaystyle \frac{1}{\sqrt{a^2-x^2}}$
+%%     \item \label{yoko2}$\displaystyle -\frac{1}{1+x^2}$
+%%     \item  $\displaystyle \frac{1}{\sqrt{1-x^2}}$
+%%  
+%%    \end{Yenumerate}
+%%
+%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+
+
+
+
+\AtBeginDocument{%
+\def\tagform@#1{%\maketag@@@{\ignorespaces#1\unskip\@@italiccorr}\quad
+{\normalfont \normalcolor {\theequation}\quad}}%
+\def\@eqnnum{{\normalfont \normalcolor {\theequation}\quad}}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\let\parentequation\Mparentequation
+%\let\subequations\Msubequations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\everymath={\displaystyle\def\={\,\,=\,\,}}%
+%%\everymath={\def\={\,\,=\,\,}}
+\everydisplay={\def\={\,\,=\,\,}}
+\let\frac=\dfrac
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\@COFFeqnnum{{\normalfont \normalcolor {\theCOFFequation}\quad}}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\COFFtagform@#1{%\maketag@@@{\ignorespaces#1\unskip\@@italiccorr}\quad
+{\normalfont \normalcolor {\theCOFFequation}\quad}}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewenvironment{equation}%
+    {%
+\def\item{%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[\@itemlabel]}}
+%
+\@beginparpenalty\predisplaypenalty
+     \@endparpenalty\postdisplaypenalty
+     \refstepcounter{equation}%
+     \parsep  4\p@ \@plus2\p@ \@minus\p@
+     \topsep  8\p@ \@plus2\p@ \@minus4\p@
+     \itemsep 4\p@ \@plus2\p@ \@minus\p@
+     \trivlist \item[]\leavevmode
+       \hb@xt@\linewidth\bgroup $\m@th% $
+         \displaystyle
+         \hskip\mathindent}%
+        {$\hfil % $
+         \displaywidth\linewidth\hbox{\@eqnnum}%
+       \egroup
+     \endtrivlist}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+\@ifundefined{subequations}{
+%%%%
+\newcounter{parentequation}% Counter for ``parent equation''.
+\@ifundefined{ignorespacesafterend}{%
+  \def\ignorespacesafterend{\global\@ignoretrue}%
+}{}
+\newenvironment{subequations}{%
+\renewcommand{\theequation}{%
+\ifnum\c@chapter>\z@\thechapter.\fi \@arabic\c@equation}
+  \refstepcounter{equation}%
+  \protected@edef\theparentequation{\theequation}%
+  \setcounter{parentequation}{\value{equation}}%
+  \setcounter{equation}{0}%
+  \def\theequation{(\theparentequation\alph{equation})}%
+  \ignorespaces
+}{%
+  \setcounter{equation}{\value{parentequation}}%
+  \ignorespacesafterend
+}
+%%%%
+}{
+%%%%
+\renewenvironment{subequations}{%
+\renewcommand{\theequation}{%
+\ifnum\c@chapter>\z@\thechapter.\fi \@arabic\c@equation}
+  \refstepcounter{equation}%
+  \protected@edef\theparentequation{\theequation}%
+  \setcounter{parentequation}{\value{equation}}%
+  \setcounter{equation}{0}%
+  \def\theequation{(\theparentequation\alph{equation})}%
+  \ignorespaces
+}{%
+  \setcounter{equation}{\value{parentequation}}%
+  \ignorespacesafterend
+}
+%%%%
+}
+}
+%% (  )は \theequationにとりあえず入れたが、後で、検証
+
+
+
+
+
+%% 
+%% 注意 上下20Hアキ 12Q 20H 34W中央，カウンタ付き！
+%% 
+
+
+\newcounter{CHUUIcount}[chapter]
+%\renewcommand{\theCHUUIcount}{\@arabic\c@CHUUIcount}
+
+\renewcommand{\theCHUUIcount}{注意\protect\makebox[1zw][c]{\@arabic\c@CHUUIcount}%
+%\makebox[1zw][c]{\@arabic\c@CHUUIcount}
+%\protect\makebox[1zw][l]{：}%
+}
+
+%\def\chuui{\refstepcounter{CHUUIcount}%
+%\noindent%%
+%{\bfseries 注意\makebox[1zw][c]{\theCHUUIcount}\makebox[1zw][l]{：}}%
+%\ignorespaces}%
+
+
+\def\chuui{\refstepcounter{CHUUIcount}%
+\noindent%%
+{\bfseries\theCHUUIcount}\makebox[1zw][l]{：}%
+\ignorespaces}%
+
+
+\newcounter{CHUUIiiicount}[chapter]
+\renewcommand{\theCHUUIiiicount}{%\refstepcounter{CHUUIiiicount}
+%\leavevmode\noindent%\hbox to\leftskip%[l]
+\noindent%\hspace*{-\leftskip}
+{注意\@arabic\c@CHUUIiiicount}}
+
+
+
+\def\chuuiiitem{%
+\noindent\refstepcounter{CHUUIiiicount}%\pushtowall
+%\ifnum \c@CHUUIiiicount=10 %\hangindent33.0841pt
+%\setlength{\leftskip}{33.0841pt}%
+%{\hspace*{-\leftskip}{\bfseries \theCHUUIiiicount：}}%\hskip1zw%
+%\else
+%{\hspace*{-\leftskip}{\bfseries \theCHUUIiiicount：}}%\hskip1zw%
+%\fi
+{\bfseries \theCHUUIiiicount：}}%
+
+
+
+\newenvironment{注意}{%%%
+\def\item{\chuuiiitem}%\let\chuuiiitem\item
+\par\nointerlineskip\addvspace{20H\@plus 3pt \@minus 1pt}%
+\bgroup%
+%\list{\csname label\@enumctr\endcsname}{}
+%\let\chuuiiitem\item
+\small\baselineskip20\h%
+%%%%%%%%%%%%%%%%%%%%%%%%
+%\usecounter{\@arabic\c@CHUUIiiicount}%
+\ifnum \c@CHUUIiiicount >9
+  \setlength{\leftskip}{33.0841pt}%
+\else
+  \setlength{\leftskip}{27.75917pt}%
+\fi
+\mathindent=\leftskip
+%\noindent\hspace*{-\leftskip}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\let\toiitem\theCHUUIiiicount
+%問\theCHUUIiiicount\hskip1zw
+}{%\endlist%
+\par\nointerlineskip\addvspace{20H\@plus 3pt \@minus 1pt}%
+\egroup\par}
+
+
+
+
+\renewenvironment{注意}{%%%
+\def\item{\chuuiiitem}%\let\chuuiiitem\item
+\par\nointerlineskip\addvspace{20H\@plus 3pt \@minus 1pt}%
+\bgroup%
+%\list{\csname label\@enumctr\endcsname}{}
+%\let\chuuiiitem\item
+\small\baselineskip20\h%
+%%%%%%%%%%%%%%%%%%%%%%%%
+%\usecounter{\@arabic\c@CHUUIiiicount}%
+%\ifnum \c@CHUUIiiicount >9
+%  \setlength{\leftskip}{33.0841pt}%
+%\else
+%  \setlength{\leftskip}{27.75917pt}%
+%\fi
+%\mathindent=\leftskip
+%\noindent\hspace*{-\leftskip}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\let\toiitem\theCHUUIiiicount
+%問\theCHUUIiiicount\hskip1zw
+}{%\endlist%
+\par\nointerlineskip\addvspace{20H\@plus 3pt \@minus 1pt}%
+\egroup\par}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%
+\newcounter{TOIenumi}[chapter]
+\renewcommand{\theTOIenumi}{%\refstepcounter{TOIenumi}
+%\leavevmode\noindent%\hbox to\leftskip%[l]
+%\hspace*{-\leftskip}
+{問\@arabic\c@TOIenumi.}}
+
+
+
+
+\newcounter{TOIenumii}[TOIenumi]
+\renewcommand{\theTOIenumii}{%\refstepcounter{TOIenumi}
+%\leavevmode\noindent%\hbox to\leftskip%[l]
+%\hspace*{-\leftskip}
+{\theTOIenumi(\@arabic\c@TOIenumii)}}
+
+
+%%%%%
+%%%
+%%  問の第2階層のカウンタ手動モード
+%%    \begin{enumerate}
+%%      \item<setcounter=n>
+%%    \end{enumerate}
+%%%%
+
+
+\define@key{TOIcounterI}{setcounter}{\setcounter{TOIenumi}{#1}}
+
+\def\TOIcounterI{%
+   \@ifnextchar[%]
+      {\main@TOIcounterI}%
+      {\main@TOIcounterI[]}%
+}
+
+\def\main@TOIcounterI[#1]{%
+   \setkeys{TOIcounterI}{setcounter=false}%
+   \setkeys{TOIcounterI}{#1}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+
+\def\bunkitoiitem{%
+\@ifnextchar<{\special@toiitem}{\normal@toiitem}%
+}%
+
+
+\def\normal@toiitem{%
+\noindent\refstepcounter{TOIenumi}%\pushtowall
+\ifnum \c@TOIenumi=10 %\hangindent33.0841pt
+\setlength{\leftskip}{33.0841pt}%
+{\hspace*{-\leftskip}{\bfseries \theTOIenumi}}\hskip1zw%
+\else
+{\hspace*{-\leftskip}{\bfseries \theTOIenumi}}\hskip1zw%
+\fi
+%{\bfseries \theTOIenumi.}
+}%
+
+
+\def\special@toiitem<#1>{%
+\setkeys{TOIcounterI}{#1}%
+\noindent\refstepcounter{TOIenumi}%\pushtowall
+\ifnum \c@TOIenumi=10 %\hangindent33.0841pt
+\setlength{\leftskip}{33.0841pt}%
+{\hspace*{-\leftskip}{\bfseries \theTOIenumi}}\hskip1zw%
+\else
+{\hspace*{-\leftskip}{\bfseries \theTOIenumi}}\hskip1zw%
+\fi
+%{\bfseries \theTOIenumi.}
+}%
+
+
+
+\def\toiitem{%
+\noindent\refstepcounter{TOIenumi}%\pushtowall
+\ifnum \c@TOIenumi=10 %\hangindent33.0841pt
+\setlength{\leftskip}{33.0841pt}%
+{\hspace*{-\leftskip}{\bfseries \theTOIenumi}}\hskip1zw%
+\else
+{\hspace*{-\leftskip}{\bfseries \theTOIenumi}}\hskip1zw%
+\fi
+%{\bfseries \theTOIenumi.}
+}%
+
+
+
+\def\toiitemII{%
+\noindent\refstepcounter{TOIenumii}%\pushtowall
+\ifnum \c@TOIenumii=10 %\hangindent33.0841pt
+\setlength{\leftskip}{33.0841pt}%
+{\hspace*{-\leftskip}{(\@arabic\c@TOIenumii)}}\hskip1zw%
+\else
+{\hspace*{-\leftskip}{(\@arabic\c@TOIenumii)}}\hskip1zw%
+\fi
+%{\bfseries \theTOIenumi.}
+}%
+
+
+
+
+%%%% 問題環境の中で、箇条書が、横の短い数式が続くようなパターン
+%%%%   この環境は、現時点では、暫定的なものです。
+\newcounter{YokoenumiTOI}[TOIenumi]
+
+\renewcommand{\theYokoenumiTOI}{\theTOIenumi(\@arabic\c@YokoenumiTOI)}
+
+%% \newcommand{\YitemTOI}{\noindent\refstepcounter{YokoenumiTOI}(\@arabic\c@YokoenumiTOI)}
+
+
+%%% 問の第2階層のYenumerateカウンタ手動モード
+%%    \begin{Yenumerate}
+%%      \item<setcounter=n>
+%%    \end{Yenumerate}
+%%%%
+
+
+\define@key{TOIcounterYokoenumiTOI}{setcounter}{\setcounter{YokoenumiTOI}{#1}}
+
+\def\TOIcounterYokoenumiTOI{%
+   \@ifnextchar[%]
+      {\main@TOIcounterYokoenumiTOI}
+      {\main@TOIcounterYokoenumiTOI[]}
+}
+
+\def\main@TOIcounterYokoenumiTOI[#1]{%
+   \setkeys{TOIcounterYokoenumiTOI}{setcounter=false}%
+   \setkeys{TOIcounterYokoenumiTOI}{#1}
+}
+
+
+
+
+\def\normal@YitemTOI{%
+\noindent\refstepcounter{YokoenumiTOI}(\@arabic\c@YokoenumiTOI)%
+}
+
+\def\special@YitemTOI<#1>{%
+\setkeys{TOIcounterYokoenumiTOI}{#1}%
+\noindent\refstepcounter{YokoenumiTOI}(\@arabic\c@YokoenumiTOI)%
+}
+
+
+\def\YitemTOI{%
+\@ifnextchar<{\special@YitemTOI}{\normal@YitemTOI}%
+}%%
+
+\newenvironment{YenumerateTOI}{\ignorespaces\noindent%
+\let\item\YitemTOI%
+\ignorespaces}{}
+
+
+
+
+
+%
+
+%%% 問の第2階層のカウンタ手動モード
+%%    \begin{enumerate}
+%%      \item<setcounter=n>
+%%    \end{enumerate}
+%%%%
+
+%\newif\ifTOIcntII \TOIcntIIfalse
+
+\define@key{TOIcounter}{setcounter}{\setcounter{TOIenumii}{#1}}
+
+\def\TOIcounter{%
+   \@ifnextchar[%]
+      {\main@TOIcounter}
+      {\main@TOIcounter[]}
+}
+
+\def\main@TOIcounter[#1]{%
+   \setkeys{TOIcounter}{setcounter=false}%
+   \setkeys{TOIcounter}{#1}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\newenvironment{問}{%%%
+\par\nointerlineskip\addvspace{20H\@plus 3pt \@minus 1pt}%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\item{%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[\theTOIenumi%\@itemlabel
+]}}
+\def\@donoparitem{%
+  \@noparitemfalse
+  \global\setbox\@labels\hbox{\hskip -\leftmargin
+                               \unhbox\@labels
+                                \hskip \leftmargin}%
+  \if@minipage\else
+    \@tempskipa\lastskip
+    \vskip -\lastskip
+    \advance\@tempskipa\@outerparskip
+    \advance\@tempskipa -\parskip
+    \vskip\@tempskipa
+  \fi}
+\def\@item[##1]{%
+  \if@noparitem
+    \@donoparitem
+  \else
+    \if@inlabel
+      \indent \par
+    \fi
+    \ifhmode
+      \unskip\unskip \par
+    \fi
+    \if@newlist
+      \if@nobreak
+        \@nbitem
+      \else
+        \addpenalty\@beginparpenalty
+        \addvspace\@topsep
+        \addvspace{-\parskip}%
+      \fi
+    \else
+      \addpenalty\@itempenalty
+      \addvspace\itemsep
+    \fi
+    \global\@inlabeltrue
+  \fi
+  \everypar{%
+    \@minipagefalse
+    \global\@newlistfalse
+    \if@inlabel
+      \global\@inlabelfalse
+      {\setbox\z@\lastbox
+       \ifvoid\z@
+         \kern-\itemindent
+       \fi}%
+      \box\@labels
+      \penalty\z@
+    \fi
+    \if@nobreak
+      \@nobreakfalse
+      \clubpenalty \@M
+    \else
+      \clubpenalty \@clubpenalty
+      \everypar{}%
+    \fi}%
+  \if@noitemarg
+    \@noitemargfalse
+    \if@nmbrlist
+%      \refstepcounter\@listctr
+\refstepcounter{TOIenumi}
+    \fi
+  \fi
+  \sbox\@tempboxa{\makelabel{##1}}%
+  \global\setbox\@labels\hbox{%
+    \unhbox\@labels
+    \hskip \itemindent
+    \hskip -\labelwidth
+    \hskip -\labelsep
+    \ifdim \wd\@tempboxa >\labelwidth
+      \box\@tempboxa
+    \else
+      \hbox to\labelwidth {\unhbox\@tempboxa}%
+    \fi
+    \hskip \labelsep}%
+  \ignorespaces}
+\def\makelabel##1{%
+  \@latex@error{Lonely \string\item--perhaps a missing
+        list environment}\@ehc}
+\def\@nbitem{%
+  \@tempskipa\@outerparskip
+  \advance\@tempskipa -\parskip
+  \addvspace\@tempskipa}
+\def\usecounter##1{\@nmbrlisttrue\def\@listctr{##1}\setcounter{##1}\z@
+\def\TOIenumi{##1}
+}
+
+%%%%
+\def\normal@item{%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[問\@arabic\c@TOIenumi.%\theTOIenumi%
+%\@itemlabel
+]}
+}
+\def\special@item<##1>{%
+\setkeys{TOIcounterI}{##1}%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[問\@arabic\c@TOIenumi.%\theTOIenumi%
+%\@itemlabel
+]}
+}
+%
+\def\item{%
+\@ifnextchar<{\special@item}{\normal@item}%
+}%
+
+
+\ifnum \@enumdepth >\thr@@\@toodeep\else
+   \advance\@enumdepth\@ne
+   \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+   \list{\csname label\@enumctr\endcsname}{%
+      %\iftdir
+%         \ifnum \@listdepth=\@ne \topsep.5\normalbaselineskip
+%           \else\topsep\z@\fi
+%         \parskip\z@ \itemsep\z@ \parsep\z@
+%         \labelwidth1zw \labelsep.3zw
+%         \ifnum \@enumdepth=\@ne \leftmargin1zw\relax
+%           \else\leftmargin\leftskip\fi
+%         \advance\leftmargin 1zw
+%      \fi
+%
+%
+%
+%\ifnum \c@TOIenumi >9
+%  \setlength{\leftmargin}{133.0841pt}%
+%\else
+%  \setlength{\leftskip}{127.75917pt}%
+%\fi
+\mathindent=\leftskip
+%     \leftmargin33.9814pt%3zw%3zw%\z@
+%\ifnum \c@TOIenumi >9
+%     \labelwidth33.0841pt%2zw
+%\else
+%     \labelwidth27.75917pt%2zw
+%\fi
+     \leftmargin=3zw
+     \labelwidth=3zw
+     \labelsep\z@%1zw
+%     \itemindent1zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+         \usecounter{\@enumctr}%
+%         \def\makelabel##1{\hss\llap{\bfseries##1}}}%
+         \def\makelabel##1{{\bfseries##1\hfill}}}%
+   \fi%
+\small\baselineskip20\h%
+\let\enumerate\TOIMMenumerate%
+\let\Yenumerate=\YenumerateTOI%
+}{\endlist
+\nointerlineskip\addvspace{20H\@plus 3pt \@minus 1pt}
+}
+
+
+
+
+
+
+
+
+%%%% (1) (2). 
+\newenvironment{TOIMMenumerate}
+  {%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\item{%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[(\@arabic\c@TOIenumii)%\theTOIenumii%\@itemlabel
+]}}
+\def\@donoparitem{%
+  \@noparitemfalse
+  \global\setbox\@labels\hbox{\hskip -\leftmargin
+                               \unhbox\@labels
+                                \hskip \leftmargin}%
+  \if@minipage\else
+    \@tempskipa\lastskip
+    \vskip -\lastskip
+    \advance\@tempskipa\@outerparskip
+    \advance\@tempskipa -\parskip
+    \vskip\@tempskipa
+  \fi}
+\def\@item[##1]{%
+  \if@noparitem
+    \@donoparitem
+  \else
+    \if@inlabel
+      \indent \par
+    \fi
+    \ifhmode
+      \unskip\unskip \par
+    \fi
+    \if@newlist
+      \if@nobreak
+        \@nbitem
+      \else
+        \addpenalty\@beginparpenalty
+        \addvspace\@topsep
+        \addvspace{-\parskip}%
+      \fi
+    \else
+      \addpenalty\@itempenalty
+      \addvspace\itemsep
+    \fi
+    \global\@inlabeltrue
+  \fi
+  \everypar{%
+    \@minipagefalse
+    \global\@newlistfalse
+    \if@inlabel
+      \global\@inlabelfalse
+      {\setbox\z@\lastbox
+       \ifvoid\z@
+         \kern-\itemindent
+       \fi}%
+      \box\@labels
+      \penalty\z@
+    \fi
+    \if@nobreak
+      \@nobreakfalse
+      \clubpenalty \@M
+    \else
+      \clubpenalty \@clubpenalty
+      \everypar{}%
+    \fi}%
+  \if@noitemarg
+    \@noitemargfalse
+    \if@nmbrlist
+%      \refstepcounter\@listctr
+\refstepcounter{TOIenumii}
+    \fi
+  \fi
+  \sbox\@tempboxa{\makelabel{##1}}%
+  \global\setbox\@labels\hbox{%
+    \unhbox\@labels
+    \hskip \itemindent
+    \hskip -\labelwidth
+    \hskip -\labelsep
+    \ifdim \wd\@tempboxa >\labelwidth
+      \box\@tempboxa
+    \else
+      \hbox to\labelwidth {\unhbox\@tempboxa}%
+    \fi
+    \hskip \labelsep}%
+  \ignorespaces}
+\def\makelabel##1{%
+  \@latex@error{Lonely \string\item--perhaps a missing
+        list environment}\@ehc}
+\def\@nbitem{%
+  \@tempskipa\@outerparskip
+  \advance\@tempskipa -\parskip
+  \addvspace\@tempskipa}
+\def\usecounter##1{\@nmbrlisttrue\def\@listctr{##1}\setcounter{##1}\z@
+%\def\NEWcount{##1}
+\def\TOIenumii{##1}
+}
+
+\def\normal@item{%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[(\@arabic\c@TOIenumii)%\theTOIenumii%\@itemlabel
+]}
+}
+\def\special@item<##1>{%
+\setkeys{TOIcounter}{##1}%
+  \@inmatherr\item
+  \@ifnextchar [\@item{\@noitemargtrue \@item[(\@arabic\c@TOIenumii)%\theTOIenumii%\@itemlabel
+]}
+}
+%
+\def\item{%
+\@ifnextchar<{\special@item}{\normal@item}%
+}%
+
+%\def\normal@item{%
+%  \@inmatherr\item
+%  \@ifnextchar [\@item{\@noitemargtrue \@item[\@itemlabel]}
+%}
+%\def\special@item<##1>{%
+%\setkeys{TOIcounter}{##1}%
+%  \@inmatherr\item
+%  \@ifnextchar [\@item{\@noitemargtrue \@item[\@itemlabel]}
+%}
+%%
+%\def\item{%
+%\@ifnextchar<{\special@item}{\normal@item}%
+%}%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\@enumdepth = 1%\def\toiitem{\item}%% <
+
+
+   \ifnum \@enumdepth >3\relax\@toodeep\else
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+%\renewcommand{\theenumii}{\theTOIenumi(\@arabic\c@enumii)}
+%\renewcommand{\labelenumii}{(\@arabic\c@enumii)}
+%\renewcommand{\theTOIenumii}{(\@arabic\c@enumii)} 
+   \list{\csname label\@enumctr\endcsname}{%
+%
+%     \leftmargin5.6375zw%5.95zw%20.22397pt%19.47594pt%18.47032pt%27.72026pt%2.5zw
+     \labelwidth20.35457pt%0zw%24.97954pt%\z@%3zw
+    \leftmargin\labelwidth%3zw
+     \labelsep\z@%1zw\z@%1zw
+     \itemindent\z@%1zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+%     \def\makelabel##1{\hss\llap{##1}}}%
+    \def\makelabel##1{{##1}\hfill}}%
+    \fi}{\endlist}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%% 定理関係 
+%%% 定理
+%%% 定義
+%%% 補題
+%%% 例題
+%%% 例
+%%% 証明
+%%% 公理
+%%% 命題
+%%% 系
+
+\newcounter{TEIRIcount}[chapter]
+\renewcommand{\theTEIRIcount}{\thechapter.\@arabic\c@TEIRIcount}
+
+\def\TEIRImoto{\@ifnextchar[{\TEIRIhikisu}{\TEIRIno}%
+}
+\def\endTEIRImoto{\nopagebreak}
+
+
+\long\def\TEIRIhikisu[#1]{\par\refstepcounter{TEIRIcount}%
+%%%%
+\setlength{\leftmargin}{1zw}%
+  \setlength{\rightmargin}{1zw}%
+  \advance\linewidth -\leftmargin
+  \advance\linewidth -\rightmargin
+  \advance\@totalleftmargin\leftmargin
+  \@setpar{{\@@par}}%
+  \parshape 1 \@totalleftmargin \linewidth
+  \ignorespaces
+%%%%
+\noindent\mbox{{\bfseries 定理\theTEIRIcount\hskip1zw{\mc\rm(#1)}\hskip1zw}}}
+\let\endTEIRIhikisu\endtrivlist
+
+\long\def\TEIRIno{\par\refstepcounter{TEIRIcount}%
+%%%%
+\setlength{\leftmargin}{1zw}%
+  \setlength{\rightmargin}{1zw}%
+  \advance\linewidth -\leftmargin
+  \advance\linewidth -\rightmargin
+  \advance\@totalleftmargin\leftmargin
+  \@setpar{{\@@par}}%
+  \parshape 1 \@totalleftmargin \linewidth
+  \ignorespaces
+%%%%
+\noindent\mbox{{\bfseries 定理\theTEIRIcount}}\hskip1zw}
+\let\endTEIRIno\endtrivlist
+
+\newenvironment{定理}{%
+\par\noindent\leavevmode\leaders\hrule height2pt\hfill\kern\z@\par\vskip-5.5mm
+\noindent\leavevmode\leaders\hrule height.12mm\hfill\kern\z@\par
+%\hrulefill height .4mm
+\bgroup  \begin{TEIRImoto}
+%\begin{TEIRImoto}
+}{\par\nopagebreak\end{TEIRImoto}%
+\egroup\par
+\vskip-2.125mm%8.375mm
+\noindent\leavevmode\leaders\hrule height.12mm\hfill\kern\z@\par
+\vskip-5mm
+\noindent\leavevmode\leaders\hrule height2pt\hfill\kern\z@\par
+}
+
+
+
+
+
+%% 定義
+\newcounter{TEIGIcount}[chapter]
+\renewcommand{\theTEIGIcount}{\thechapter.\@arabic\c@TEIGIcount}
+
+\def\TEIGImoto{\@ifnextchar[{\TEIGIhikisu}{\TEIGIno}%
+}
+%%%\let\endTEIGImoto\endtrivlist
+
+%%%%%% TEST endlist
+\def\endTEIGImotoTEST{\nopagebreak%
+  \if@inlabel
+    \leavevmode
+    \global \@inlabelfalse 
+  \fi
+  \if@newlist
+    \@noitemerr 
+    \global \@newlistfalse 
+  \fi %A
+  \ifhmode \unskip \par \fi\nopagebreak
+  \if@noparlist \else %B
+    \ifdim\lastskip >\z@ 
+      \@tempskipa\lastskip \vskip -\lastskip
+      \advance\@tempskipa\parskip \advance\@tempskipa -\@outerparskip %C
+      \vskip\@tempskipa\nopagebreak 
+    \fi 
+    \@endparenv %D
+  \fi %E
+\nopagebreak
+}
+%%%%%%%%%%%%%%%%%
+
+\def\endTEIGImoto{\nopagebreak}%
+
+
+
+\long\def\TEIGIhikisu[#1]{\par\refstepcounter{TEIGIcount}%
+\noindent\mbox{{\bfseries 定義\theTEIGIcount\hskip1zw\nobreak{\mc\rm(#1)}\hskip1zw}}}
+\let\endTEIGIhikisu\endtrivlist
+
+\long\def\TEIGIno{\par\refstepcounter{TEIGIcount}%
+\noindent\mbox{{\bfseries 定義\theTEIGIcount}}\hskip1zw}
+\let\endTEIGIno\endtrivlist
+
+\newenvironment{定義}{%
+\par\noindent\leavevmode\leaders\hrule height2pt\hfill\kern\z@\par\vskip-5.5mm\nopagebreak
+\noindent\leavevmode\leaders\hrule height.12mm\hfill\kern\z@\par\nopagebreak
+%\hrulefill height .4mm
+\bgroup  
+\setlength{\leftmargin}{1zw}%
+  \setlength{\rightmargin}{1zw}%
+  \advance\linewidth -\leftmargin
+  \advance\linewidth -\rightmargin
+  \advance\@totalleftmargin\leftmargin
+  \@setpar{{\@@par}}%
+  \parshape 1 \@totalleftmargin \linewidth
+  \ignorespaces
+\begin{TEIGImoto}
+}{\par\end{TEIGImoto}%
+\egroup
+\vskip-2.125mm%8.375mm
+\noindent\leavevmode\leaders\hrule height.12mm\hfill\kern\z@\par
+\vskip-5mm
+\noindent\leavevmode\leaders\hrule height2pt\hfill\kern\z@\par
+}
+
+
+
+
+
+
+
+
+
+%% 補題
+\newcounter{HODAIcount}[chapter]
+\renewcommand{\theHODAIcount}{\thechapter.\@arabic\c@HODAIcount}
+
+\def\HODAImoto{\@ifnextchar[{\HODAIhikisu}{\HODAIno}%
+}
+\def\endHODAImoto{\nopagebreak}
+
+
+\long\def\HODAIhikisu[#1]{\par\refstepcounter{HODAIcount}%
+\noindent\mbox{{\bfseries 補題\theHODAIcount\hskip1zw\nobreak{\mc\rm(#1)}\hskip1zw}}}
+\let\endHODAIhikisu\endtrivlist
+
+\long\def\HODAIno{\par\refstepcounter{HODAIcount}%
+\noindent\mbox{{\bfseries 補題\theHODAIcount}}\hskip1zw\nopagebreak}
+\let\endHODAIno\endtrivlist
+
+\newenvironment{補題}{%
+\par\noindent\leavevmode\leaders\hrule height2pt\hfill\kern\z@\par\vskip-5.5mm
+\noindent\leavevmode\leaders\hrule height.12mm\hfill\kern\z@\par
+%\hrulefill height .4mm
+\bgroup  \setlength{\leftmargin}{1zw}%
+  \setlength{\rightmargin}{1zw}%
+  \advance\linewidth -\leftmargin
+  \advance\linewidth -\rightmargin
+  \advance\@totalleftmargin\leftmargin
+  \@setpar{{\@@par}}%
+  \parshape 1 \@totalleftmargin \linewidth
+  \ignorespaces
+\begin{HODAImoto}
+}{\par\nopagebreak\end{HODAImoto}%
+\egroup\par
+\vskip-2.125mm%8.375mm
+\noindent\leavevmode\leaders\hrule height.12mm\hfill\kern\z@\par
+\vskip-5mm
+\noindent\leavevmode\leaders\hrule height2pt\hfill\kern\z@\par
+}
+
+
+
+%% 証明 proof
+
+\def\SHOUMEImoto{\@ifnextchar[{\SHOUMEIhikisu}{\SHOUMEIno}%
+}
+\def\endSHOUMEImoto{\nopagebreak}
+
+
+\long\def\SHOUMEIhikisu[#1]{%%
+\noindent\smash{\raisebox{-1.25mm}{\framebox(9,5){{\bfseries
+証明}}}}\hskip1zw{(#1)}\hskip1zw\nopagebreak}
+\let\endSHOUMEIhikisu\endtrivlist
+
+
+\long\def\SHOUMEIno{%\par\noindent%
+\noindent\smash{\raisebox{-1.25mm}{\framebox(9,5){{\bfseries 証明}}}\hskip1zw\nopagebreak}}
+\let\endSHOUMEIno\endtrivlist
+
+
+\def\SPADEsuiteQED{{\unskip\nobreak\hfil\penalty50
+ \hskip1zw\hbox{}\nobreak\hfil \hbox{$\Box$}
+ \parfillskip\z@ \finalhyphendemerits\z@\par}}
+
+\newenvironment{証明}{%
+\par\noindent
+\bgroup\vskip.5mm%-2.75mm%.5\topsep 25Hアキ
+\small\baselineskip20\h%\topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+%\topsep0pt
+  \setlength{\leftmargin}{1zw}%
+  \setlength{\rightmargin}{1zw}%
+  \advance\linewidth -\leftmargin
+  \advance\linewidth -\rightmargin
+  \advance\@totalleftmargin\leftmargin
+  \@setpar{{\@@par}}%
+  \parshape 1 \@totalleftmargin \linewidth
+  \ignorespaces
+\begin{SHOUMEImoto}
+}{\SPADEsuiteQED\end{SHOUMEImoto}%
+\vskip1.875mm%-6.125mm
+\egroup\par}
+
+
+
+
+
+
+
+
+
+%% 例題
+\newcounter{REIDAIcount}[chapter]
+\renewcommand{\theREIDAIcount}{\thechapter.\@arabic\c@REIDAIcount}
+
+\def\REIDAImoto{\@ifnextchar[{\REIDAIhikisu}{\REIDAIno}%
+}
+\def\endREIDAImoto{\nopagebreak}
+
+
+\long\def\REIDAIhikisu[#1]{\par\refstepcounter{REIDAIcount}%
+\noindent\mbox{{\bfseries 例題\theREIDAIcount\hskip1zw\nobreak{\mc\rm(#1)}\hskip1zw}}}
+\let\endREIDAIhikisu\endtrivlist
+
+\long\def\REIDAIno{\par\refstepcounter{REIDAIcount}%
+\noindent\mbox{{\bfseries 例題\theREIDAIcount}}\hskip1zw\nopagebreak}
+\let\endREIDAIno\endtrivlist
+
+\newenvironment{例題}{\vskip-5\h%%
+\par\noindent\leavevmode\leaders\hrule height.12mm\hfill\kern\z@\par
+%\hrulefill height .4mm
+\bgroup  \setlength{\leftmargin}{1zw}%
+  \setlength{\rightmargin}{1zw}%
+  \advance\linewidth -\leftmargin
+  \advance\linewidth -\rightmargin
+  \advance\@totalleftmargin\leftmargin
+  \@setpar{{\@@par}}%
+  \parshape 1 \@totalleftmargin \linewidth
+  \ignorespaces
+\begin{REIDAImoto}
+}{\par\nopagebreak\end{REIDAImoto}%
+\egroup\par
+\vskip-2.125mm%8.375mm
+\noindent\leavevmode\leaders\hrule height.12mm\hfill\kern\z@\par
+}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 例 (例題に似ているけれど区別されている)
+\newcounter{REIcount}[chapter]
+\renewcommand{\theREIcount}{\thechapter.\@arabic\c@REIcount}
+
+\def\REImoto{\@ifnextchar[{\REIhikisu}{\REIno}%
+}
+\def\endREImoto{\nopagebreak}
+
+
+\long\def\REIhikisu[#1]{\par\refstepcounter{REIcount}%
+\noindent\mbox{{\bfseries 例\theREIcount\hskip1zw\nobreak{\mc\rm(#1)}}\hskip1zw}}
+\let\endREIhikisu\endtrivlist
+
+\long\def\REIno{\par\refstepcounter{REIcount}%
+\noindent\mbox{{\bfseries 例\theREIcount}}\hskip1zw\nopagebreak}
+\let\endREIno\endtrivlist
+
+\newenvironment{例}{\vskip-5\h%%
+\par\noindent\leavevmode\leaders\hrule height.12mm\hfill\kern\z@\par\nopagebreak
+%\hrulefill height .4mm
+\bgroup  \setlength{\leftmargin}{1zw}%
+  \setlength{\rightmargin}{1zw}%
+  \advance\linewidth -\leftmargin
+  \advance\linewidth -\rightmargin
+  \advance\@totalleftmargin\leftmargin
+  \@setpar{{\@@par}}%
+  \parshape 1 \@totalleftmargin \linewidth
+  \ignorespaces
+\begin{REImoto}
+}{\par\nopagebreak\end{REImoto}%
+\egroup\par
+\vskip-2.125mm%8.375mm
+\noindent\leavevmode\leaders\hrule height.12mm\hfill\kern\z@\par
+}
+
+
+
+
+
+
+%% 公理
+\newcounter{KORIcount}[chapter]
+\renewcommand{\theKORIcount}{\thechapter.\@arabic\c@KORIcount}
+
+\def\KORImoto{\@ifnextchar[{\KORIhikisu}{\KORIno}%
+}
+\def\endKORImoto{\nopagebreak}
+
+
+\long\def\KORIhikisu[#1]{\par\refstepcounter{KORIcount}%
+\noindent\mbox{{\bfseries 公理\theKORIcount\hskip1zw\nobreak{\mc\rm(#1)}\hskip1zw}}}
+\let\endKORIhikisu\endtrivlist
+
+\long\def\KORIno{\par\refstepcounter{KORIcount}%
+\noindent\mbox{{\bfseries 公理\theKORIcount}}\hskip1zw\nopagebreak}
+\let\endKORIno\endtrivlist
+
+\newenvironment{公理}{%
+\par\noindent\leavevmode\leaders\hrule height2pt\hfill\kern\z@\par\vskip-5.5mm
+\noindent\leavevmode\leaders\hrule height.12mm\hfill\kern\z@\par
+%\hrulefill height .4mm
+\bgroup  \setlength{\leftmargin}{1zw}%
+  \setlength{\rightmargin}{1zw}%
+  \advance\linewidth -\leftmargin
+  \advance\linewidth -\rightmargin
+  \advance\@totalleftmargin\leftmargin
+  \@setpar{{\@@par}}%
+  \parshape 1 \@totalleftmargin \linewidth
+  \ignorespaces
+\begin{KORImoto}
+}{\par\nopagebreak\end{KORImoto}%
+\egroup\par
+\vskip-2.125mm%8.375mm
+\noindent\leavevmode\leaders\hrule height.12mm\hfill\kern\z@\par
+\vskip-5mm
+\noindent\leavevmode\leaders\hrule height2pt\hfill\kern\z@\par
+}
+
+
+
+
+
+%% 命題
+\newcounter{MEIDAIcount}[chapter]
+\renewcommand{\theMEIDAIcount}{\thechapter.\@arabic\c@MEIDAIcount}
+
+\def\MEIDAImoto{\@ifnextchar[{\MEIDAIhikisu}{\MEIDAIno}%
+}
+\def\endMEIDAImoto{\nopagebreak}
+
+
+\long\def\MEIDAIhikisu[#1]{\par\refstepcounter{MEIDAIcount}%
+\noindent\mbox{{\bfseries 命題\theMEIDAIcount\hskip1zw\nobreak{\mc\rm(#1)}\hskip1zw}}}
+\let\endMEIDAIhikisu\endtrivlist
+
+\long\def\MEIDAIno{\par\refstepcounter{MEIDAIcount}%
+\noindent\mbox{{\bfseries 命題\theMEIDAIcount}}\hskip1zw\nopagebreak}
+\let\endMEIDAIno\endtrivlist
+
+\newenvironment{命題}{%
+\par\noindent\leavevmode\leaders\hrule height2pt\hfill\kern\z@\par\vskip-5.5mm
+\noindent\leavevmode\leaders\hrule height.12mm\hfill\kern\z@\par
+%\hrulefill height .4mm
+\bgroup  \setlength{\leftmargin}{1zw}%
+  \setlength{\rightmargin}{1zw}%
+  \advance\linewidth -\leftmargin
+  \advance\linewidth -\rightmargin
+  \advance\@totalleftmargin\leftmargin
+  \@setpar{{\@@par}}%
+  \parshape 1 \@totalleftmargin \linewidth
+  \ignorespaces
+\begin{MEIDAImoto}
+}{\par\nopagebreak\end{MEIDAImoto}%
+\egroup\par
+\vskip-2.125mm%8.375mm
+\noindent\leavevmode\leaders\hrule height.12mm\hfill\kern\z@\par
+\vskip-5mm
+\noindent\leavevmode\leaders\hrule height2pt\hfill\kern\z@\par
+}
+
+
+
+
+%% 系
+\newcounter{KEIcount}[chapter]
+\renewcommand{\theKEIcount}{\thechapter.\@arabic\c@KEIcount}
+
+\def\KEImoto{\@ifnextchar[{\KEIhikisu}{\KEIno}%
+}
+\def\endKEImoto{\nopagebreak}
+
+
+\long\def\KEIhikisu[#1]{\par\refstepcounter{KEIcount}%
+\noindent\mbox{{\bfseries 系\theKEIcount\hskip1zw\nobreak{\mc\rm(#1)}\hskip1zw}}}
+\let\endKEIhikisu\endtrivlist
+
+\long\def\KEIno{\par\refstepcounter{KEIcount}%
+\noindent\mbox{{\bfseries 系\theKEIcount}}\hskip1zw\nopagebreak}
+\let\endKEIno\endtrivlist
+
+\newenvironment{系}{%
+\par\noindent\leavevmode\leaders\hrule height2pt\hfill\kern\z@\par\vskip-5.5mm
+\noindent\leavevmode\leaders\hrule height.12mm\hfill\kern\z@\par
+%\hrulefill height .4mm
+\bgroup  \setlength{\leftmargin}{1zw}%
+  \setlength{\rightmargin}{1zw}%
+  \advance\linewidth -\leftmargin
+  \advance\linewidth -\rightmargin
+  \advance\@totalleftmargin\leftmargin
+  \@setpar{{\@@par}}%
+  \parshape 1 \@totalleftmargin \linewidth
+  \ignorespaces
+\begin{KEImoto}
+}{\par\nopagebreak\end{KEImoto}%
+\egroup\par
+\vskip-2.125mm%8.375mm
+\noindent\leavevmode\leaders\hrule height.12mm\hfill\kern\z@\par
+\vskip-5mm
+\noindent\leavevmode\leaders\hrule height2pt\hfill\kern\z@\par
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%% 定理関係 終了 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% 新しい定理関係の体裁の追加 カウンタは連動で，体裁が違う %%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\def\TEIRImotoSTAR{\@ifnextchar[{\TEIRIhikisuSTAR}{\TEIRInoSTAR}%
+}
+\def\endTEIRImotoSTAR{\nopagebreak}
+
+
+
+
+\long\def\TEIRIhikisuSTAR[#1]{\par\refstepcounter{TEIRIcount}%
+%%%%
+\setlength{\leftmargin}{0zw}%
+  \setlength{\rightmargin}{0zw}%
+  \advance\linewidth -\leftmargin
+  \advance\linewidth -\rightmargin
+  \advance\@totalleftmargin\leftmargin
+  \@setpar{{\@@par}}%
+  \parshape 1 \@totalleftmargin \linewidth
+  \ignorespaces
+%%%%
+\noindent\mbox{{\bfseries 定理\theTEIRIcount\hskip1zw{\mc\rm(#1)}\hskip1zw}}}
+\let\endTEIRIhikisuSTAR=\endtrivlist
+
+\long\def\TEIRInoSTAR{\par\refstepcounter{TEIRIcount}%
+%%%%
+\setlength{\leftmargin}{0zw}%
+  \setlength{\rightmargin}{0zw}%
+  \advance\linewidth -\leftmargin
+  \advance\linewidth -\rightmargin
+  \advance\@totalleftmargin\leftmargin
+  \@setpar{{\@@par}}%
+  \parshape 1 \@totalleftmargin \linewidth
+  \ignorespaces
+%%%%
+\noindent\mbox{{\bfseries 定理\theTEIRIcount}}\hskip1zw}
+\let\endTEIRInoSTAR=\endtrivlist
+
+
+
+\newenvironment{定理*}{%
+%
+%\hrulefill height .4mm
+\vskip7\h
+\bgroup
+\begin{TEIRImotoSTAR}
+}{\end{TEIRImotoSTAR}%
+\egroup\vskip7\h
+%\vskip-2.125mm%8.375mm
+}
+
+
+
+
+
+
+%% 定義
+%\newcounter{TEIGIcount}[chapter]
+%\renewcommand{\theTEIGIcount}{\thechapter.\@arabic\c@TEIGIcount}
+
+\def\TEIGImotoSTAR{\@ifnextchar[{\TEIGIhikisuSTAR}{\TEIGInoSTAR}%
+}
+%%%\let\endTEIGImoto\endtrivlist
+
+
+
+\def\endTEIGImotoSTAR{\nopagebreak}%
+
+
+
+\long\def\TEIGIhikisuSTAR[#1]{\par\refstepcounter{TEIGIcount}%
+\noindent\mbox{{\bfseries 定義\theTEIGIcount\hskip1zw\nobreak{\mc\rm(#1)}\hskip1zw}}}
+\let\endTEIGIhikisuSTAR\endtrivlist
+
+\long\def\TEIGInoSTAR{\par\refstepcounter{TEIGIcount}%
+\noindent\mbox{{\bfseries 定義\theTEIGIcount}}\hskip1zw}
+\let\endTEIGInoSTAR\endtrivlist
+
+\newenvironment{定義*}{%
+\vskip7\h
+\bgroup  
+\setlength{\leftmargin}{0zw}%
+  \setlength{\rightmargin}{0zw}%
+  \advance\linewidth -\leftmargin
+  \advance\linewidth -\rightmargin
+  \advance\@totalleftmargin\leftmargin
+  \@setpar{{\@@par}}%
+  \parshape 1 \@totalleftmargin \linewidth
+  \ignorespaces
+\begin{TEIGImotoSTAR}
+}{\par\end{TEIGImotoSTAR}%
+\egroup\vskip7\h
+}
+
+
+
+%% 補題
+%\newcounter{HODAIcount}[chapter]
+%\renewcommand{\theHODAIcount}{\thechapter.\@arabic\c@HODAIcount}
+
+\def\HODAImotoSTAR{\@ifnextchar[{\HODAIhikisuSTAR}{\HODAInoSTAR}%
+}
+\def\endHODAImotoSTAR{\nopagebreak}
+
+
+\long\def\HODAIhikisuSTAR[#1]{\par\refstepcounter{HODAIcount}%
+\noindent\mbox{{\bfseries 補題\theHODAIcount\hskip1zw\nobreak{\mc\rm(#1)}\hskip1zw}}}
+\let\endHODAIhikisuSTAR\endtrivlist
+
+\long\def\HODAInoSTAR{\par\refstepcounter{HODAIcount}%
+\noindent\mbox{{\bfseries 補題\theHODAIcount}}\hskip1zw\nopagebreak}
+\let\endHODAInoSTAR\endtrivlist
+
+\newenvironment{補題*}{%
+\vskip7\h
+\bgroup  \setlength{\leftmargin}{0zw}%
+  \setlength{\rightmargin}{0zw}%
+  \advance\linewidth -\leftmargin
+  \advance\linewidth -\rightmargin
+  \advance\@totalleftmargin\leftmargin
+  \@setpar{{\@@par}}%
+  \parshape 1 \@totalleftmargin \linewidth
+  \ignorespaces
+\begin{HODAImotoSTAR}
+}{\par\nopagebreak\end{HODAImotoSTAR}%
+\egroup\vskip7\h
+}
+
+
+
+
+%% 証明 proof
+
+\def\SHOUMEImotoSTAR{\@ifnextchar[{\SHOUMEIhikisuSTAR}{\SHOUMEInoSTAR}}
+\def\endSHOUMEImotoSTAR{\nopagebreak}
+
+
+\long\def\SHOUMEIhikisuSTAR[#1]{%%
+\noindent\smash{\raisebox{-1.25mm}{\framebox(9,5){{\bfseries
+証明}}}}\hskip1zw{(#1)}\hskip1zw\nopagebreak}
+\let\endSHOUMEIhikisuSTAR\endtrivlist
+
+
+\long\def\SHOUMEInoSTAR{%\par\noindent%
+\noindent\smash{\raisebox{-1.25mm}{\framebox(9,5){{\bfseries 証明}}}\hskip1zw\nopagebreak}}
+\let\endSHOUMEInoSTAR\endtrivlist
+
+
+%\def\SPADEsuiteQED{{\unskip\nobreak\hfil\penalty50
+% \hskip1zw\hbox{}\nobreak\hfil \hbox{$\Box$}
+% \parfillskip\z@ \finalhyphendemerits\z@\par}}
+
+\newenvironment{証明*}{%
+\par\noindent
+\bgroup\vskip.5mm%-2.75mm%.5\topsep 25Hアキ
+\small\baselineskip20\h%\topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+%\topsep0pt
+  \setlength{\leftmargin}{0zw}%
+  \setlength{\rightmargin}{0zw}%
+  \advance\linewidth -\leftmargin
+  \advance\linewidth -\rightmargin
+  \advance\@totalleftmargin\leftmargin
+  \@setpar{{\@@par}}%
+  \parshape 1 \@totalleftmargin \linewidth
+  \ignorespaces
+\begin{SHOUMEImotoSTAR}
+}{\SPADEsuiteQED\end{SHOUMEImotoSTAR}%
+\vskip1.875mm%-6.125mm
+\egroup\par}
+
+
+
+
+%% 例題
+%\newcounter{REIDAIcount}[chapter]
+%\renewcommand{\theREIDAIcount}{\thechapter.\@arabic\c@REIDAIcount}
+
+\def\REIDAImotoSTAR{\@ifnextchar[{\REIDAIhikisuSTAR}{\REIDAInoSTAR}%
+}
+\def\endREIDAImotoSTAR{\nopagebreak}
+
+
+\long\def\REIDAIhikisuSTAR[#1]{\par\refstepcounter{REIDAIcount}%
+\noindent\mbox{{\bfseries 例題\theREIDAIcount\hskip1zw\nobreak{\mc\rm(#1)}\hskip1zw}}}
+\let\endREIDAIhikisuSTAR\endtrivlist
+
+\long\def\REIDAInoSTAR{\par\refstepcounter{REIDAIcount}%
+\noindent\mbox{{\bfseries 例題\theREIDAIcount}}\hskip1zw\nopagebreak}
+\let\endREIDAInoSTAR\endtrivlist
+
+\newenvironment{例題*}{\vskip7\h%%
+\bgroup  \setlength{\leftmargin}{0zw}%
+  \setlength{\rightmargin}{0zw}%
+  \advance\linewidth -\leftmargin
+  \advance\linewidth -\rightmargin
+  \advance\@totalleftmargin\leftmargin
+  \@setpar{{\@@par}}%
+  \parshape 1 \@totalleftmargin \linewidth
+  \ignorespaces
+\begin{REIDAImotoSTAR}
+}{\par\nopagebreak\end{REIDAImotoSTAR}%
+\egroup
+\vskip7\h
+}
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 例 (例題に似ているけれど区別されている)
+%\newcounter{REIcount}[chapter]
+%\renewcommand{\theREIcount}{\thechapter.\@arabic\c@REIcount}
+
+\def\REImotoSTAR{\@ifnextchar[{\REIhikisuSTAR}{\REInoSTAR}%
+}
+\def\endREImotoSTAR{\nopagebreak}
+
+
+\long\def\REIhikisuSTAR[#1]{\par\refstepcounter{REIcount}%
+\noindent\mbox{{\bfseries 例\theREIcount\hskip1zw\nobreak{\mc\rm(#1)}}\hskip1zw}}
+\let\endREIhikisuSTAR\endtrivlist
+
+\long\def\REInoSTAR{\par\refstepcounter{REIcount}%
+\noindent\mbox{{\bfseries 例\theREIcount}}\hskip1zw\nopagebreak}
+\let\endREInoSTAR\endtrivlist
+
+\newenvironment{例*}{\vskip7\h%%
+\bgroup  \setlength{\leftmargin}{0zw}%
+  \setlength{\rightmargin}{0zw}%
+  \advance\linewidth -\leftmargin
+  \advance\linewidth -\rightmargin
+  \advance\@totalleftmargin\leftmargin
+  \@setpar{{\@@par}}%
+  \parshape 1 \@totalleftmargin \linewidth
+  \ignorespaces
+\begin{REImotoSTAR}
+}{\par\nopagebreak\end{REImotoSTAR}%
+\egroup
+\vskip7\h
+}
+
+
+
+
+%% 公理
+%\newcounter{KORIcount}[chapter]
+%\renewcommand{\theKORIcount}{\thechapter.\@arabic\c@KORIcount}
+
+\def\KORImotoSTAR{\@ifnextchar[{\KORIhikisuSTAR}{\KORInoSTAR}%
+}
+\def\endKORImotoSTAR{\nopagebreak}
+
+
+\long\def\KORIhikisuSTAR[#1]{\par\refstepcounter{KORIcount}%
+\noindent\mbox{{\bfseries 公理\theKORIcount\hskip1zw\nobreak{\mc\rm(#1)}\hskip1zw}}}
+\let\endKORIhikisuSTAR\endtrivlist
+
+\long\def\KORInoSTAR{\par\refstepcounter{KORIcount}%
+\noindent\mbox{{\bfseries 公理\theKORIcount}}\hskip1zw\nopagebreak}
+\let\endKORInoSTAR\endtrivlist
+
+\newenvironment{公理*}{%
+\vskip7\h
+\bgroup  \setlength{\leftmargin}{0zw}%
+  \setlength{\rightmargin}{0zw}%
+  \advance\linewidth -\leftmargin
+  \advance\linewidth -\rightmargin
+  \advance\@totalleftmargin\leftmargin
+  \@setpar{{\@@par}}%
+  \parshape 1 \@totalleftmargin \linewidth
+  \ignorespaces
+\begin{KORImotoSTAR}
+}{\par\nopagebreak\end{KORImotoSTAR}%
+\egroup\vskip7\h
+}
+
+
+
+
+%% 命題
+%\newcounter{MEIDAIcount}[chapter]
+%\renewcommand{\theMEIDAIcount}{\thechapter.\@arabic\c@MEIDAIcount}
+
+\def\MEIDAImotoSTAR{\@ifnextchar[{\MEIDAIhikisu}{\MEIDAIno}%
+}
+\def\endMEIDAImotoSTAR{\nopagebreak}
+
+
+\long\def\MEIDAISTARhikisu[#1]{\par\refstepcounter{MEIDAIcount}%
+\noindent\mbox{{\bfseries 命題\theMEIDAIcount\hskip1zw\nobreak{\mc\rm(#1)}\hskip1zw}}}
+\let\endMEIDAIhikisuSTAR\endtrivlist
+
+\long\def\MEIDAInoSTAR{\par\refstepcounter{MEIDAIcount}%
+\noindent\mbox{{\bfseries 命題\theMEIDAIcount}}\hskip1zw\nopagebreak}
+\let\endMEIDAInoSTAR\endtrivlist
+
+\newenvironment{命題*}{%
+\vskip7\h
+\bgroup  \setlength{\leftmargin}{0zw}%
+  \setlength{\rightmargin}{0zw}%
+  \advance\linewidth -\leftmargin
+  \advance\linewidth -\rightmargin
+  \advance\@totalleftmargin\leftmargin
+  \@setpar{{\@@par}}%
+  \parshape 1 \@totalleftmargin \linewidth
+  \ignorespaces
+\begin{MEIDAImotoSTAR}
+}{\par\nopagebreak\end{MEIDAImotoSTAR}%
+\egroup\vskip7\h
+}
+
+
+%% 系
+%\newcounter{KEIcount}[chapter]
+%\renewcommand{\theKEIcount}{\thechapter.\@arabic\c@KEIcount}
+
+\def\KEImotoSTAR{\@ifnextchar[{\KEIhikisuSTAR}{\KEInoSTAR}%
+}
+\def\endKEImotoSTAR{\nopagebreak}
+
+
+\long\def\KEIhikisuSTAR[#1]{\par\refstepcounter{KEIcount}%
+\noindent\mbox{{\bfseries 系\theKEIcount\hskip1zw\nobreak{\mc\rm(#1)}\hskip1zw}}}
+\let\endKEIhikisuSTAR\endtrivlist
+
+\long\def\KEInoSTAR{\par\refstepcounter{KEIcount}%
+\noindent\mbox{{\bfseries 系\theKEIcount}}\hskip1zw\nopagebreak}
+\let\endKEInoSTAR\endtrivlist
+
+\newenvironment{系*}{%
+\vskip7\h
+\bgroup  \setlength{\leftmargin}{0zw}%
+  \setlength{\rightmargin}{0zw}%
+  \advance\linewidth -\leftmargin
+  \advance\linewidth -\rightmargin
+  \advance\@totalleftmargin\leftmargin
+  \@setpar{{\@@par}}%
+  \parshape 1 \@totalleftmargin \linewidth
+  \ignorespaces
+\begin{KEImotoSTAR}
+}{\par\nopagebreak\end{KEImotoSTAR}%
+\egroup\vskip7\h
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 新しい定理関 終了 %%%%%%%%%%%%%%%
+
+
+
+
+
+
+%%%%%%%% 表の参照しない脚注の新設と，\putfootnote がエラーでるのを回避
+
+%%%%% \putfootnoteのマクロ調節
+%%%% \multicolumn で，新マクロと共存するとエラーになる
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\putfootnote#1#2{%
+\multispan{#1}%
+   \global\count@\z@
+\bgroup
+   \let\\\relax
+   \let\multicolumn\relax
+   \let\@nameuse\relax
+   \let\footnote@list\@empty
+   \let\@makefntext@tab\relax
+   \loop\ifnum\count@<\c@footnote@tab
+   \advance\count@\@ne
+   \xdef\footnote@list{\footnote@list
+      \multicolumn{#1}{@{}p{#2}@{}}{%
+         \@makefntext@tab
+         \@nameuse{footnote@tab@\the\count@}}%
+      \\}%
+   \repeat
+\egroup
+\\\noalign{\vskip\tablefootnotesep}
+\footnote@list%
+\multispan{#1}\reset@footnote@tab%
+\\}%
+
+%%% 参照しない，表内の脚注
+\def\tableattention#1#2#3{\multicolumn{#1}{l}{\pushtowall{\scriptsize\parbox[t]{#2}{\hangindent=2.125zw\hangafter=1\hspace*{-.75mm}\<〔注〕#3}}}\\[3mm]}
+
+%%%%%%%%%%%%%
+%%%%%%% 表の参照しない脚注の新設 終了%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+
+
+ \renewcommand{\section}{\@startsection{section}{1}{0zw}%
+   {.925\Cvs \@plus.1mm \@minus.1mm}%
+   {.925\Cvs \@plus.1mm \@minus.1mm}%
+   {\reset@font\large%\slshape
+%\bfseries%\FutogoXvi%\HelveXvi
+%\gt\sffamily
+\bfseries
+\mathversion{bold}%
+%\fontsize{28Q}{32H}\selectfont
+}}
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%% Sample.tex p.20の箇条書の例のための
+%% \begin{箇条書}...仮の環境名
+% (1) ......
+%   (a).....
+% (2) ......
+
+\renewenvironment{箇条書}
+  {%% <
+%\ifnum \theenumi %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%
+%\renewcommand{\labelenumi}{\theenumi..}
+%   \ifnum \@enumdepth >3\relax\@toodeep\else
+   \ifnum \@enumdepth =2\relax\@toodeep\else
+\ifnum %\theenumi
+\@enumdepth=0
+%%%
+\renewcommand{\labelenumi}{\theenumi}
+\renewcommand{\theenumi}{(\@arabic\c@enumi)}
+%%
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+    \list{\csname label\@enumctr\endcsname}{%
+%\renewcommand{\theenumi}{(\@arabic\c@enumi)}
+%{\<【\hbox to10.64987pt{\hfill{\bfseries\@arabic\c@enumi}\hfill}】\<}
+     \leftmargin3zw%2zw%27.72026pt%
+     \labelwidth2zw%19.18506pt%
+     \labelsep0.25zw%1zw
+     \itemindent0zw%1zw%0zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+    \def\makelabel##1{{##1}}}
+\else
+\ifnum %\theenumi
+\@enumdepth=1
+\renewcommand{\labelenumii}{\theenumii}
+\renewcommand{\theenumii}{(\@alph\c@enumii)}
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+   \list{\csname label\@enumctr\endcsname}{%
+%
+     \leftmargin0zw%\z@
+     \labelwidth2zw%0zw
+     \labelsep0.25zw%.75zw
+     \itemindent0zw%1zw%-1.375zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+    \def\makelabel##1{{##1}\hss}}
+\else
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+   \list{\csname label\@enumctr\endcsname}{%
+     \leftmargin12zw%\z@
+     \labelwidth2zw
+     \labelsep1zw
+     \itemindent1zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+    \def\makelabel##1{{##1}}}
+\fi\fi
+%
+\fi%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+}{\endlist}
+
+
+%% \begin{手順}...仮の環境名
+% 1) ......
+%   a).....
+% 2) ......
+
+\renewenvironment{手順}
+  {%% <
+%\ifnum \theenumi %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%
+%\renewcommand{\labelenumi}{\theenumi..}
+%   \ifnum \@enumdepth >3\relax\@toodeep\else
+   \ifnum \@enumdepth =2\relax\@toodeep\else
+\ifnum %\theenumi
+\@enumdepth=0
+%%%
+\renewcommand{\labelenumi}{\theenumi}
+\renewcommand{\theenumi}{\@arabic\c@enumi)}
+%%
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+    \list{\csname label\@enumctr\endcsname}{%
+%\renewcommand{\theenumi}{(\@arabic\c@enumi)}
+%{\<【\hbox to10.64987pt{\hfill{\bfseries\@arabic\c@enumi}\hfill}】\<}
+     \leftmargin3zw%2zw%27.72026pt%
+     \labelwidth1.5zw%19.18506pt%
+     \labelsep.25zw
+     \itemindent0zw%1zw%0zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+    \def\makelabel##1{{##1}}}
+\else
+\ifnum %\theenumi
+\@enumdepth=1
+\renewcommand{\labelenumii}{\theenumii}
+\renewcommand{\theenumii}{\@alph\c@enumii)}
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+   \list{\csname label\@enumctr\endcsname}{%
+%
+     \leftmargin0zw%\z@
+     \labelwidth1.5zw%0zw
+     \labelsep.25zw%.75zw
+     \itemindent0zw%1zw%-1.375zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+    \def\makelabel##1{{##1}\hss}}
+\else
+    \advance\@enumdepth\@ne
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+   \list{\csname label\@enumctr\endcsname}{%
+     \leftmargin12zw%\z@
+     \labelwidth2zw
+     \labelsep1zw
+     \itemindent1zw
+     \listparindent1zw
+     \topsep\z@\parsep\z@\partopsep\z@\itemsep\z@
+     \clubpenalty-200
+     \usecounter{\@enumctr}%
+    \def\makelabel##1{{##1}}}
+\fi\fi
+%
+\fi%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+}{\endlist}
+
+
+
+
+
+
+
+
+
+
+%%% マニュアル用の環境
+
+% LEFT-LINE QUOTE STYLE - Released 04 Janualy 1997
+%    by Masaki Sudoh <GFB01751@niftyserve.or.jp>
+ 
+\newbox\@LQboxa
+\newbox\@LQboxb
+\newif\if@LQcnt
+\newdimen\@LQht
+\newdimen\linequoteindent \linequoteindent3zw
+ 
+\def\linequote{\vskip\baselineskip\@LQht\baselineskip
+ \setbox\@LQboxb\vtop\bgroup\advance\linewidth-\linequoteindent
+ \columnwidth\linewidth\textwidth\linewidth
+ \hsize\linewidth\hbox{}\par}
+ 
+\def\LQ@split{\@tempdimb\ht\@LQboxb
+ \advance\@tempdimb\dp\@LQboxb
+ \setbox\@LQboxa\vsplit\@LQboxb to\z@
+ \setbox\@LQboxa\vtop{\unvbox\@LQboxa}%
+ \setbox\@tempboxa\vtop{\copy\@LQboxa\copy\@LQboxb}%
+ \advance\@tempdimb-\ht\@tempboxa
+ \advance\@tempdimb-\dp\@tempboxa}
+ 
+\def\LQ@addskipdp{\@tempdima\dp\@LQboxa
+ \advance\@tempdima\@tempdimb
+ \dp\@LQboxa\@tempdima}
+ 
+\def\LQ@line{\leavevmode\kern\linequoteindent\hbox{\kern-4.2\p@
+ \vrule\@width.4\p@\kern-.2\p@\kern4\p@\box\@LQboxa}\par}
+ 
+\def\endlinequote{\egroup
+ \ifhmode\par\fi{\@LQcnttrue\baselineskip\z@\lineskiplimit\z@
+ \lineskip\z@\vfuzz\maxdimen
+ \noindent\LQ@split\LQ@addskipdp
+ \ifvoid\@LQboxb
+ \else\loop
+  \noindent\LQ@split\LQ@addskipdp\leavevmode
+  \ifvoid\@LQboxb\@LQcntfalse\LQ@line\else\LQ@line\fi
+  \if@LQcnt\repeat
+ \fi\vskip\@LQht\par}\vskip.2\baselineskip}
+ 
+\newenvironment{入力例}{\begin{indentation}{0zw}{0mm}\scriptsize\fbox{入力}\vspace*{-3mm}\begin{linequote}}{\end{linequote}\end{indentation}}
+
+
+
+
+
+\def\出力例{\vskip3mm\noindent{\scriptsize\fbox{出力}}\hrulefill \textbullet}
+\def\end出力例{\noindent{\scriptsize\fbox{}}\hrulefill \textbullet\vskip3mm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newdimen\hangwidth
+\hangwidth=1zw
+
+\define@key{corona}{hangwidth}{\hangwidth=#1}
+
+
+
+
+
+
+
+\long\def\@makecaption#1#2{\footnotesize\baselineskip15\h%
+\vskip\abovecaptionskip 
+ \setbox\@tempboxa\hbox{{\bfseries#1}\hskip1zw\shortstack[l]{#2}}%
+ \@tempdima\ht\@tempboxa \advance \@tempdima \dp\@tempboxa
+\if@hangalign
+ \setbox\@tempboxb\hbox{{\bfseries#1}\hskip1zw}%% <<
+\else
+%\setbox\@tempboxb\hbox{{\bfseries □}}%% <<
+\setbox\@tempboxb\hbox{{\bfseries \hspace{\hangwidth}}}%% <<
+\fi
+\addtolength{\capwidth}{\wd\@tempboxb}
+%%%%%%%
+\if@hang
+\let\hang@or@not\hangindent
+\else
+\def\hang@or@not##1##2{}%
+\fi
+%%%%%%%
+ \ifdim \@tempdima > \baselineskip%%2行以上の場合
+  \ifdim \wd\@tempboxa > \capwidth
+   \hfil\parbox[t]{\capwidth}{\hang@or@not\wd\@tempboxb 
+    {\bfseries#1}\hskip1zw #2}%\vskip2\@Q
+  \else
+   \hfil\parbox[t]{\wd\@tempboxa}{\hang@or@not\wd\@tempboxb 
+    {\bfseries#1}\hskip1zw #2}%\vskip2\@Q
+  \fi
+ \else %% 1行の場合
+  \ifdim \wd\@tempboxa > \capwidth %%行幅が長すぎる場合
+   \hfil\parbox[t]{\capwidth}{\hang@or@not\wd\@tempboxb 
+    {\bfseries#1}\hskip1zw #2}\hfil
+  \else
+   \setbox\@tempboxb\hbox{#2}%
+   \ifdim \wd\@tempboxb < 4.5zw %% >
+    \hbox to\hsize{\hfil{\bfseries#1}\hskip1zw#2\hfil}
+   \else
+    \hbox to\hsize{\hfil\box\@tempboxa\hfil}
+   \fi
+  \fi
+ \fi
+\vskip\belowcaptionskip
+}
+
+
+
+
+
+\renewenvironment{Hfloat}{\capwidth=20zw\bgroup\let\@caption\@YOKOcaption\let\@makecaption\@makeYOKOcaption}{\egroup}
+
+
+
+\long\def\@YOKOcaption#1[#2]#3{%
+  \par@or@relax
+  \addcontentsline{\csname ext@#1\endcsname}{#1}%
+    {\protect\numberline{\csname the#1\endcsname}{\ignorespaces #2}}%
+  \begingroup
+  \if@yoko\else
+    \@parboxrestore
+    \if@minipage
+      \@setminipage
+    \fi
+  \fi
+    \normalsize
+    \@makecaption{\csname fnum@#1\endcsname}{\ignorespaces #3}%\par
+  \endgroup}
+
+
+
+\long\def\@makeYOKOcaption#1#2{\footnotesize\baselineskip15\h%
+%\capwidth=\wd\@tempboxa
+%\vskip\abovecaptionskip
+ \setbox\@tempboxa\hbox{{\bfseries#1}\hskip1zw\shortstack[l]{#2}}%
+ \@tempdima\ht\@tempboxa \advance \@tempdima \dp\@tempboxa
+\if@hangalign
+ \setbox\@tempboxb\hbox{{\bfseries#1}\hskip1zw}%% <<
+\else
+%\if@hangwidth
+%\setbox\@tempboxb\hbox{{\bfseries \hspace{\hangwidth}}}%% <<
+\setbox\@tempboxb\hbox{{\bfseries\hspace*{\hangwidth}}}%% <<
+%\else
+%\setbox\@tempboxb\hbox{{\bfseries □□}}%% <<
+%\fi
+\fi
+\addtolength{\capwidth}{\wd\@tempboxb}
+%%%%%%%
+\if@hang
+\let\hang@or@not\hangindent
+\else
+\def\hang@or@not##1##2{}%
+\fi
+%%%%%%%
+ \ifdim \@tempdima > \baselineskip%%2行以上の場合
+  \ifdim \wd\@tempboxa > \capwidth
+   \hfil\parbox[t]{\capwidth}{\hang@or@not\wd\@tempboxb%
+%   \hfil\parbox[t]{\wd\@tempboxa}{A\hang@or@not\wd\@tempboxb
+    {\bfseries#1}\hskip1zw #2}\hfil%\vskip2\@Q
+  \else
+   \hfil\parbox[t]{\wd\@tempboxa}{\hang@or@not\wd\@tempboxb
+    {\bfseries#1}\hskip1zw #2}%\vskip2\@Q
+  \fi
+ \else %% 1行の場合
+  \ifdim \wd\@tempboxa > \capwidth %%行幅が長すぎる場合
+   \hfil\parbox[t]{\capwidth}{\hang@or@not\wd\@tempboxb
+%   \hfil\parbox[t]{\wd\@tempboxa}{C\hang@or@not\wd\@tempboxb
+    {\bfseries#1}\hskip1zw #2}\hfil
+  \else
+   \setbox\@tempboxb\hbox{#2}%
+   \ifdim \wd\@tempboxb < 4.5zw %% >
+%    \hbox to\hsize{\hfil{\bfseries#1}\hskip1zw#2\hfil}
+    \hbox to\wd\@tempboxa{\hfil{\bfseries#1}\hskip1zw#2\hfil}
+   \else
+%    \hbox to\hsize{\hfil\box\@tempboxa\hfil}
+    \hbox to\wd\@tempboxa{\hfil\box\@tempboxa\hfil}
+   \fi
+  \fi
+ \fi
+%\vskip\belowcaptionskip
+}
+
+
+
+
+
+
+
+
+

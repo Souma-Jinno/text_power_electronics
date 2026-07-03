@@ -1,0 +1,31 @@
+delim_0	"\\hfill {\\sl "
+delim_1	"\\hfill {\\sl "
+delim_2	"\\hfill {\\sl "
+delim_t "}"
+
+encap_prefix "\\"
+encap_infix "{"
+encap_suffix "}"
+
+
+lethead_flag 1
+lethead_prefix "{"
+lethead_suffix "}"
+letter_head 2
+group_skip "\n\n  \ \indexspace"
+
+
+
+preamble
+"\n\\begin{theindex}\n\n\\indexspace"
+
+postamble
+"\n\\end{theindex}\n\n%欧文索引\n\\begin{theEindex}\n\n
+%数字1から INDbulkei の後に挿入\n\\INDbulkei\n\n%記号 INDbulkei の後に挿入 \\indexspace はとる\n\\INDbulkei\n\n\\end{theEindex}"
+
+
+
+character_order "JES"
+symbol_flag 0
+
+
