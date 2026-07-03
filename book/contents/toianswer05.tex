@@ -1,4 +1,72 @@
 \answer
 \begin{enumerate}
-\item （解答整備予定）
+
+%% 5章 問1（5.1節）
+\item[5.1節 問1]
+$T = 1/f = 1/(100\times10^{3}) = 10\,\mathrm{\mu s}$，
+$T_{\mathrm{on}} = DT = 0.3 \times 10 = 3\,\mathrm{\mu s}$。
+平均電圧は「$12$\,Vである時間の割合」で決まるから
+$D \times 12 = 3.6$\,Vである。
+デューティ比の制御がそのまま平均電圧の制御になる。
+
+%% 5章 問2（5.2節）
+\item[5.2節 問2]
+式\ref{eq5.9}より$D = 12/48 = 0.25$。
+オフ期間はダイオードが導通してSの出力側の端子はほぼ接地電位になるから，
+Sの両端には入力電圧$V_{\mathrm{in}} = 48$\,Vがかかる。
+降圧チョッパのスイッチとダイオードには，
+いずれも入力電圧以上の耐圧が必要である。
+
+%% 5章 問3（5.3節）
+\item[5.3節 問3]
+式\ref{eq5.13}より
+$D = 1 - V_{\mathrm{in}}/V_{\mathrm{out}} = 1 - 24/96 = 0.75$。
+$D = 0.9$では$V_{\mathrm{out}}/V_{\mathrm{in}} = 1/(1-0.9) = 10$倍が理論上の上限である
+（実際には損失のためこの比までは使えない。\ref{sec5.3}節の注意）。
+
+%% 5章 問4（5.4節）
+\item[5.4節 問4]
+式\ref{eq5.18}より$|V_{\mathrm{out}}|/V_{\mathrm{in}} = D/(1-D)$。
+$-5$\,V：$D/(1-D) = 5/12$より$12D = 5 - 5D$，
+$D = 5/17 \approx 0.29$。
+$-24$\,V：$D/(1-D) = 2$より$D = 2/3 \approx 0.67$。
+$D < 0.5$で降圧，$D > 0.5$で昇圧になっていることを確かめてほしい。
+
+%% 5章 問5（5.5節）
+\item[5.5節 問5]
+式\ref{eq5.21}の右辺の単位は，$D$が無次元であることに注意して
+\begin{equation*}
+\frac{\mathrm{V}}{\mathrm{Hz}\cdot\mathrm{A}}
+= \frac{\mathrm{V}}{(1/\mathrm{s})\cdot\mathrm{A}}
+= \frac{\mathrm{V \cdot s}}{\mathrm{A}} = \mathrm{H}
+\end{equation*}
+となり，左辺（インダクタンス）と一致する。
+$1\,\mathrm{H} = 1\,\mathrm{V\cdot s/A}$は式\ref{eq5.2}
+（$v_L = L\, di_L/dt$）そのものである。
+
+%% 5章 問6（5.6節）
+\item[5.6節 問6]
+$V_{\mathrm{out}} = DV_{\mathrm{in}} = 5$\,V。式\ref{eq5.19}より
+\begin{equation*}
+\mathit{\Delta}I_L = \frac{(10-5)\times0.5}{1\times10^{3}\times30\times10^{-3}}
+\approx 83\,\mathrm{mA}
+\end{equation*}
+式\ref{eq5.24}より
+\begin{equation*}
+\mathit{\Delta}V_{\mathrm{out}}
+= \frac{83\times10^{-3}}{8\times1\times10^{3}\times100\times10^{-6}}
+\approx 0.10\,\mathrm{V}
+\end{equation*}
+出力$5$\,Vに対して約2\,\%のリプルである。
+
+%% 5章 問7（5.7節）
+\item[5.7節 問7]
+式\ref{eq5.27}より，境界の負荷電流は
+$I_{\mathrm{out}} = \mathit{\Delta}I_L/2 = 0.2$\,Aであり，
+これ以下でDCMに入る。負荷抵抗では
+\begin{equation*}
+R = \frac{V_{\mathrm{out}}}{I_{\mathrm{out}}} = \frac{5}{0.2} = 25\,\Omega
+\end{equation*}
+以上でDCMに入る（軽負荷＝大きい抵抗であることに注意）。
+
 \end{enumerate}

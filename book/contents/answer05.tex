@@ -1,4 +1,120 @@
 \answer
 \begin{enumerate}
-\item （解答整備予定）
+
+%%--- 章末問題 5.1 ---
+\item[\ref{ex5.1}]
+(a) 式\ref{eq5.9}より$D = 12/24 = 0.5$。
+
+(b) 式\ref{eq5.21}より
+\begin{equation*}
+L = \frac{(24-12)\times0.5}{200\times10^{3}\times0.6} = 50\,\mathrm{\mu H}
+\end{equation*}
+
+(c) 式\ref{eq5.25}より
+\begin{equation*}
+C = \frac{0.6}{8\times200\times10^{3}\times0.05} = 7.5\,\mathrm{\mu F}
+\end{equation*}
+実際にはESR（\ref{sec5.6}節の注意）を見込んで，これより大きめの標準値を選ぶ。
+
+(d) $I_{\mathrm{out}} + \mathit{\Delta}I_L/2 = 3 + 0.3 = 3.3$\,A。
+この値が磁気飽和とスイッチ・ダイオードの電流定格の基準になる。
+
+%%--- 章末問題 5.2 ---
+\item[\ref{ex5.2}]
+(a) 式\ref{eq5.13}より$D = 1 - 12/48 = 0.75$。
+損失がなければ入出力の電力は等しいから，式\ref{eq5.14}より
+$I_{\mathrm{in}} = I_{\mathrm{out}}/(1-D) = 0.5/0.25 = 2$\,A。
+
+(b) オン期間は$v_L = V_{\mathrm{in}}$，傾き$V_{\mathrm{in}}/L$で$DT$の間増えるから
+\begin{equation*}
+\mathit{\Delta}I_L = \frac{V_{\mathrm{in}} D}{f L}
+= \frac{12\times0.75}{100\times10^{3}\times100\times10^{-6}} = 0.9\,\mathrm{A}
+\end{equation*}
+$i_L$の平均は入力電流$I_{\mathrm{in}} = 2$\,Aだから，最大値は
+$2 + 0.45 = 2.45$\,Aである。
+
+(c) オフ期間，Sの両端にはダイオードを介して出力電圧がかかるので$48$\,V。
+オン期間，ダイオードには出力電圧が逆向きにかかるので$48$\,V。
+いずれも\textbf{出力}電圧で決まる。
+昇圧チョッパの素子には出力電圧以上の耐圧が必要である。
+
+%%--- 章末問題 5.3 ---
+\item[\ref{ex5.3}]
+等価回路は図\ref{fig5.5}(b)，(c)のとおり。
+オン期間は電源→S→$L$のループで$v_L = V_{\mathrm{in}}$，
+オフ期間は$L$がダイオードを介して負荷と並列になり$v_L = V_{\mathrm{out}}$。
+ボルト秒平衡（式\ref{eq5.5}）に代入して
+\begin{equation*}
+V_{\mathrm{in}} DT + V_{\mathrm{out}}(1-D)T = 0
+\end{equation*}
+より$V_{\mathrm{out}} = -\dfrac{D}{1-D}V_{\mathrm{in}}$（式\ref{eq5.18}）。
+大きさの比$D/(1-D)$がそれぞれ$1$，$5/12$，$2$になればよいから，
+$-12$\,V：$D = 0.5$，
+$-5$\,V：$D = 5/17 \approx 0.29$，
+$-24$\,V：$D = 2/3 \approx 0.67$。
+
+%%--- 章末問題 5.4 ---
+\item[\ref{ex5.4}]
+(a) 境界では$I_{\mathrm{out}} = \mathit{\Delta}I_L/2$（式\ref{eq5.27}）。
+左辺に$I_{\mathrm{out}} = V_{\mathrm{out}}/R_B = DV_{\mathrm{in}}/R_B$，
+右辺に式\ref{eq5.20}を使うと
+\begin{equation*}
+\frac{D V_{\mathrm{in}}}{R_B} = \frac{V_{\mathrm{in}} D(1-D)}{2 f L}
+\end{equation*}
+両辺を$D V_{\mathrm{in}}$で割って整理すれば
+\begin{equation*}
+R_B = \frac{2 f L}{1-D}
+\end{equation*}
+を得る。$R < R_B$でCCM，$R > R_B$でDCMである。
+
+(b)
+\begin{equation*}
+R_B = \frac{2\times100\times10^{3}\times73\times10^{-6}}{1-0.417}
+\approx \frac{14.6}{0.583} \approx 25\,\Omega
+\end{equation*}
+\ref{sec5.7}節の問で求めた「$25\,\Omega$以上でDCM」と一致する。
+
+%%--- 章末問題 5.5 ---
+\item[\ref{ex5.5}]
+(a) オフ期間のループはダイオード→$L$→負荷で，
+ダイオードの電圧降下$V_F$を含めてキルヒホッフの電圧則を立てると
+$0 = V_F + v_L + V_{\mathrm{out}}$，
+すなわち$v_L = -V_{\mathrm{out}} - V_F$である。
+ボルト秒平衡より
+\begin{eqnarray*}
+(V_{\mathrm{in}} - V_{\mathrm{out}})D - (V_{\mathrm{out}} + V_F)(1-D) &=& 0 \\
+V_{\mathrm{in}} D - V_{\mathrm{out}} - V_F (1-D) &=& 0
+\end{eqnarray*}
+となり，$V_{\mathrm{out}} = D V_{\mathrm{in}} - (1-D)V_F$を得る。
+
+(b) $V_{\mathrm{out}} = 5 - 0.583\times0.7 \approx 4.59$\,V。
+理想値より約$0.41$\,V（8\,\%）低い。
+出力電圧が低いほどこのずれの割合は大きくなるから，
+低電圧・大電流の電源ではダイオードをMOSFETに置き換える同期整流が必須になる。
+
+%%--- 章末問題 5.6 ---
+\item[\ref{ex5.6}]
+(a) シミュレーションの定常波形から
+$\mathit{\Delta}I_L \approx 83$\,mA，
+$\mathit{\Delta}V_{\mathrm{out}} \approx 0.10$\,Vが読み取れ，
+\ref{sec5.6}節の問の計算値と一致する。
+
+(b) 境界抵抗は章末問題\ref{ex5.4}より
+$R_B = 2\times10^{3}\times30\times10^{-3}/0.5 = 120\,\Omega$。
+$R = 150\,\Omega > R_B$だからDCMに入り，
+$i_L$が0に張り付く期間が現れて，出力は$5$\,Vより高い値に浮き上がる。
+軽負荷が受け取りきれないエネルギーが毎周期送り込まれ，
+$C$の電圧が押し上げられるからである（\ref{sec5.7}節）。
+
+(c) 式\ref{eq5.19}より$\mathit{\Delta}I_L$は$1/f$に比例して$1/10$
+（約$8.3$\,mA）になる。
+$\mathit{\Delta}V_{\mathrm{out}}$は式\ref{eq5.24}で
+$\mathit{\Delta}I_L$と$f$の両方が効くため$1/f^2$に比例し，
+$1/100$（約$1$\,mV）まで下がる。
+高周波化が平滑部品にどれほど効くかがわかる（\ref{sec5.8}節）。
+
+(d) $\mathit{\Delta}I_L$は$1/L$に比例するから10倍（約$0.83$\,A）になる。
+境界抵抗は$R_B = 12\,\Omega$に下がるので，
+$R = 150\,\Omega$では(b)よりさらに深いDCMになる
+（$R = 10\,\Omega$ならかろうじてCCMを保つ）。
 \end{enumerate}
