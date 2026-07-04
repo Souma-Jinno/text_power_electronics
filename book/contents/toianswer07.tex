@@ -1,4 +1,45 @@
 \answer
 \begin{enumerate}
-\item （解答整備予定）
+
+%% 7章 問1（7.1節・単位検算）
+\item[7.1節 問1]
+$(V_{\mathrm{in}}-V_{\mathrm{out}})$は電圧だからV，$I_{\mathrm{out}}$は電流だからAで，
+右辺の単位は
+\begin{equation*}
+\mathrm{V \cdot A} = \mathrm{W}
+\end{equation*}
+となり電力の単位に一致する。
+$5$\,V$\to 3.3$\,V・$0.5$\,Aの場合は式\ref{eq7.2}より
+\begin{equation*}
+P_{\mathrm{loss}} = (5 - 3.3)\times0.5 = 0.85\,\mathrm{W}
+\end{equation*}
+効率は式\ref{eq7.3}より$\eta = 3.3/5 = 0.66 = 66\,\%$である。
+入力と出力の電圧差が小さいので，例題\ref{rei7.1}（$42\,\%$）よりずっと効率がよい。
+
+%% 7章 問2（7.2節）
+\item[7.2節 問2]
+式\ref{eq7.5}より
+\begin{equation*}
+R_s = \frac{V_{\mathrm{in}} - V_Z}{I_Z}
+= \frac{12 - 5.1}{5\times10^{-3}} = 1380\,\Omega
+\end{equation*}
+おおよそ$1.4$\,k$\Omega$の標準値を選ぶ。
+$R_s$が消費する電力は，$R_s$の電圧降下$(V_{\mathrm{in}}-V_Z)=6.9$\,Vに$I_Z$を掛けて
+\begin{equation*}
+P_{R_s} = 6.9 \times 5\times10^{-3} \approx 35\,\mathrm{mW}
+\end{equation*}
+である。
+
+%% 7章 問3（7.3節）
+\item[7.3節 問3]
+式\ref{eq7.9}より，$R_1 = R_2$のときは
+\begin{equation*}
+V_{\mathrm{out}} = \left(1 + \frac{10}{10}\right)\times2.5 = 2\times2.5 = 5.0\,\mathrm{V}
+\end{equation*}
+$R_1$を$30$\,k$\Omega$にすると
+\begin{equation*}
+V_{\mathrm{out}} = \left(1 + \frac{30}{10}\right)\times2.5 = 4\times2.5 = 10\,\mathrm{V}
+\end{equation*}
+となる。分圧比だけで出力が決まり，$R_1$を上げるほど出力が高くなることがわかる。
+
 \end{enumerate}

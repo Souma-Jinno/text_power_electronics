@@ -1,4 +1,85 @@
 \answer
 \begin{enumerate}
-\item （解答整備予定）
+
+%%--- 章末問題 7.1 ---
+\item[\ref{ex7.1}]
+出力電力は$P_{\mathrm{out}} = 5\times0.5 = 2.5$\,Wで一定。式\ref{eq7.2}・式\ref{eq7.3}より
+\begin{center}
+\begin{tabular}{c|c|c}
+\hline
+$V_{\mathrm{in}}$ & $P_{\mathrm{loss}}=(V_{\mathrm{in}}-5)\times0.5$ & $\eta=5/V_{\mathrm{in}}$ \\
+\hline
+$6$\,V & $0.5$\,W & $83\,\%$ \\
+$9$\,V & $2.0$\,W & $56\,\%$ \\
+$12$\,V & $3.5$\,W & $42\,\%$ \\
+\hline
+\end{tabular}
+\end{center}
+入力電圧が高いほど損失が増え効率が下がる。
+効率よく使うには\textbf{入力電圧を出力電圧にできるだけ近づける}（電圧差を小さくする）ことである。
+
+%%--- 章末問題 7.2 ---
+\item[\ref{ex7.2}]
+(a) 式\ref{eq7.5}より
+\begin{equation*}
+R_s = \frac{9 - 4.7}{4\times10^{-3}} = \frac{4.3}{4\times10^{-3}} \approx 1.1\,\mathrm{k}\Omega
+\end{equation*}
+
+(b) $V_Z$が$4.7$\,Vのまま一定なら，入力が$12$\,Vに上がったときのツェナー電流は
+\begin{equation*}
+I_Z = \frac{12 - 4.7}{1075} \approx 6.8\,\mathrm{mA}
+\end{equation*}
+入力が$3$\,V上がった分は，ほぼすべて$R_s$の電圧降下（電流の増加）が引き受け，
+基準電圧$V_Z$はほとんど動かない。
+入力電圧がふらついても基準が一定に保たれるので，これを物差しにした出力も安定する ―
+これが定電圧源として都合のよい理由である。
+
+%%--- 章末問題 7.3 ---
+\item[\ref{ex7.3}]
+(a) 式\ref{eq7.9}より
+\begin{equation*}
+\frac{R_1}{R_2} = \frac{V_{\mathrm{out}}}{V_{\mathrm{ref}}} - 1
+= \frac{12}{2.5} - 1 = 4.8 - 1 = 3.8
+\end{equation*}
+
+(b) $R_1 = 3.8 \times R_2 = 3.8 \times 4.7\,\mathrm{k}\Omega \approx 18\,\mathrm{k}\Omega$。
+
+(c) 分圧より$V_{\mathrm{fb}} = \dfrac{R_2}{R_1+R_2}V_{\mathrm{out}}$（式\ref{eq7.8}）。
+負帰還が効くと仮想短絡（式\ref{eq7.7}）で$V_{\mathrm{fb}} = V_{\mathrm{ref}}$になるから，
+\begin{equation*}
+V_{\mathrm{ref}} = \frac{R_2}{R_1+R_2}V_{\mathrm{out}}
+\end{equation*}
+これを$V_{\mathrm{out}}$について解くと
+$V_{\mathrm{out}} = \dfrac{R_1+R_2}{R_2}V_{\mathrm{ref}} = \left(1+\dfrac{R_1}{R_2}\right)V_{\mathrm{ref}}$
+（式\ref{eq7.9}）を得る。
+
+%%--- 章末問題 7.4 ---
+\item[\ref{ex7.4}]
+(a) $P_{\mathrm{out}} = 3.3\times1.5 = 4.95$\,W。式\ref{eq7.2}より
+\begin{equation*}
+P_{\mathrm{loss}} = (12 - 3.3)\times1.5 = 8.7\times1.5 \approx 13\,\mathrm{W}
+\end{equation*}
+効率は$\eta = 3.3/12 \approx 0.28 = 28\,\%$。
+
+(b) 降圧チョッパでは入力$P_{\mathrm{in}} = 4.95/0.88 \approx 5.6$\,W，
+損失は$5.6 - 4.95 \approx 0.68$\,Wで済む。
+リニアレギュレータは出力の$2.6$倍もの$13$\,Wを\textbf{パストランジスタ1個}で発熱させ，
+大きな放熱器が必要になる（\ref{sec7.4}節の注意）。
+電圧差が大きく電流も大きいこの用途では，損失が20分の1で済む\textbf{降圧チョッパがふさわしい}。
+
+%%--- 章末問題 7.5 ---
+\item[\ref{ex7.5}]
+(a) ツェナー基準だけの回路では，出力は$V_{\mathrm{out}} = V_{\mathrm{ref}} - V_{\mathrm{BE}}$（式\ref{eq7.10}）。
+負荷を軽くしていくと出力電圧がわずかに動く。
+これは負荷電流の変化で$V_{\mathrm{BE}}$が変わり，それがそのまま出力に残るためである
+（ツェナー電圧$V_Z$自体はほとんど動かない）。
+
+(b) オペアンプで負帰還をかけた回路では，$V_{\mathrm{BE}}$の変動もループの内側に閉じ込められ，
+同じ負荷変動に対する出力の変動は(a)より大幅に小さくなる。
+定常出力は式\ref{eq7.9}の$V_{\mathrm{out}}=(1+R_1/R_2)V_{\mathrm{ref}}$とよく一致する。
+
+(c) 入力を下げていくと，ある電圧（$V_{\mathrm{out}}+V_{\mathrm{dropout}}$，式\ref{eq7.11}）を割り込んだところで
+パストランジスタが開ききって負帰還が効かなくなり，出力が入力に引きずられて低下し始める。
+この崩れ始める入力電圧からドロップアウト電圧を読み取れる。
+
 \end{enumerate}
