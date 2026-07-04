@@ -1,4 +1,120 @@
 \answer
 \begin{enumerate}
-\item （解答整備予定）
+
+%%--- 章末問題 9.1 ---
+\item[\ref{ex9.1}]
+(a) $v_R(t)$は$v_R(-t) = -v_R(t)$を満たす奇関数である
+（前半の$+E$と後半の$-E$が原点対称）。奇関数は余弦（偶関数）の成分をもたないので，
+式\ref{eq9.4}の$A_n$の積分は偶関数$\times$奇関数の積の1周期積分となり$A_n = 0$である。
+
+(b) 式\ref{eq9.5}を$\int\sin n\omega t\,dt = -\cos(n\omega t)/(n\omega)$で積分すると
+\begin{eqnarray*}
+B_n &=& \frac{2E}{n\omega T}\left[-\left(\cos\frac{n\omega T}{2}-1\right)
++\left(\cos n\omega T - \cos\frac{n\omega T}{2}\right)\right]
+\end{eqnarray*}
+$n\omega T = 2\pi n$，$n\omega T/2 = \pi n$を代入して
+$\cos2\pi n = 1$，$\cos\pi n = (-1)^n$を使うと
+\begin{equation*}
+B_n = \frac{E}{\pi n}\left[-((-1)^n-1)+(1-(-1)^n)\right]
+= \frac{2E}{\pi n}\left[1-(-1)^n\right]
+\end{equation*}
+（式\ref{eq9.7}）を得る。奇数次で$4E/(\pi n)$，偶数次で$0$である。
+
+(c) $E = 100$\,Vで$\hat{V}_1 = 400/\pi \approx 127$\,V，
+$\hat{V}_3 \approx 42$\,V，$\hat{V}_5 \approx 25$\,V。
+基本波実効値$V_1 = 127/\sqrt{2} \approx 90$\,V，方形波全体の実効値$100$\,Vより
+\begin{equation*}
+\mathrm{THD} = \frac{\sqrt{100^2 - 90^2}}{90} \approx \frac{43.6}{90} \approx 0.48
+\end{equation*}
+すなわち約$48$\,\%である（式\ref{eq9.12}）。
+
+%%--- 章末問題 9.2 ---
+\item[\ref{ex9.2}]
+(a) 出力は$0 \le t < T/2-\mathit{\Delta}t$で$+E$，$T/2 \le t < T-\mathit{\Delta}t$で$-E$，
+それ以外で$0$。$0$の区間は積分に寄与しないので，式\ref{eq9.4}の$B_n$の積分は
+$+E$と$-E$の2区間だけが残り，設問の式になる。
+
+(b) それぞれ積分すると
+\begin{eqnarray*}
+B_n &=& \frac{2E}{n\omega T}\Big\{
+-\big[\cos n\omega(T/2-\mathit{\Delta}t)-1\big] \\
+&& \qquad +\big[\cos n\omega(T-\mathit{\Delta}t)-\cos n\omega(T/2)\big]\Big\}
+\end{eqnarray*}
+$n\omega(T/2-\mathit{\Delta}t) = \pi n - n\omega\mathit{\Delta}t$，
+$n\omega(T-\mathit{\Delta}t) = 2\pi n - n\omega\mathit{\Delta}t$より
+$\cos(\pi n - n\omega\mathit{\Delta}t) = (-1)^n\cos n\omega\mathit{\Delta}t$，
+$\cos(2\pi n - n\omega\mathit{\Delta}t) = \cos n\omega\mathit{\Delta}t$。
+整理すると（奇数次で）
+\begin{equation*}
+B_n = \frac{2E}{\pi n}\left(1 + \cos n\omega\mathit{\Delta}t\right)
+= \frac{4E}{\pi n}\cos^2\!\left(\frac{n\omega\mathit{\Delta}t}{2}\right)
+\end{equation*}
+（$1+\cos\theta = 2\cos^2(\theta/2)$を使用）。$\mathit{\Delta}t = 0$で式\ref{eq9.8}に戻る。
+
+(c) $\cos^2(\omega\mathit{\Delta}t/2) = 0.7$より
+$\omega\mathit{\Delta}t/2 = \arccos\sqrt{0.7} \approx 0.5548$\,rad。
+$\omega = 2\pi/T$を代入して
+\begin{equation*}
+\mathit{\Delta}t = \frac{2 \times 0.5548}{2\pi/T} \approx 0.177\,T
+\end{equation*}
+すなわち$\mathit{\Delta}t \approx 0.18\,T$だけずらせばよい。
+
+%%--- 章末問題 9.3 ---
+\item[\ref{ex9.3}]
+(a) フルブリッジのバイポーラ変調は$\hat{V}_1 = mE$（\ref{sec9.5}節）。
+$m = 0.9$，$E = 400$\,Vで$\hat{V}_1 = 0.9\times400 = 360$\,V，
+実効値$V_1 = 360/\sqrt{2} \approx 255$\,V。
+
+(b) 線形制御の上限は$m = 1$だから$\hat{V}_1 = E = 400$\,V，
+実効値は$400/\sqrt{2} \approx 283$\,Vが最大である。
+
+(c) $m > 1$では変調波の山が搬送波の頂点を越え，その付近でパルスが途切れずオンのままになる（過変調）。
+基本波はもう$m$に比例して増えず，低次の高調波が現れて波形がひずむ。
+出力を増やし続けると，最終的に方形波（基本波振幅$4E/\pi \approx 1.27E$）に近づく。
+
+%%--- 章末問題 9.4 ---
+\item[\ref{ex9.4}]
+(a) $t_d \gtrsim t_{\mathrm{off}} + 150\,\mathrm{ns} + 150\,\mathrm{ns}
+= 300 + 150 + 150 = 600$\,ns。余裕を見て$t_d = 0.6\,\mathrm{\mu s}$と選ぶ。
+
+(b) $T_c = 1/f_c = 1/(15\times10^3) \approx 66.7\,\mathrm{\mu s}$。
+失われる割合は$2t_d/T_c = 2\times0.6/66.7 \approx 0.018$，すなわち約$1.8$\,\%。
+
+(c) $f_c = 60$\,kHzでは$T_c \approx 16.7\,\mathrm{\mu s}$と短くなり，
+$2t_d/T_c = 2\times0.6/16.7 \approx 0.072$，約$7.2$\,\%に増える。
+デッドタイムは周波数によらずほぼ一定なので，搬送波周波数を上げるほど
+1周期に占める割合が増え，出力電圧の誤差（デッドタイムひずみ）が大きくなる。
+高周波化はフィルタを小型にできる一方，デッドタイムの影響を増やす。
+
+%%--- 章末問題 9.5 ---
+\item[\ref{ex9.5}]
+(a) 各レグが$0$，$E/2$，$E$をとり，$v_R$は左右のレグの差だから，
+\begin{equation*}
+v_R = -E,\ -\frac{E}{2},\ 0,\ +\frac{E}{2},\ +E
+\end{equation*}
+の5レベルをとる。
+
+(b) 2レベルでは1回のスイッチングで$E$跳ぶが，3レベルでは$E/2$ずつ跳ぶので，
+電圧の跳びは\textbf{半分}になる。$dv/dt$が小さくなり，ノイズが減る。
+
+(c) オフのスイッチにかかる電圧が$E/2$で済むので，耐圧の低い素子が使える。
+高電圧のインバータでは，1つの素子では耐えられない電圧を複数の素子で分担でき，
+また耐圧の低い素子はオン抵抗が小さく高速なので，損失やスイッチング特性の面でも有利になる。
+
+%%--- 章末問題 9.6 ---
+\item[\ref{ex9.6}]
+(a) バイポーラ変調では$v$は$\pm E$の細かいパルス列になるが，
+RL負荷がローパスフィルタとして働き，電流$i$は正弦波に近い波形になる
+（インダクタが高周波成分を平滑する）。
+(b) 出力電圧のFFTでは，基本波（$50$\,Hz）のほかに，
+搬送波周波数$f_c = 5$\,kHz（次数$m_f = 100$）の付近に高調波の山が現れる。
+基本波と搬送波付近の高調波は周波数がよく離れている。
+(c) ユニポーラ変調では出力が$0, \pm E$の3値になり実効スイッチング周波数が2倍になるため，
+高調波の山は$2f_c = 10$\,kHz（次数$2m_f = 200$）の付近に移る。
+高調波がより高い周波数へ逃げるので，負荷電流のリプルはバイポーラより小さくなる
+（\ref{sec9.5}節の予想と一致する）。
+(d) $\hat{V}_1 = mE$より$m = 0.5$で$200$\,V，$m = 1.0$で$400$\,Vと$m$に比例する。
+$m = 1.2$では過変調に入り，基本波振幅は$1.2E = 480$\,Vには届かず，
+低次の高調波が現れて波形がひずむ。線形の関係から外れることが確かめられる。
+
 \end{enumerate}
