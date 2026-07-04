@@ -1,4 +1,56 @@
 \answer
 \begin{enumerate}
-\item （解答整備予定）
+
+%% 8章 問1（8.1節）
+\item[8.1節 問1]
+波高値は$V_m = \sqrt{2}\times200 \approx 283$\,V。
+半波整流では平均値$V_{\mathrm{avg}} = V_m/\pi \approx 90$\,V，
+実効値$V_{\mathrm{rms}} = V_m/2 \approx 141$\,V。
+全波整流では平均値$V_{\mathrm{avg}} = 2V_m/\pi \approx 180$\,V，
+実効値$V_{\mathrm{rms}} = V_m/\sqrt{2} = 200$\,V。
+平均値・実効値とも全波が半波の$2$倍（実効値は正確に$\sqrt{2}$倍）であり，
+全波整流のほうが交流を無駄なく使えている。
+
+%% 8章 問2（8.2節）
+\item[8.2節 問2]
+式\ref{eq8.10}の右辺の単位は，$f$が$\mathrm{Hz} = 1/\mathrm{s}$であることに注意して
+\begin{equation*}
+\frac{\mathrm{A}}{(1/\mathrm{s})\cdot\mathrm{F}}
+= \frac{\mathrm{A}\cdot\mathrm{s}}{\mathrm{F}}
+= \frac{\mathrm{A}\cdot\mathrm{s}}{\mathrm{A}\cdot\mathrm{s}/\mathrm{V}} = \mathrm{V}
+\end{equation*}
+となり，たしかに電圧の単位になる。
+途中で$1\,\mathrm{F} = 1\,\mathrm{A\cdot s/V}$（キャパシタの定義）を使った。
+分子$\mathrm{A}\cdot\mathrm{s}$は電荷$\mathit{\Delta}Q$の単位そのものである。
+
+%% 8章 問3（8.3節）
+\item[8.3節 問3]
+力率$0.6$のとき，式\ref{eq8.18}より
+\begin{equation*}
+I_{\mathrm{rms}} = \frac{P}{V_{\mathrm{rms}}\cdot\mathrm{PF}}
+= \frac{1200}{200\times0.6} = 10\,\mathrm{A}
+\end{equation*}
+力率が$1$に改善されると$I_{\mathrm{rms}} = 1200/(200\times1) = 6$\,Aで済む。
+同じ$1.2$\,kWを使うのに，力率が低いと$10/6 \approx 1.7$倍の電流が必要になる。
+
+%% 8章 問4（8.4節）
+\item[8.4節 問4]
+式\ref{eq8.24}で位相差をゼロとして
+\begin{equation*}
+\mathrm{PF} = \frac{1}{\sqrt{1 + 0.48^2}}
+= \frac{1}{\sqrt{1.23}} \approx 0.90
+\end{equation*}
+チョークインプット形は電流が正弦波に近く，THDが小さいので力率は約$0.9$と高い。
+キャパシタインプット形はパルス状電流でTHDが大きく，力率は$0.5$前後まで下がる。
+大電力ではチョークインプット形が好まれる理由がここにある。
+
+%% 8章 問5（8.5節）
+\item[8.5節 問5]
+入力の波高値は$V_m = \sqrt{2}\times200 \approx 283$\,V。
+昇圧型PFCは昇圧チョッパなので出力電圧は$V_{\mathrm{out}} = V_m/(1-D)$（式\ref{eq5.13}）であり，
+$0 < D < 1$では必ず$V_{\mathrm{out}} > V_m$になる。
+すなわち出力は入力の波高値$283$\,Vより低くはできず，これが下限である
+（実際には余裕を見て$400$\,V程度に設定される）。
+昇圧チョッパは入力より低い電圧を作れないため，PFC出力は波高値以上と決まる。
+
 \end{enumerate}

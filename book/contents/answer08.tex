@@ -1,4 +1,78 @@
 \answer
 \begin{enumerate}
-\item （解答整備予定）
+
+%%--- 章末問題 8.1 ---
+\item[\ref{ex8.1}]
+(a) $V_m = \sqrt{2}\times100 \approx 141$\,V。
+
+(b) 全波整流なので式\ref{eq8.10}より
+\begin{equation*}
+\mathit{\Delta}V = \frac{I_o}{2 f C}
+= \frac{0.8}{2\times60\times1000\times10^{-6}} \approx 6.7\,\mathrm{V}
+\end{equation*}
+
+(c) 半波整流では谷の来る頻度が半分になり放電期間が$2$倍長くなるので，
+リプルは$\mathit{\Delta}V = I_o/(fC) \approx 13.3$\,Vと$2$倍になる。
+
+%%--- 章末問題 8.2 ---
+\item[\ref{ex8.2}]
+(a) 半波：$V_{\mathrm{avg}} = V_m/\pi \approx 45$\,V，$V_{\mathrm{rms}} = V_m/2 \approx 70.5$\,V。
+全波：$V_{\mathrm{avg}} = 2V_m/\pi \approx 90$\,V，$V_{\mathrm{rms}} = V_m/\sqrt{2} \approx 100$\,V。
+
+(b) 全波整流は脈流の周波数が$2f$で，半波の$f$の$2$倍である。
+このため山と山の間隔（放電期間）が半分になり，
+式\ref{eq8.10}のとおりリプル電圧が半分に収まる。
+
+%%--- 章末問題 8.3 ---
+\item[\ref{ex8.3}]
+(a) 皮相電力$S = V_{\mathrm{rms}} I_{\mathrm{rms}} = 100\times8 = 800$\,V$\cdot$A。
+有効電力$P = S\cos45^\circ = 800\times0.707 \approx 566$\,W。
+力率$\mathrm{PF} = \cos45^\circ \approx 0.71$。
+
+(b) 力率$1$なら$I = P/V_{\mathrm{rms}} = 566/100 \approx 5.7$\,A。
+配線損失は電流の二乗に比例するから，$(5.7/8)^2 = 0.5$，すなわち半分に減る。
+
+%%--- 章末問題 8.4 ---
+\item[\ref{ex8.4}]
+(a) 振幅の比が実効値の比になるから，式\ref{eq8.22}より
+\begin{equation*}
+\mathrm{THD} = \frac{\sqrt{4^2 + 2^2}}{10} = \frac{\sqrt{20}}{10} \approx 0.45
+\end{equation*}
+すなわち約$45\,\%$。
+
+(b) 式\ref{eq8.24}で位相差ゼロとして
+$\mathrm{PF} = 1/\sqrt{1 + 0.45^2} = 1/\sqrt{1.2} \approx 0.91$。
+
+(c) 実効値は式\ref{eq8.23}より$\sqrt{1 + \mathrm{THD}^2} = \sqrt{1.2} \approx 1.10$倍。
+高調波のぶんだけ実効値が約$1$割増える。
+
+%%--- 章末問題 8.5 ---
+\item[\ref{ex8.5}]
+半波整流では，導通時にダイオードで$V_F$だけ電圧が落ちるので，
+出力の山の値は$V_m - V_F$になる。
+$V_m = 5$\,Vのとき山は$5 - 0.7 = 4.3$\,Vで，理想より$0.7$\,V低い。
+これは$V_m$の約$14\,\%$にあたる大きなずれである。
+一方$V_m = 141$\,Vの商用整流では$0.7$\,Vは約$0.5\,\%$にすぎず無視できる。
+したがって$V_F$の影響が問題になるのは，$V_m$が小さい\textbf{低電圧の整流}のほうである
+（低電圧では順方向電圧降下の小さいショットキーダイオードや同期整流が使われる）。
+
+%%--- 章末問題 8.6 ---
+\item[\ref{ex8.6}]
+(a) 波高値$V_m = 141$\,Vに対し出力平均は$V_{\mathrm{avg}} \approx 135$\,V程度になるので，
+負荷電流は$I_o \approx V_{\mathrm{avg}}/R \approx 1.35$\,A。
+式\ref{eq8.10}より
+\begin{equation*}
+\mathit{\Delta}V \approx \frac{1.35}{2\times50\times1000\times10^{-6}} \approx 13\,\mathrm{V}
+\end{equation*}
+となり，シミュレーション波形のリプル（十数V）とおおむね一致する。
+
+(b) 電源電流はキャパシタが充電される山の近くだけに流れるパルス状になる。
+$C$を大きくすると，より短い時間で充電しようとしてパルスは背が高く鋭くなり，
+実効値が増えて力率が下がる。平滑をよくすることと力率を上げることは，
+この方式では両立しない（\ref{sec8.5}節のPFCが必要になる）。
+
+(c) 式\ref{eq8.10}よりリプルは$C$に反比例するから，
+$C$を$1/10$の$100\,\mathrm{\mu F}$にするとリプルは約$10$倍になり，
+出力は直流とは呼べないほど大きく脈動する。
+
 \end{enumerate}

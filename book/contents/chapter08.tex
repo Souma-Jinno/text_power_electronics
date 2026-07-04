@@ -1,4 +1,545 @@
 \chapter{交流-直流変換 ― 整流回路}
 \label{chap8}
 
-（執筆予定）
+ここから，交流のからむ変換に入る。家庭のコンセントに来ているのは交流であり，
+一方で電子機器の中身はほとんどが直流で動く。
+交流を直流に作り替える\index{せいりゅう@整流}\textbf{整流}（rectification）は，
+あらゆる電源回路の入口にあたる，パワーエレクトロニクスの最も基本的な変換である。
+主役は2章で学んだ\index{だいおーど@ダイオード}\textbf{ダイオード}（\ref{sec2.3}節）― 電圧の向きでオン・オフが決まる，
+向きをもったスイッチである。本章ではまず，ダイオードで交流の山を取り出す半波・全波整流を学び（\ref{sec8.1}節），
+キャパシタで谷を埋める平滑とリプルの見積り（\ref{sec8.2}節），
+交流電力の基礎である実効値・平均電力・力率（\ref{sec8.3}節），
+整流回路が抱える歪み波形と高調波の問題（\ref{sec8.4}節），
+そしてそれを解く力率改善回路（\ref{sec8.5}節）へと進む。
+
+\begin{screen}
+\noindent\textbf{本章の現在地}\\[3pt]
+序章の電力変換の地図（\ref{fig0.1}）の「交流→直流（AC-DC変換）」に入る。
+5〜7章の直流変換に続き，ここから交流がからむ変換（8〜10章）が始まる。
+エネルギーの視点で先に要点を言えば，\textbf{ダイオードが交流の山だけを負荷へ通し，
+キャパシタが放電で谷を埋めて直流に均す}。
+ただしこれはタダではない ― 電源電流がパルス状になり，力率が下がるという代償を伴う。
+その代償を回路の作り替えで取り戻すのが，本章の後半（力率改善）である。
+\end{screen}
+
+%%======================================================================
+\section{半波整流と全波整流}
+\label{sec8.1}
+
+\subsection{整流とは ― ダイオードという一方通行弁}
+
+\index{ちょくりゅう@直流}\textbf{直流}は電圧・電流の向きが一定で，電池やチョッパ出力（5章）がこれにあたる。
+これに対し\index{こうりゅう@交流}\textbf{交流}は向きが周期的に反転し，商用電源（日本では実効値$100$\,V，周波数$50$または$60$\,Hz）が代表である。
+交流は変圧器で電圧を容易に変えられ，遠くへ送るのに都合がよい。しかし機器の中の半導体は直流で動くから，どこかで交流を直流へ変えなければならない。
+
+その要となるのがダイオードである。ダイオードは順方向（アノードからカソード）には電流を流すが，逆方向にはほとんど流さない。
+すなわち電流の向きを一方向に制限する弁として働く。本章では解析を見通しよくするため，次の理想化を置く。
+
+\begin{注意}
+本章では特に断らないかぎり\index{りそうだいおーど@理想ダイオード}\textbf{理想ダイオード}を仮定する。
+すなわち，順方向では電圧降下ゼロで電流を流し（オン），逆方向では電流ゼロで電圧を受け持ち（オフ），
+切替えは一瞬で行われるとする。実際のダイオードには順方向電圧降下$V_F$（シリコンで約$0.7$\,V。2章）があり，
+低電圧の整流ではこれが無視できない。その影響は章末問題\ref{ex8.5}で確かめる。
+\end{注意}
+
+\subsection{半波整流回路}
+
+最も単純な整流回路は，交流電源にダイオード1個と抵抗負荷を直列につないだ\index{はんぱせいりゅう@半波整流}\textbf{半波整流回路}である（\FIGref{fig8.1}(a)）。
+電源電圧を$v_S = V_m \sin\omega t$とする（$V_m$は\index{はこうち@波高値}\textbf{波高値}，すなわち最大値）。
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[clip]{figures/fig8.1.eps}
+\end{center}
+\caption{半波整流回路と電圧波形。ダイオードは$v_S>0$の半周期だけ導通し，出力$v_R$には正の山だけが現れる}
+\label{fig8.1}
+\end{figure}
+
+$v_S > 0$の半周期ではダイオードが順バイアスされて導通し，出力には電源電圧がそのまま現れる。
+$v_S < 0$の半周期では逆バイアスされて遮断し，出力はゼロになる。したがって出力電圧は
+\begin{equation}
+v_R = \left.
+\begin{array}{ll}
+V_m \sin\omega t & (v_S > 0)\\
+0 & (v_S \le 0)
+\end{array}
+\right\}
+\label{eq8.1}
+\end{equation}
+となり，正弦波の正の半分だけを取り出した脈流になる（\ref{fig8.1}(b)）。
+
+この波形を1つの直流値で代表させるのが\index{へいきんち@平均値}\textbf{平均値}（直流分）である。角度$\theta = \omega t$で1周期$0 \sim 2\pi$にわたり平均すると
+\begin{equation}
+V_{\mathrm{avg}} = \frac{1}{2\pi}\int_0^{2\pi} v_R \, d\theta
+= \frac{1}{2\pi}\int_0^{\pi} V_m \sin\theta \, d\theta
+\label{eq8.2}
+\end{equation}
+である（$\pi \sim 2\pi$では$v_R = 0$なので積分に寄与しない）。$\int_0^\pi \sin\theta\, d\theta = [-\cos\theta]_0^\pi = 2$だから
+\begin{equation}
+V_{\mathrm{avg}} = \frac{V_m}{2\pi}\cdot 2 = \frac{V_m}{\pi}
+\label{eq8.3}
+\end{equation}
+となる。
+
+一方，負荷での発熱を決めるのは\index{じっこうち@実効値}\textbf{実効値}（RMS）である。実効値は瞬時値の二乗を平均して平方根をとった量で（\ref{sec8.3}節で詳しく述べる），
+\begin{equation}
+V_{\mathrm{rms}} = \sqrt{\frac{1}{2\pi}\int_0^{2\pi} v_R^2 \, d\theta}
+= \sqrt{\frac{1}{2\pi}\int_0^{\pi} V_m^2 \sin^2\theta \, d\theta}
+\label{eq8.4}
+\end{equation}
+と定義される。$\sin^2\theta = (1-\cos2\theta)/2$を使うと$\int_0^\pi \sin^2\theta\, d\theta = \pi/2$だから
+\begin{equation}
+V_{\mathrm{rms}} = V_m\sqrt{\frac{1}{2\pi}\cdot\frac{\pi}{2}} = \frac{V_m}{2}
+\label{eq8.5}
+\end{equation}
+となる。半波整流では，正弦波の片側しか使わないため出力の平均値も実効値も小さい。
+
+\subsection{全波整流回路 ― ダイオードブリッジ}
+
+交流の両方の半周期を使えば，出力をもっと大きく，谷の浅い脈流にできる。これを実現するのが，
+4個のダイオードを橋のように組んだ\index{だいおーどぶりっじ@ダイオードブリッジ}\textbf{ダイオードブリッジ}による\index{ぜんぱせいりゅう@全波整流}\textbf{全波整流回路}である（\FIGref{fig8.2}(a)）。
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[clip]{figures/fig8.2.eps}
+\end{center}
+\caption{ダイオードブリッジによる全波整流回路と出力波形。どちらの半周期でも負荷には同じ向きに電流が流れ，出力は$v_R = |v_S|$となる}
+\label{fig8.2}
+\end{figure}
+
+$v_S > 0$の半周期は$D_1$と$D_4$が導通し，電流は$D_1 \to$負荷$\to D_4$の経路を流れる。
+$v_S < 0$の半周期は$D_2$と$D_3$が導通し，電流は$D_2 \to$負荷$\to D_3$の経路を流れる。
+要点は，どちらの半周期でも\textbf{負荷には同じ向きに電流が流れる}ことである。負荷から電源の負の半周期を見ると，符号が反転して正になるので，出力は
+\begin{equation}
+v_R = |v_S| = |V_m \sin\omega t|
+\label{eq8.6}
+\end{equation}
+という，正弦波を折り返した波形になる（\ref{fig8.2}(b)）。山が半周期ごとに現れるので，脈流の周波数は電源周波数$f$の2倍の$2f$である。
+
+平均値は，半波と同じ積分を今度は$0 \sim \pi$の1つの山について行い，それを周期$\pi$で割ればよい。
+\begin{equation}
+V_{\mathrm{avg}} = \frac{1}{\pi}\int_0^{\pi} V_m \sin\theta \, d\theta = \frac{2V_m}{\pi}
+\label{eq8.7}
+\end{equation}
+半波の$2$倍である。実効値は，二乗すれば$|v_S|^2 = v_S^2$で正弦波と変わらないから
+\begin{equation}
+V_{\mathrm{rms}} = \sqrt{\frac{1}{\pi}\int_0^{\pi} V_m^2 \sin^2\theta \, d\theta} = \frac{V_m}{\sqrt{2}}
+\label{eq8.8}
+\end{equation}
+となり，もとの正弦波の実効値$V_m/\sqrt{2}$に等しい。半波整流と全波整流の比較を\TABref{tab8.1}にまとめる。
+
+\begin{table}[h]
+\begin{center}
+\caption{半波整流と全波整流の比較（抵抗負荷，理想ダイオード）}
+\label{tab8.1}
+\begin{tabular}{c|c|c}
+\hline
+項目 & 半波整流 & 全波整流 \\
+\hline
+ダイオード数 & 1個 & 4個 \\
+利用する半周期 & 正のみ & 正・負の両方 \\
+脈流の周波数 & $f$ & $2f$ \\
+平均値$V_{\mathrm{avg}}$ & $\dfrac{V_m}{\pi}$ & $\dfrac{2V_m}{\pi}$ \\
+実効値$V_{\mathrm{rms}}$ & $\dfrac{V_m}{2}$ & $\dfrac{V_m}{\sqrt{2}}$ \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{例題}[商用電源の整流]
+\label{rei8.1}
+実効値$100$\,Vの商用交流（$f = 50$\,Hz）をダイオードブリッジで全波整流する。
+出力電圧の波高値$V_m$，平均値$V_{\mathrm{avg}}$，実効値$V_{\mathrm{rms}}$，および脈流の周波数を求めよ。理想ダイオードとする。
+\begin{解答}
+波高値は実効値の$\sqrt{2}$倍だから$V_m = \sqrt{2}\times100 \approx 141$\,V。
+式\ref{eq8.7}より
+\begin{equation*}
+V_{\mathrm{avg}} = \frac{2V_m}{\pi} = \frac{2\times141}{\pi} \approx 90\,\mathrm{V}
+\end{equation*}
+式\ref{eq8.8}より$V_{\mathrm{rms}} = V_m/\sqrt{2} = 100$\,V（もとの交流の実効値に等しい）。
+脈流の周波数は$2f = 100$\,Hzである。半波整流なら平均値は$V_m/\pi \approx 45$\,Vと半分になる。
+\end{解答}
+\end{例題}
+
+\begin{注意}
+整流では，導通していないダイオードが受け持つ逆電圧（\index{ぎゃくでんあつ@逆電圧}逆電圧のピーク値，PIV）にも注意する。
+抵抗負荷の半波整流では，逆の半周期にダイオードへ$V_m$がそのままかかる。ブリッジでも各ダイオードの逆電圧は$V_m$である。
+ダイオードは，この逆電圧に耐える耐圧のものを選ばなければならない。
+なお，ダイオードを2章のサイリスタ（\ref{sec2.7}節）に置き換え，オンのタイミングを遅らせると出力電圧を可変にできる。これを位相制御整流という。
+\end{注意}
+
+\begin{問}
+\item 実効値$200$\,Vの交流を半波整流したときの出力の平均値と実効値を求めよ。また同じ交流を全波整流したときの平均値と実効値を求め，半波の場合と比べよ。
+\end{問}
+
+%%======================================================================
+\section{平滑とリプル}
+\label{sec8.2}
+
+\subsection{キャパシタで谷を埋める}
+
+整流しただけの出力は，\ref{fig8.2}(b)のように大きく脈動していて，そのままでは直流電源として使えない。
+そこで\ref{fig8.3}のように，出力に大容量のキャパシタ$C$を並列につなぐ。すると$C$が電圧の谷を埋め，出力はほぼ一定の直流に近づく。
+このように，整流の直後にキャパシタを置いて電圧を平滑にする方式を\index{きゃぱしたいんぷっとがた@キャパシタインプット形}\textbf{キャパシタインプット形}という。
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[clip]{figures/fig8.3.eps}
+\end{center}
+\caption{キャパシタインプット形の平滑動作（全波整流の場合）。整流電圧がキャパシタ電圧より高い短い期間だけダイオードが導通して$C$を充電し（下段のパルス状電流），
+残りの期間は$C$が放電して負荷に電流を供給する。この充放電の繰返しがリプル電圧$\mathit{\Delta}V$を生む}
+\label{fig8.3}
+\end{figure}
+
+動作は充電と放電の2つの期間に分かれる。整流電圧がキャパシタ電圧より高い山の近くのごく短い期間だけ，ダイオードが導通して電源から$C$と負荷へ電流が流れ，$C$は山の頂上（ほぼ$V_m$）まで充電される。
+それ以外の期間は，整流電圧が$C$の電圧を下回るのでダイオードは遮断し，$C$が放電して負荷に電流を供給し続ける。この放電の間だけ電圧がゆるやかに下がる。
+この電圧のわずかな上下動を\index{りぷるでんあつ@リプル電圧}\textbf{リプル電圧}$\mathit{\Delta}V$という。
+
+\subsection{リプル電圧の見積り}
+
+リプル電圧は，キャパシタの基本式$i_C = C\, dv_C/dt$から見積もれる。
+小リプルを仮定すると，負荷電流$I_o$はほぼ一定とみなせる。放電期間の間，この$I_o$がすべて$C$から供給されるので，放電で失われる電荷は
+\begin{equation}
+\mathit{\Delta}Q = I_o \, t_{\mathrm{dis}}
+\label{eq8.9}
+\end{equation}
+である。ここで$t_{\mathrm{dis}}$は放電期間の長さで，リプルが小さいときはほぼ1つの山から次の山までの間隔に等しい。
+その間隔は，半波整流では$1/f$，全波整流では山が2倍の頻度で来るので$1/(2f)$である。
+電荷$\mathit{\Delta}Q$が抜けると電圧は$\mathit{\Delta}Q/C$だけ下がるから，全波整流のリプル電圧は
+\begin{equation}
+\mathit{\Delta}V = \frac{\mathit{\Delta}Q}{C} = \frac{I_o}{2 f C}
+\label{eq8.10}
+\end{equation}
+となる（半波整流では分母の$2$がとれて$\mathit{\Delta}V = I_o/(fC)$）。
+リプルを小さくするには，$C$を大きくするか，全波整流にして谷の来る頻度を上げればよい。全波整流が同じ$C$で半波の半分のリプルに収まるのは，この$2f$のおかげである。
+
+設計では，許容できるリプル電圧$\mathit{\Delta}V$を先に決め，式\ref{eq8.10}を$C$について解いて
+\begin{equation}
+C = \frac{I_o}{2 f\, \mathit{\Delta}V}
+\label{eq8.11}
+\end{equation}
+から必要な容量を求める。
+
+\begin{例題}[平滑キャパシタの見積り]
+\label{rei8.2}
+実効値$100$\,V・$50$\,Hzの商用交流を全波整流し，負荷電流$I_o = 1$\,Aを供給する。
+リプル電圧を$\mathit{\Delta}V = 5$\,V以内に抑えるために必要なキャパシタンス$C$を求めよ。
+\begin{解答}
+全波整流なので式\ref{eq8.11}を使う。
+\begin{equation*}
+C = \frac{I_o}{2 f\, \mathit{\Delta}V} = \frac{1}{2\times50\times5} = 2.0\times10^{-3}\,\mathrm{F} = 2000\,\mathrm{\mu F}
+\end{equation*}
+となる。商用周波数は$50$\,Hzと低いため，チョッパ（5章）のような高い周波数に比べて桁違いに大きな容量が必要になる。
+実際には余裕を見て，これ以上の標準値（たとえば$3300\,\mathrm{\mu F}$）を選ぶ。
+\end{解答}
+\end{例題}
+
+\subsection{チョークインプット形}
+
+平滑にはもう1つの方式がある。整流の直後にインダクタ（チョークコイル）$L$を直列に置く\index{ちょーくいんぷっとがた@チョークインプット形}\textbf{チョークインプット形}である。
+インダクタは電流の急な変化を嫌う（4章）ので，電源から負荷へ流れる電流がならされ，途切れずに連続的に流れるようになる。
+このため，電源電流の波形が正弦波に近づき，後で述べる力率が高くなるという大きな利点がある。
+一方で，出力電圧は波高値$V_m$ではなく，平均値$2V_m/\pi$に近い値までしか上がらない。
+大電流を扱う電源ではチョークインプット形が，小型・低コストが求められる小電力機器ではキャパシタインプット形が使われることが多い。両者の対比を\TABref{tab8.2}に示す。
+
+\begin{table}[h]
+\begin{center}
+\caption{キャパシタインプット形とチョークインプット形の比較}
+\label{tab8.2}
+\begin{tabular}{c|c|c}
+\hline
+項目 & キャパシタインプット形 & チョークインプット形 \\
+\hline
+平滑する量 & 電圧 & 電流 \\
+出力電圧 & 高い（$\approx V_m$） & やや低い（$\approx 2V_m/\pi$） \\
+電源電流 & パルス状 & 正弦波に近い \\
+力率 & 低い & 高い \\
+向く用途 & 小電力機器 & 大電力機器 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{問}
+\item 式\ref{eq8.10}の右辺の単位が$\mathrm{V}$（ボルト）になることを確かめよ。
+$1\,\mathrm{F} = 1\,\mathrm{C/V} = 1\,\mathrm{A\cdot s/V}$を使ってよい。
+\end{問}
+
+%%======================================================================
+\section{電力の基礎 ― 実効値・平均電力・力率}
+\label{sec8.3}
+
+\subsection{なぜ実効値か ― 同じ発熱}
+
+前節までにたびたび実効値が出てきた。ここでその意味をきちんと押さえておく。
+時間とともに変化する電圧・電流を，1つの数値で「大きさ」として代表させたい。単純な平均値では，正弦波のように正負に振れる量は平均がゼロになってしまい役に立たない。
+そこで役立つのが実効値である。
+
+\begin{定義}[実効値]
+\label{def8.1}
+時間変化する量$x(t)$の\index{じっこうち@実効値}\textbf{実効値}（RMS：root mean square）を
+\begin{equation}
+X_{\mathrm{rms}} = \sqrt{\frac{1}{T}\int_0^T x^2(t)\, dt}
+\label{eq8.12}
+\end{equation}
+で定義する。二乗（square）し，時間平均（mean）し，平方根（root）をとる，という名の通りの操作である。
+\end{定義}
+
+なぜ二乗するのか。電力が電圧・電流の二乗に比例するからである。抵抗$R$に電圧$v(t)$を加えたときの平均電力は
+\begin{equation}
+P = \frac{1}{T}\int_0^T \frac{v^2(t)}{R}\, dt = \frac{1}{R}\cdot\frac{1}{T}\int_0^T v^2(t)\, dt = \frac{V_{\mathrm{rms}}^2}{R}
+\label{eq8.13}
+\end{equation}
+となり，これは直流電圧$V = V_{\mathrm{rms}}$を加えたときの電力$V^2/R$と同じ形である。つまり実効値とは，
+\textbf{同じ抵抗に同じ発熱（同じ平均電力）を生じさせる直流の値}にほかならない（\FIGref{fig8.4}）。
+「AC\,$100$\,V」と「DC\,$100$\,V」は，抵抗負荷に対して同じ熱を出すという意味で等価なのである。
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[clip]{figures/fig8.4.eps}
+\end{center}
+\caption{実効値の意味。瞬時電力$v^2/R$は脈動するが（下段），その時間平均は実効値$V_{\mathrm{rms}}$の直流を加えたときの一定電力に等しい。この「同じ発熱」を与える値が実効値である}
+\label{fig8.4}
+\end{figure}
+
+正弦波$v = V_m \sin\omega t$の実効値を計算してみよう。$\sin^2\omega t = (1-\cos2\omega t)/2$の平均は$1/2$だから
+\begin{equation}
+V_{\mathrm{rms}} = \sqrt{\frac{1}{T}\int_0^T V_m^2 \sin^2\omega t\, dt} = V_m\sqrt{\frac{1}{2}} = \frac{V_m}{\sqrt{2}}
+\label{eq8.14}
+\end{equation}
+となる。正弦波の実効値は波高値の$1/\sqrt{2} \approx 0.707$倍である。商用の「$100$\,V」は実効値であり，波高値は約$141$\,Vになる。
+
+\subsection{平均電力と力率}
+
+電圧と電流に位相差$\varphi$がある一般の場合を考える。$v = V_m\sin\omega t$，$i = I_m\sin(\omega t - \varphi)$とすると，
+\index{しゅんじでんりょく@瞬時電力}\textbf{瞬時電力}は
+\begin{equation}
+p(t) = v\,i = V_m I_m \sin\omega t\,\sin(\omega t - \varphi)
+= \frac{V_m I_m}{2}\bigl[\cos\varphi - \cos(2\omega t - \varphi)\bigr]
+\label{eq8.15}
+\end{equation}
+となる。第2項は1周期平均するとゼロなので，\index{へいきんでんりょく@平均電力}\textbf{平均電力}（\index{ゆうこうでんりょく@有効電力}\textbf{有効電力}）は
+\begin{equation}
+P = \frac{1}{T}\int_0^T p(t)\, dt = \frac{V_m I_m}{2}\cos\varphi
+= V_{\mathrm{rms}} I_{\mathrm{rms}} \cos\varphi
+\label{eq8.16}
+\end{equation}
+である（実効値を使うと$V_m I_m/2 = V_{\mathrm{rms}} I_{\mathrm{rms}}$）。位相差$\varphi$があると，電圧と電流の実効値の積そのままより$\cos\varphi$の分だけ小さくなる。
+
+この「実効値の積」を\index{ひそうでんりょく@皮相電力}\textbf{皮相電力}という。
+\begin{equation}
+S = V_{\mathrm{rms}} I_{\mathrm{rms}} \quad [\mathrm{V\cdot A}]
+\label{eq8.17}
+\end{equation}
+皮相電力は，その電圧・電流で送れる電力の最大値（電圧と電流が同位相の理想的な場合の電力）を表す。実際に負荷で消費される有効電力$P$が，この最大値$S$のうちどれだけを占めるかの割合が\index{りきりつ@力率}\textbf{力率}である。
+
+\begin{定義}[力率]
+\label{def8.2}
+皮相電力$S = V_{\mathrm{rms}} I_{\mathrm{rms}}$に対する有効電力$P$の比
+\begin{equation}
+\mathrm{PF} = \frac{P}{S} = \frac{P}{V_{\mathrm{rms}} I_{\mathrm{rms}}}
+\label{eq8.18}
+\end{equation}
+を\index{りきりつ@力率}\textbf{力率}（power factor）という。電圧・電流がともに同じ周波数の正弦波なら$\mathrm{PF} = \cos\varphi$である。
+\end{定義}
+
+力率が低いと，同じ有効電力$P$を得るのにより大きな電流$I_{\mathrm{rms}} = P/(V_{\mathrm{rms}}\cdot\mathrm{PF})$が必要になる。
+電流が大きいほど配線での損失$I_{\mathrm{rms}}^2 R_{\mathrm{wire}}$が増え，電源や配線を太くしなければならない。力率は，電源の能力をどれだけ無駄なく使えているかの指標なのである。
+
+\begin{例題}[平均電力と力率]
+\label{rei8.3}
+実効値$100$\,Vの交流電源に，実効値$5$\,Aの電流が位相差$\varphi = 60^\circ$で流れている。
+有効電力$P$，皮相電力$S$，力率$\mathrm{PF}$を求めよ。また，同じ有効電力を力率$1$で得るのに必要な電流と比べよ。
+\begin{解答}
+皮相電力は式\ref{eq8.17}より$S = 100\times5 = 500$\,V$\cdot$A。
+有効電力は式\ref{eq8.16}より
+\begin{equation*}
+P = V_{\mathrm{rms}} I_{\mathrm{rms}}\cos\varphi = 100\times5\times\cos60^\circ = 100\times5\times0.5 = 250\,\mathrm{W}
+\end{equation*}
+力率は$\mathrm{PF} = P/S = 250/500 = 0.5$である。
+同じ$250$\,Wを力率$1$で得るなら電流は$I = P/V_{\mathrm{rms}} = 250/100 = 2.5$\,Aで済む。
+力率$0.5$では$2$倍の$5$\,Aを流しており，配線損失は$2^2 = 4$倍になる。
+\end{解答}
+\end{例題}
+
+\begin{問}
+\item ある機器が実効値$200$\,Vの電源から有効電力$1.2$\,kWを消費している。力率が$0.6$のとき，電源から流れる電流の実効値を求めよ。力率が$1$に改善されると電流は何\,Aになるか。
+\end{問}
+
+%%======================================================================
+\section{歪み波形の力率と高調波}
+\label{sec8.4}
+
+\subsection{パルス状電流が力率を下げる}
+
+\ref{sec8.2}節のキャパシタインプット形では，ダイオードが山の近くのごく短い間だけ導通するため，電源から流れる電流は\ref{fig8.3}下段のように鋭いパルス状になる。
+この電流を電源電圧と重ねて描くと\FIGref{fig8.5}のようになり，電圧は正弦波なのに電流はまったく違う形をしている。このとき，前節の$\mathrm{PF} = \cos\varphi$はそのままでは使えない。位相差$\varphi$を1つの値で決められないからである。
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[clip]{figures/fig8.5.eps}
+\end{center}
+\caption{キャパシタインプット形の電源電流。電圧$v_S$は正弦波だが，電流$i_S$はピーク付近に集中したパルス状に歪む。基本波成分$i_{S1}$は電圧と位相が合っていても振幅が小さく，力率を下げる}
+\label{fig8.5}
+\end{figure}
+
+歪んだ電流を扱うには，それを周波数成分に分解する。周期波形はどれも，電源と同じ周波数の\index{きほんは@基本波}\textbf{基本波}と，その整数倍の周波数をもつ\index{こうちょうは@高調波}\textbf{高調波}の和（\index{ふーりえきゅうすう@フーリエ級数}\textbf{フーリエ級数}）で表せる。
+電流を
+\begin{equation}
+i_S = i_1\sin(\omega t - \varphi_1) + i_3\sin(3\omega t - \varphi_3) + i_5\sin(5\omega t - \varphi_5) + \cdots
+\label{eq8.19}
+\end{equation}
+と書く（整流回路では対称性から偶数次はほとんど現れず，奇数次が残る）。
+
+\subsection{有効電力に効くのは基本波だけ}
+
+ここで大切な性質がある。異なる周波数の正弦波を掛けて1周期で平均するとゼロになる（三角関数の\index{ちょっこうせい@直交性}\textbf{直交性}）。
+電源電圧が基本波の正弦波$v_S = V_m\sin\omega t$だけなら，式\ref{eq8.19}の高調波との積は平均するとすべて消え，有効電力に残るのは電圧と同じ周波数の基本波成分だけである。
+\begin{equation}
+P = V_{\mathrm{rms}} I_{1,\mathrm{rms}}\cos\varphi_1
+\label{eq8.20}
+\end{equation}
+すなわち\textbf{高調波電流は有効電力を1ワットも運ばない}。
+
+ところが，電流の実効値には高調波もしっかり効く。直交性から，実効値の二乗は各成分の二乗和になり
+\begin{equation}
+I_{\mathrm{rms}} = \sqrt{I_{1,\mathrm{rms}}^2 + I_{3,\mathrm{rms}}^2 + I_{5,\mathrm{rms}}^2 + \cdots} > I_{1,\mathrm{rms}}
+\label{eq8.21}
+\end{equation}
+となる。高調波は仕事をしないのに実効値だけを増やす ― これが力率を下げる正体である。
+
+\subsection{全高調波歪み率（THD）}
+
+高調波がどれだけ含まれるかを表す指標が\index{ぜんこうちょうはひずみりつ@全高調波歪み率}\textbf{全高調波歪み率}（THD）である。
+
+\begin{定義}[全高調波歪み率]
+\label{def8.3}
+基本波の実効値に対する，高調波成分全体の実効値の比
+\begin{equation}
+\mathrm{THD} = \frac{\sqrt{I_{3,\mathrm{rms}}^2 + I_{5,\mathrm{rms}}^2 + \cdots}}{I_{1,\mathrm{rms}}}
+\label{eq8.22}
+\end{equation}
+を\textbf{全高調波歪み率}（total harmonic distortion）という。純粋な正弦波では$\mathrm{THD} = 0$である。
+\end{定義}
+
+THDを使うと，式\ref{eq8.21}は
+\begin{equation}
+I_{\mathrm{rms}} = I_{1,\mathrm{rms}}\sqrt{1 + \mathrm{THD}^2}
+\label{eq8.23}
+\end{equation}
+と書ける。これを力率の定義（式\ref{eq8.18}）に代入し，式\ref{eq8.20}を使うと
+\begin{equation}
+\mathrm{PF} = \frac{P}{V_{\mathrm{rms}} I_{\mathrm{rms}}}
+= \frac{V_{\mathrm{rms}} I_{1,\mathrm{rms}}\cos\varphi_1}{V_{\mathrm{rms}}\, I_{1,\mathrm{rms}}\sqrt{1+\mathrm{THD}^2}}
+= \frac{\cos\varphi_1}{\sqrt{1 + \mathrm{THD}^2}}
+\label{eq8.24}
+\end{equation}
+となる。力率は2つの要因で下がることがわかる。基本波の位相差$\varphi_1$（$\cos\varphi_1$の項）と，波形の歪み（$\sqrt{1+\mathrm{THD}^2}$の項）である。
+整流回路では位相差より歪みのほうが主な原因であり，力率を上げるには何よりも電流波形の歪みを減らす（THDを下げる）ことが効く。
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[clip]{figures/fig8.6.eps}
+\end{center}
+\caption{歪み電流の高調波スペクトル。基本波を$1$に規格化し，各次数の相対振幅を棒で示す。高調波（赤）の実効値の総和と基本波の比がTHDである}
+\label{fig8.6}
+\end{figure}
+
+\begin{例題}[歪み電流の力率]
+\label{rei8.4}
+電源電圧を正弦波とし，電源電流が
+$i_S = 1.0\sin\omega t + 0.5\sin3\omega t + 0.2\sin5\omega t$（単位はA）と表せるとする。
+基本波は電圧と同位相（$\varphi_1 = 0$）である。THDと力率を求めよ。
+\begin{解答}
+振幅の比がそのまま実効値の比になるから，式\ref{eq8.22}より
+\begin{equation*}
+\mathrm{THD} = \frac{\sqrt{0.5^2 + 0.2^2}}{1.0} = \sqrt{0.29} \approx 0.54
+\end{equation*}
+すなわち$54\,\%$。力率は式\ref{eq8.24}で$\cos\varphi_1 = 1$として
+\begin{equation*}
+\mathrm{PF} = \frac{1}{\sqrt{1 + 0.54^2}} = \frac{1}{\sqrt{1.29}} \approx 0.88
+\end{equation*}
+となる。位相差がまったくなくても，波形が歪んでいるだけで力率は$0.88$まで下がる。この歪みによる分を\index{ひずみりきりつ@歪み力率}\textbf{歪み力率}という。
+\end{解答}
+\end{例題}
+
+\begin{問}
+\item チョークインプット形の電源電流を方形波で近似すると，そのTHDは約$0.48$になる。このときの力率を求めよ（基本波の位相差はないものとする）。キャパシタインプット形の力率（しばしば$0.5$前後）と比べよ。
+\end{問}
+
+%%======================================================================
+\section{力率改善回路（PFC）}
+\label{sec8.5}
+
+\subsection{電流を正弦波に整形する}
+
+力率を下げているのは，パルス状に歪んだ電源電流であった。ならば，\textbf{電源電流を電圧と同じ正弦波の形に，しかも同位相で流してやれば}力率は$1$に近づく。
+これを能動的に行う回路が\index{りきりつかいぜんかいろ@力率改善回路}\textbf{力率改善回路}（PFC：power factor correction）である。
+
+その主役となるのが\index{しょうあつがたぴーえふしー@昇圧型PFC}\textbf{昇圧型PFC}で，
+なんと\textbf{5章の昇圧チョッパをそのまま再利用する}（\FIGref{fig8.7}）。
+構成は，ダイオードブリッジで全波整流した脈流を，昇圧チョッパ（\ref{sec5.3}節）に通すだけである。
+ここでスイッチ$S$を高い周波数でオン・オフし，そのデューティ比を絶えず調整して，
+インダクタ電流（＝電源から流れ込む電流）が\textbf{整流電圧$|v_S|$に相似な正弦半波になるよう}制御する。すると入力電流は\ref{fig8.7}(b)のように電圧と同じ形にそろい，力率はほぼ$1$，THDはごく小さくなる。
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[clip]{figures/fig8.7.eps}
+\end{center}
+\caption{昇圧型PFC。ダイオードブリッジと5章の昇圧チョッパを組み合わせ，スイッチ$S$のデューティ比を制御して入力電流を電圧と同じ正弦波に整形する。出力は入力波高値より高い一定の直流電圧になる}
+\label{fig8.7}
+\end{figure}
+
+なぜ昇圧チョッパなのか。昇圧型は入力側にインダクタが直列に入るので，入力電流をそのままインダクタ電流として細かく制御でき，しかも脈流のどの瞬間でも電流を流し続けられる。
+昇圧チョッパの出力電圧は入力より高い$V_m/(1-D)$（式\ref{eq5.13}）だから，出力には入力の波高値$V_m$より高い一定の直流電圧（商用$100$\,V系なら$400$\,V程度）が得られ，これを後段のDC-DCコンバータ（5〜7章）へ渡す。
+本書がくり返してきた「1つの回路の考え方を別の変換へ使い回す」という理念が，ここでもそのまま生きている。
+
+\subsection{ブリッジレスPFCへ}
+
+昇圧型PFCには弱点もある。電流が入口のダイオードブリッジを必ず通るため，ダイオード2〜3個分の電圧降下（合わせて約$2$\,V）がつねに損失として生じる。
+そこで，ダイオードブリッジをなくし，整流と力率改善を高速スイッチだけで同時に行う\index{とーてむぽーるぶりっじれすぴーえふしー@トーテムポールブリッジレスPFC}\textbf{トーテムポールブリッジレスPFC}が使われるようになってきた。
+電流が通る半導体の数が減るぶん効率が上がるが，スイッチを交流の極性に合わせて正確に制御する必要があり，制御が複雑になる。
+この回路が実用になったのは，高速でスイッチングでき損失の小さいSiC・GaNデバイス（3章）が現れたおかげである。整流回路もまた，デバイスの進歩とともに姿を変えているのである。
+
+\begin{問}
+\item 実効値$200$\,Vの交流を昇圧型PFCに入力する。出力の直流電圧は，少なくとも入力の波高値より高くなければならない。必要な出力電圧の下限を求めよ。また，その理由を昇圧チョッパの電圧比（式\ref{eq5.13}）から説明せよ。
+\end{問}
+
+%%======================================================================
+\begin{章末問題}
+\item \label{ex8.1}実効値$100$\,V・$60$\,Hzの商用交流をダイオードブリッジで全波整流し，$C = 1000\,\mathrm{\mu F}$のキャパシタで平滑して，負荷電流$0.8$\,Aを供給する。理想ダイオードとする。
+\begin{enumerate}
+\item[(a)] 出力電圧の波高値$V_m$を求めよ。
+\item[(b)] リプル電圧$\mathit{\Delta}V$を求めよ。
+\item[(c)] 同じ回路を半波整流に変えると，リプル電圧はどうなるか。
+\end{enumerate}
+
+\item \label{ex8.2}半波整流と全波整流について答えよ。
+\begin{enumerate}
+\item[(a)] 波高値$V_m = 141$\,Vのとき，それぞれの出力の平均値と実効値を求めよ。
+\item[(b)] 全波整流のほうが，同じ平滑キャパシタでもリプルが小さくなる理由を，脈流の周波数に着目して説明せよ。
+\end{enumerate}
+
+\item \label{ex8.3}実効値$100$\,Vの電源に接続した誘導性負荷に，実効値$8$\,Aの電流が位相差$45^\circ$で流れている。
+\begin{enumerate}
+\item[(a)] 皮相電力$S$，有効電力$P$，力率$\mathrm{PF}$を求めよ。
+\item[(b)] 同じ有効電力を力率$1$で供給できれば，電流は何\,Aになるか。配線損失は何倍に減るか。
+\end{enumerate}
+
+\item \label{ex8.4}ある整流回路の電源電流の基本波振幅が$10$\,A，第3次高調波が$4$\,A，第5次高調波が$2$\,Aであった。電源電圧は正弦波，基本波の位相差はないものとする。
+\begin{enumerate}
+\item[(a)] この電流のTHDを求めよ。
+\item[(b)] 力率を求めよ。
+\item[(c)] 電流の実効値は，基本波だけの場合の何倍か。
+\end{enumerate}
+
+\item \label{ex8.5}ダイオードの順方向電圧降下$V_F = 0.7$\,Vを無視できない半波整流を考える。波高値$V_m = 5$\,Vの小さな交流を整流する場合，出力電圧の山の値は理想の$V_m$からどれだけ下がるか。
+また，$V_m = 141$\,Vの商用整流の場合と比べ，$V_F$の影響が問題になるのはどちらか，理由とともに述べよ。
+
+\item \label{ex8.6}（LTspiceで確かめよ）交流電源（振幅$141$\,V，$50$\,Hz），ダイオードブリッジ，平滑キャパシタ$C$，負荷抵抗$R$からなる全波整流回路をLTspiceで組み，次を確かめよ。
+\begin{enumerate}
+\item[(a)] $C = 1000\,\mathrm{\mu F}$，$R = 100\,\Omega$として，出力電圧のリプル$\mathit{\Delta}V$を波形から読み取り，式\ref{eq8.10}の見積り（$I_o \approx V_{\mathrm{avg}}/R$とせよ）と比べよ。
+\item[(b)] 電源電流$i_S$の波形を観察し，パルス状になっていることと，$C$を大きくするほどパルスが鋭くなる（力率が下がる）ことを確かめよ。
+\item[(c)] $C$を$100\,\mathrm{\mu F}$に減らすとリプルはどうなるか。式\ref{eq8.10}から予想してから確かめよ。
+\end{enumerate}
+\end{章末問題}
