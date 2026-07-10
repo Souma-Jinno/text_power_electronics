@@ -353,12 +353,12 @@ E_{\mathrm{off}} = \frac{1}{2}VIt_{\mathrm{off}}
 
 \subsection{高周波化の限界}
 
-スイッチは1秒間に$f_{\mathrm{sw}}$回オンオフを繰り返す。
-この$f_{\mathrm{sw}}$を\index{すいっちんぐしゅうはすう@スイッチング周波数}\textbf{スイッチング周波数}という。
+スイッチは1秒間に$f$回オンオフを繰り返す。
+この$f$を\index{すいっちんぐしゅうはすう@スイッチング周波数}\textbf{スイッチング周波数}という。
 1回の切り替えごとに$E_{\mathrm{on}} + E_{\mathrm{off}}$のエネルギーが失われるから，
 平均のスイッチング損失電力は
 \begin{equation}
-P_{\mathrm{sw}} = \frac{1}{2}VI(t_{\mathrm{on}} + t_{\mathrm{off}})f_{\mathrm{sw}}
+P_{\mathrm{sw}} = \frac{1}{2}VI(t_{\mathrm{on}} + t_{\mathrm{off}})f
 \label{eq3.10}
 \end{equation}
 となる。一方，導通損失はデューティ比$D$（オンしている時間の割合，序章）を使って
@@ -376,7 +376,7 @@ P_{\mathrm{total}} = P_{\mathrm{cond}} + P_{\mathrm{sw}}
 式\ref{eq3.10}が示す構図は単純で強力である。
 
 \begin{箇条書}
-\item $P_{\mathrm{sw}} \propto f_{\mathrm{sw}}$：\textbf{周波数を上げた分だけ損失は正比例で増える}。
+\item $P_{\mathrm{sw}} \propto f$：\textbf{周波数を上げた分だけ損失は正比例で増える}。
 導通損失は周波数によらないから，高周波では必ずスイッチング損失が支配的になる
 \item $P_{\mathrm{sw}} \propto (t_{\mathrm{on}} + t_{\mathrm{off}})$：
 同じ周波数なら，切り替えの速い素子ほど損失が小さい。
@@ -385,7 +385,7 @@ P_{\mathrm{total}} = P_{\mathrm{cond}} + P_{\mathrm{sw}}
 
 それでもなぜ高周波化したいのか。
 4章以降で見るように，変換回路のインダクタとキャパシタの大きさは
-おおむね$1/f_{\mathrm{sw}}$で決まり，周波数を10倍にできれば装置は10分の1のLとCで済む。
+おおむね$1/f$で決まり，周波数を10倍にできれば装置は10分の1のLとCで済む。
 \textbf{小型化と高効率の綱引き}こそ，スイッチング周波数を選ぶという設計行為の正体である。
 
 \begin{例題}[導通損失とスイッチング損失]
@@ -393,8 +393,8 @@ P_{\mathrm{total}} = P_{\mathrm{cond}} + P_{\mathrm{sw}}
 $V = 100$\,V，$I = 10$\,Aを切り替えるMOSFETがある。
 $R_{\mathrm{on}} = 50$\,m$\Omega$，$t_{\mathrm{on}} = t_{\mathrm{off}} = 50$\,ns，
 $D = 0.5$とする。
-(a) $f_{\mathrm{sw}} = 100$\,kHzのときの導通損失とスイッチング損失，
-(b) $f_{\mathrm{sw}} = 1$\,MHzのときのスイッチング損失を求めよ。
+(a) $f = 100$\,kHzのときの導通損失とスイッチング損失，
+(b) $f = 1$\,MHzのときのスイッチング損失を求めよ。
 \begin{解答}
 (a) 導通損失は式\ref{eq3.11}より
 \begin{equation*}
@@ -405,12 +405,12 @@ P_{\mathrm{cond}} = 0.05\times10^2\times0.5 = 2.5\,\mathrm{W}
 E_{\mathrm{on}} + E_{\mathrm{off}} = \frac{1}{2}\times100\times10\times(50+50)\times10^{-9}
 = 50\,\mathrm{\mu J}
 \end{equation*}
-だから，$f_{\mathrm{sw}} = 100$\,kHzでは
+だから，$f = 100$\,kHzでは
 \begin{equation*}
 P_{\mathrm{sw}} = 50\times10^{-6}\times10^5 = 5\,\mathrm{W}
 \end{equation*}
 総損失は$7.5$\,Wで，スイッチング損失がすでに導通損失を上回っている。
-(b) $f_{\mathrm{sw}} = 1$\,MHzでは$P_{\mathrm{sw}} = 50$\,Wとなり，
+(b) $f = 1$\,MHzでは$P_{\mathrm{sw}} = 50$\,Wとなり，
 導通損失の20倍に達する。
 このままでは冷却が追いつかない。
 高周波化には切り替え時間そのものを短くするしかない ―
@@ -422,7 +422,7 @@ P_{\mathrm{sw}} = 50\times10^{-6}\times10^5 = 5\,\mathrm{W}
 係数$1/2$は直線変化を仮定した近似で，波形が変われば変わる
 （電圧と電流が同時に直線変化する抵抗負荷では$1/6$）。
 実務ではデータシートの実測値$E_{\mathrm{on}}$，$E_{\mathrm{off}}$に
-$f_{\mathrm{sw}}$を掛けて見積もる。
+$f$を掛けて見積もる。
 式\ref{eq3.10}の価値は係数ではなく，損失が$V$，$I$，切り替え時間，
 周波数のそれぞれに比例するという\textbf{構造}にある。
 \end{注意}
@@ -710,22 +710,22 @@ MOSFETではなくIGBTが使われてきた理由，
 \begin{enumerate}
 \item[(a)] IGBT（$V_{\mathrm{CE(sat)}} = 1.5$\,V，
 $t_{\mathrm{on}} + t_{\mathrm{off}} = 1\,\mathrm{\mu s}$）を
-$f_{\mathrm{sw}} = 10$\,kHzで使うときの導通損失，スイッチング損失，総損失を求めよ。
-\item[(b)] (a)のIGBTのまま$f_{\mathrm{sw}} = 50$\,kHzに上げると総損失はいくらになるか。
+$f = 10$\,kHzで使うときの導通損失，スイッチング損失，総損失を求めよ。
+\item[(b)] (a)のIGBTのまま$f = 50$\,kHzに上げると総損失はいくらになるか。
 \item[(c)] SiC-MOSFET（$R_{\mathrm{on}} = 10$\,m$\Omega$，
-$t_{\mathrm{on}} + t_{\mathrm{off}} = 100$\,ns）を$f_{\mathrm{sw}} = 50$\,kHzで
+$t_{\mathrm{on}} + t_{\mathrm{off}} = 100$\,ns）を$f = 50$\,kHzで
 使うときの総損失を求め，(b)と比較せよ。
 \end{enumerate}
 
 \item \label{ex3.3}
 スイッチング損失には容量に由来する成分もある。
-$f_{\mathrm{sw}} = 100$\,kHzで動作するMOSFETについて次を求めよ。
+$f = 100$\,kHzで動作するMOSFETについて次を求めよ。
 \begin{enumerate}
 \item[(a)] 出力容量$C_{\mathrm{oss}} = 100$\,pFが電圧$V = 800$\,Vまで充電され，
 ターンオンのたびにそのエネルギー$\frac{1}{2}C_{\mathrm{oss}}V^2$が素子内で失われる。
 この損失電力を求めよ。
 \item[(b)] ゲート電荷$Q_g = 100$\,nCをゲート電圧$V_g = 15$\,Vで充放電するとき，
-駆動回路の損失$P_g = Q_gV_gf_{\mathrm{sw}}$を求めよ。
+駆動回路の損失$P_g = Q_gV_gf$を求めよ。
 \item[(c)] (a)(b)の結果を例題\ref{rei3.2}の$P_{\mathrm{sw}}$と比べ，
 どの成分が支配的かを述べよ。
 \end{enumerate}
