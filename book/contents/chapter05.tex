@@ -117,7 +117,7 @@ V_{\mathrm{on}} \cdot DT + V_{\mathrm{off}} \cdot (1-D)T = 0
 \item キャパシタ$C$：出力電圧を平滑にする（\index{へいかつきゃぱした@平滑キャパシタ}\textbf{平滑キャパシタ}）
 \end{箇条書}
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig5.1.eps}
 \end{center}
@@ -175,7 +175,7 @@ V_{\mathrm{out}} = D\, V_{\mathrm{in}}
 $0 < D < 1$だから，出力は必ず入力より低い。そして$D$を変えれば$0$から$V_{\mathrm{in}}$まで連続的に制御できる。
 「オン期間の割合＝電圧の比」という最も素直な変換である。
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig5.2.eps}
 \end{center}
@@ -222,7 +222,7 @@ D = \frac{V_{\mathrm{out}}}{V_{\mathrm{in}}} = \frac{5}{12} \approx 0.417
 インダクタが入力側に移り，スイッチSはインダクタの後で線路を接地側へ短絡する位置に，ダイオードは出力への一方通行弁の位置に置かれる。
 仮定は\ref{sec5.2}節の注意と同じである（理想素子・定常状態・電流連続・リプル小）。
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig5.3.eps}
 \end{center}
@@ -270,7 +270,7 @@ V_{\mathrm{out}} = \frac{V_{\mathrm{in}}}{1-D}
 \end{equation}
 $0 < D < 1$だから$1-D < 1$，出力は必ず入力より高い。たとえば$D = 0.5$で2倍，$D = 0.8$で5倍になる。
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig5.4.eps}
 \end{center}
@@ -329,7 +329,7 @@ I_{\mathrm{in}} = \frac{I_{\mathrm{out}}}{1-D}= \frac{0.42}{5/12} \approx 1.0\,\
 （\index{ばっくぶーすとこんばーた@バックブーストコンバータ}バックブーストコンバータ，buck-boost converter）である（\FIGref{fig5.5}(a)）。素子はやはり同じ4つで，
 スイッチSが入力側，インダクタ$L$が中央で接地へ落ち，ダイオード$\mathrm{D}$が出力側を向く。仮定はこれまでと同じである。
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig5.5.eps}
 \end{center}
@@ -382,7 +382,7 @@ V_{\mathrm{out}} = -\frac{D}{1-D}\, V_{\mathrm{in}}
 
 3つのチョッパ回路の性質を\TABref{tab5.1}にまとめる。
 
-\begin{table}[h]
+\begin{table}[ht]
 \begin{center}
 \caption{3つのチョッパ回路の比較}
 \label{tab5.1}
@@ -488,7 +488,7 @@ i_C = i_L - I_{\mathrm{out}}
 すなわち，$i_L$から平均値を除いた三角波の変動分がそっくり$C$に流れ込む（\ref{fig5.2}の3段目）。
 キャパシタは充放電のたびに電圧がわずかに揺れる。この揺れが出力の\index{りぷるでんあつ@リプル電圧}\textbf{リプル電圧}$\mathit{\Delta}V_{\mathrm{out}}$である。
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig5.6.eps}
 \end{center}
@@ -570,7 +570,7 @@ i_{L,\min} = I_{\mathrm{out}} - \frac{\mathit{\Delta}I_L}{2}
 やがて谷が0に触れ，さらに負荷が軽くなると電流が0に張り付く期間が現れる（\FIGref{fig5.7}）。
 ダイオードは逆向きに電流を流せないので，電流が0に達した瞬間に勝手にオフしてしまうからである。
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig5.7.eps}
 \end{center}
@@ -627,7 +627,7 @@ $L = 73\,\mathrm{\mu H}$，$\mathit{\Delta}I_L = 0.4$\,A）で，負荷電流が
 \index{こうしゅうはか@高周波化}\textbf{高周波化}はそのまま電源の小型化・軽量化につながる。単位体積あたりに変換できる電力
 （\index{ぱわーみつど@パワー密度}\textbf{パワー密度}）を高める最も効く手段である。
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig5.8.eps}
 \end{center}

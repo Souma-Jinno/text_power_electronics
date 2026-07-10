@@ -45,7 +45,7 @@ MOSFET（\ref{sec2.5}節），IGBT（\ref{sec2.6}節），
 近年はSiCやGaN（1章のワイドギャップ半導体）の実用化により，
 各素子の守備範囲が高電圧・高周波数側へ広がりつつある。
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig2.1.eps}
 \end{center}
@@ -122,7 +122,7 @@ BJT・MOSFET・IGBTは自己消弧形，サイリスタは他励形である。
 制御のしかたをまとめた。
 以降の各節はこの図の左から順に対応する。
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig2.2.eps}
 \end{center}
@@ -203,7 +203,7 @@ pn接合は電圧の向きに対するきわめて鋭いスイッチである。
 空乏層内の電場が絶縁破壊電界（\ref{sec1.6}節）に達して電流が急増する（降伏）。
 定格ではこの手前で使う。
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig2.3.eps}
 \end{center}
@@ -309,6 +309,12 @@ i_E = i_C + i_B
 $\beta$が大きいのは，ベースが薄く低濃度で「再結合の場」が小さいから ―
 つまり電流増幅は材料ではなく\textbf{構造の設計}が生む性質である。
 
+$i_C = \beta i_B$ が成り立つこの連続制御の状態を，
+\index{かっせいりょういき@活性領域}\textbf{活性領域}（線形領域）という。
+オフ（遮断）とフルオン（飽和）の\textbf{あいだ}にあり，ベース電流に応じてコレクタ電流が連続的に変わる領域で，
+ここではトランジスタが可変抵抗のように働く。スイッチング用途では活性領域を素早く通り抜けてオン・オフの2値だけを使うが，
+活性領域にとどめて連続的に使えば電圧を滑らかに調整できる（リニアレギュレータ，7章）。
+
 \begin{例題}[ベース駆動の電力]
 \label{rei2.2}
 $\beta = 50$のBJTをスイッチとして使い，コレクタ電流$100$\,Aを流す。
@@ -361,7 +367,7 @@ p形の半導体に2つのn形領域を作り，それぞれ
 ゲートは絶縁体の上に載っているから，\textbf{ゲートに直流電流は流れない}。
 ここがBJTのベースとの決定的な違いである。
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig2.4.eps}
 \end{center}
@@ -418,7 +424,7 @@ $v_{GS} > V_{th}$になると，反転層を通ってソースからドレイン
 また電流を運ぶのは多数キャリアの電子だけなので，
 少数キャリアの蓄積がなく，オフへの切替えも速い。
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig2.5.eps}
 \end{center}
@@ -471,7 +477,7 @@ $v_{GS} > V_{th}$になると，反転層を通ってソースからドレイン
 端子はBJTにならって\textbf{エミッタ}（E），\textbf{ゲート}（G），
 \textbf{コレクタ}（C）と呼ぶ。
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig2.6.eps}
 \end{center}
@@ -632,7 +638,7 @@ IGBTと同じ4層だが，ゲートが酸化膜の上ではなく
 次章では，データシートの数値と損失の見積りに基づいて
 「どれを選ぶか」を扱う。
 
-\begin{table}[h]
+\begin{table}[ht]
 \begin{center}
 \caption{本章で学んだ半導体スイッチのまとめ}
 \label{tab2.1}

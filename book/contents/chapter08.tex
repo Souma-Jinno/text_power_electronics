@@ -47,7 +47,7 @@
 最も単純な整流回路は，交流電源にダイオード1個と抵抗負荷を直列につないだ\index{はんぱせいりゅう@半波整流}\textbf{半波整流回路}である（\FIGref{fig8.1}(a)）。
 電源電圧を$v_S = V_m \sin\omega t$とする（$V_m$は\index{はこうち@波高値}\textbf{波高値}，すなわち最大値）。
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig8.1.eps}
 \end{center}
@@ -99,7 +99,7 @@ V_{\mathrm{rms}} = V_m\sqrt{\frac{1}{2\pi}\cdot\frac{\pi}{2}} = \frac{V_m}{2}
 交流の両方の半周期を使えば，出力をもっと大きく，谷の浅い脈流にできる。これを実現するのが，
 4個のダイオードを橋のように組んだ\index{だいおーどぶりっじ@ダイオードブリッジ}\textbf{ダイオードブリッジ}による\index{ぜんぱせいりゅう@全波整流}\textbf{全波整流回路}である（\FIGref{fig8.2}(a)）。
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig8.2.eps}
 \end{center}
@@ -128,7 +128,7 @@ V_{\mathrm{rms}} = \sqrt{\frac{1}{\pi}\int_0^{\pi} V_m^2 \sin^2\theta \, d\theta
 \end{equation}
 となり，もとの正弦波の実効値$V_m/\sqrt{2}$に等しい。半波整流と全波整流の比較を\TABref{tab8.1}にまとめる。
 
-\begin{table}[h]
+\begin{table}[ht]
 \begin{center}
 \caption{半波整流と全波整流の比較（抵抗負荷，理想ダイオード）}
 \label{tab8.1}
@@ -182,7 +182,7 @@ V_{\mathrm{avg}} = \frac{2V_m}{\pi} = \frac{2\times141}{\pi} \approx 90\,\mathrm
 そこで\ref{fig8.3}のように，出力に大容量のキャパシタ$C$を並列につなぐ。すると$C$が電圧の谷を埋め，出力はほぼ一定の直流に近づく。
 このように，整流の直後にキャパシタを置いて電圧を平滑にする方式を\index{きゃぱしたいんぷっとがた@キャパシタインプット形}\textbf{キャパシタインプット形}という。
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig8.3.eps}
 \end{center}
@@ -242,7 +242,7 @@ C = \frac{I_o}{2 f\, \mathit{\Delta}V} = \frac{1}{2\times50\times5} = 2.0\times1
 一方で，出力電圧は波高値$V_m$ではなく，平均値$2V_m/\pi$に近い値までしか上がらない。
 大電流を扱う電源ではチョークインプット形が，小型・低コストが求められる小電力機器ではキャパシタインプット形が使われることが多い。両者の対比を\TABref{tab8.2}に示す。
 
-\begin{table}[h]
+\begin{table}[ht]
 \begin{center}
 \caption{キャパシタインプット形とチョークインプット形の比較}
 \label{tab8.2}
@@ -294,7 +294,7 @@ P = \frac{1}{T}\int_0^T \frac{v^2(t)}{R}\, dt = \frac{1}{R}\cdot\frac{1}{T}\int_
 \textbf{同じ抵抗に同じ発熱（同じ平均電力）を生じさせる直流の値}にほかならない（\FIGref{fig8.4}）。
 「AC\,$100$\,V」と「DC\,$100$\,V」は，抵抗負荷に対して同じ熱を出すという意味で等価なのである。
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig8.4.eps}
 \end{center}
@@ -375,7 +375,7 @@ P = V_{\mathrm{rms}} I_{\mathrm{rms}}\cos\varphi = 100\times5\times\cos60^\circ 
 \ref{sec8.2}節のキャパシタインプット形では，ダイオードが山の近くのごく短い間だけ導通するため，電源から流れる電流は\ref{fig8.3}下段のように鋭いパルス状になる。
 この電流を電源電圧と重ねて描くと\FIGref{fig8.5}のようになり，電圧は正弦波なのに電流はまったく違う形をしている。このとき，前節の$\mathrm{PF} = \cos\varphi$はそのままでは使えない。位相差$\varphi$を1つの値で決められないからである。
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig8.5.eps}
 \end{center}
@@ -437,7 +437,7 @@ I_{\mathrm{rms}} = I_{1,\mathrm{rms}}\sqrt{1 + \mathrm{THD}^2}
 となる。力率は2つの要因で下がることがわかる。基本波の位相差$\varphi_1$（$\cos\varphi_1$の項）と，波形の歪み（$\sqrt{1+\mathrm{THD}^2}$の項）である。
 整流回路では位相差より歪みのほうが主な原因であり，力率を上げるには何よりも電流波形の歪みを減らす（THDを下げる）ことが効く。
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig8.6.eps}
 \end{center}
@@ -482,7 +482,7 @@ $i_S = 1.0\sin\omega t + 0.5\sin3\omega t + 0.2\sin5\omega t$（単位はA）と
 ここでスイッチ$S$を高い周波数でオン・オフし，そのデューティ比を絶えず調整して，
 インダクタ電流（＝電源から流れ込む電流）が\textbf{整流電圧$|v_S|$に相似な正弦半波になるよう}制御する。すると入力電流は\ref{fig8.7}(b)のように電圧と同じ形にそろい，力率はほぼ$1$，THDはごく小さくなる。
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig8.7.eps}
 \end{center}
