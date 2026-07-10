@@ -7,10 +7,18 @@
 
 set -euo pipefail
 
-TEXBIN=/Library/TeX/texbin
-PLATEX=${TEXBIN}/platex
-DVIPDFMX=${TEXBIN}/dvipdfmx
-MENDEX=${TEXBIN}/mendex
+# OS 非依存化: PATH に platex があればそれを使い（Linux/TeX Live 等）、
+# 無ければ macOS の既定パス /Library/TeX/texbin にフォールバックする。
+if command -v platex >/dev/null 2>&1; then
+    PLATEX=$(command -v platex)
+    DVIPDFMX=$(command -v dvipdfmx)
+    MENDEX=$(command -v mendex)
+else
+    TEXBIN=/Library/TeX/texbin
+    PLATEX=${TEXBIN}/platex
+    DVIPDFMX=${TEXBIN}/dvipdfmx
+    MENDEX=${TEXBIN}/mendex
+fi
 
 MAIN=main
 WORKDIR="$(cd "$(dirname "$0")" && pwd)"
