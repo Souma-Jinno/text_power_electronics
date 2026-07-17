@@ -1,0 +1,20 @@
+[
+  {
+    "base": "buck_chopper",
+    "label": "降圧チョッパ(Buck converter, sec5.2)",
+    "section": "sec5.2 / rei5.1 / rei5.3 / rei5.4 / ex5.6",
+    "note": "Vin=10V D=0.5 f=1kHz L=30mH C=100uF R=10ohm(章末問題ex5.6=corpus prof_02_back_withC.ascと同一定数)。ngspice検算でVout_avg=4.741V(理想値5.0Vからのズレはダイオード順方向降下0.52Vで式ex5.5(b)の補正式と小数点以下まで一致)、ΔIL=0.088A・ΔVout=0.109V(式5.19/5.24と整合)、CCM維持(il_min=0.43A>0)を確認。"
+  },
+  {
+    "base": "boost_chopper",
+    "label": "昇圧チョッパ(Boost converter, sec5.3)",
+    "section": "sec5.3 / rei5.2",
+    "note": "Vin=5V D=0.583 f=20kHz L=700uH C=500uF R=28.8ohm(例題5.2 Vin=5V->Vout=12V, Iout=0.42A + corpus prof_00_boost.ascと同一定数)。ngspice検算でVout_avg=11.48V(理想値11.99Vよりダイオード損失分低い)、平均インダクタ電流0.958A(例題5.2(b)の理論値Iin=Iout/(1-D)=0.956Aとほぼ一致)、CCM維持(il_min=0.835A>0)を確認。"
+  },
+  {
+    "base": "buckboost_chopper",
+    "label": "昇降圧チョッパ(Buck-boost converter, sec5.4)",
+    "section": "sec5.4 / ex5.3(a)",
+    "note": "Vin=12V D=0.2941 f=20kHz L=700uH C=500uF R=5ohm(章末問題ex5.3(a) 入力12V->出力-5V設計 + corpus prof_01_back_boost_back.ascと同一定数)。ngspice検算でVout_avg=-4.46V(理想値-5.00Vより10.8%低い、3回路中最大の乖離。全周期ダイオード導通+出力絶対値が小さいため相対誤差が最も目立つという物理的に妥当な傾向)、極性反転を確認、CCM維持(il_min=1.138A>0)を確認。"
+  }
+]
