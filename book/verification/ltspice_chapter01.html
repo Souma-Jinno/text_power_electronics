@@ -19,11 +19,13 @@ a { color:#0e7490; }
 <p class='meta'>関連節: 1.6節 pn接合の物理 (バイアスと整流性) / ファイル: <code>chapter01/pn_junction_iv.asc</code></p>
 <p>V1をR1=1kΩ経由でD1(pn接合ダイオードモデル DMOD, Is=1e-14, N=1.0, Rs=0.1)へ直列接続し、-5V〜+1Vで.dcスイープ。ngspiceで検算した結果、逆バイアス〜低順バイアスでは電流がpAオーダーに留まり、0.6V付近から電流が急増する整流特性が確認できた(本文の「ダイオードの順方向電圧約0.7V」に対応)。</p>
 <div class='svgwrap'><?xml version="1.0" encoding="utf-8" ?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="9.599999999999998 -38.400000000000006 708.3040000000005 326.06399999999996" width="100%">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="100.8 84.8 762.3520000000005 420.5919999999999" width="100%">
   <title>pn_junction_iv.svg</title>
   <defs/>
-  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="64" x2="192" y1="16" y2="16"/>
-  <g s:height="96" s:type="voltage" s:width="40" transform="translate(64,16)">
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="160" x2="320" y1="144" y2="144"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="160" x2="160" y1="240" y2="288"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="320" x2="320" y1="336" y2="384"/>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(160,144)">
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
@@ -37,7 +39,7 @@ a { color:#0e7490; }
       <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">0</text>
     </g>
   </g>
-  <g s:height="96" s:type="res" s:width="32" transform="translate(192,16)">
+  <g s:height="96" s:type="res" s:width="32" transform="translate(320,144)">
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
     <rect fill="none" height="64" stroke="black" stroke-width="2.0" width="32" x="-16" y="16"/>
@@ -48,7 +50,7 @@ a { color:#0e7490; }
       <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">1k</text>
     </g>
   </g>
-  <g s:height="96" s:type="diode" s:width="32" transform="translate(192,112)">
+  <g s:height="96" s:type="diode" s:width="32" transform="translate(320,240)">
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="32"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="64" y2="96"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="32" y2="32"/>
@@ -63,23 +65,23 @@ a { color:#0e7490; }
     </g>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="248.4">.model DMOD D(Is=1e-14 N=1.0 Rs=0.1)</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="160" y="56.4">pn接合ダイオードI-V特性試験回路 (chapter01 fig, sec1.6)</text>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="272.4">.dc V1 -5 1 0.01</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="160" y="464.4">.model DMOD D(Is=1e-14 N=1.0 Rs=0.1)</text>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="-47.6">pn接合ダイオードI-V特性試験回路 (chapter01 fig, sec1.6)</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="160" y="488.4">.dc V1 -5 1 0.01</text>
   </g>
   <g class="ground-flag">
-    <g transform="translate(64,112) rotate(0)">
+    <g transform="translate(160,288) rotate(0)">
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
     </g>
   </g>
   <g class="ground-flag">
-    <g transform="translate(192,208) rotate(0)">
+    <g transform="translate(320,384) rotate(0)">
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
@@ -102,11 +104,13 @@ D1 N002 0 DMOD
 <p class='meta'>関連節: 1.7節 金属-半導体接合 (ショットキー接合とオーミック接合) / ファイル: <code>chapter01/schottky_iv.asc</code></p>
 <p>同一トポロジでD1をショットキーダイオードモデル(DSCHOTTKY, Is=1e-9, N=1.05, Rs=0.05)に置き換え。ngspice検算で順方向電圧の立ち上がりが約0.27〜0.36Vとなり、本文の「順方向電圧がpn接合より小さく(0.3〜0.4V)」と整合することを確認した。逆方向リーク電流もpn接合より大きい(nAオーダー)。</p>
 <div class='svgwrap'><?xml version="1.0" encoding="utf-8" ?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="9.599999999999998 -38.400000000000006 825.904000000001 326.06399999999996" width="100%">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="100.8 84.8 879.952000000001 420.5919999999999" width="100%">
   <title>schottky_iv.svg</title>
   <defs/>
-  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="64" x2="192" y1="16" y2="16"/>
-  <g s:height="96" s:type="voltage" s:width="40" transform="translate(64,16)">
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="160" x2="320" y1="144" y2="144"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="160" x2="160" y1="240" y2="288"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="320" x2="320" y1="336" y2="384"/>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(160,144)">
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
@@ -120,7 +124,7 @@ D1 N002 0 DMOD
       <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">0</text>
     </g>
   </g>
-  <g s:height="96" s:type="res" s:width="32" transform="translate(192,16)">
+  <g s:height="96" s:type="res" s:width="32" transform="translate(320,144)">
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
     <rect fill="none" height="64" stroke="black" stroke-width="2.0" width="32" x="-16" y="16"/>
@@ -131,7 +135,7 @@ D1 N002 0 DMOD
       <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">1k</text>
     </g>
   </g>
-  <g s:height="96" s:type="diode" s:width="32" transform="translate(192,112)">
+  <g s:height="96" s:type="diode" s:width="32" transform="translate(320,240)">
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="32"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="64" y2="96"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="32" y2="32"/>
@@ -146,23 +150,23 @@ D1 N002 0 DMOD
     </g>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="248.4">.model DSCHOTTKY D(Is=1e-9 N=1.05 Rs=0.05)</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="160" y="56.4">ショットキー接合ダイオードI-V特性試験回路 (chapter01 fig, sec1.7)</text>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="272.4">.dc V1 -5 1 0.01</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="160" y="464.4">.model DSCHOTTKY D(Is=1e-9 N=1.05 Rs=0.05)</text>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="-47.6">ショットキー接合ダイオードI-V特性試験回路 (chapter01 fig, sec1.7)</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="160" y="488.4">.dc V1 -5 1 0.01</text>
   </g>
   <g class="ground-flag">
-    <g transform="translate(64,112) rotate(0)">
+    <g transform="translate(160,288) rotate(0)">
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
     </g>
   </g>
   <g class="ground-flag">
-    <g transform="translate(192,208) rotate(0)">
+    <g transform="translate(320,384) rotate(0)">
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
@@ -185,11 +189,13 @@ D1 N002 0 DSCHOTTKY
 <p class='meta'>関連節: 1.7節 金属-半導体接合 (オーミック接合) / ファイル: <code>chapter01/ohmic_contact_iv.asc</code></p>
 <p>接触抵抗Rc=1Ω(模式値)と半導体バルク抵抗Rb=100Ω(模式値、例題1.2の桁数そのものではなく説明用の代表値)を直列にした純抵抗回路。-1V〜+1Vの.dcスイープでngspice検算した結果、原点対称の完全な直線(I=V/101Ω)となり、整流性接触(上記2回路)と対比してオーミック接合が「どちら向きにも低抵抗」であることを示す。</p>
 <div class='svgwrap'><?xml version="1.0" encoding="utf-8" ?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="9.599999999999998 -38.400000000000006 1352.7040000000015 302.06399999999996" width="100%">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="100.8 84.8 1406.7520000000015 420.5919999999999" width="100%">
   <title>ohmic_contact_iv.svg</title>
   <defs/>
-  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="64" x2="192" y1="16" y2="16"/>
-  <g s:height="96" s:type="voltage" s:width="40" transform="translate(64,16)">
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="160" x2="320" y1="144" y2="144"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="160" x2="160" y1="240" y2="288"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="320" x2="320" y1="336" y2="384"/>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(160,144)">
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
@@ -203,7 +209,7 @@ D1 N002 0 DSCHOTTKY
       <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">0</text>
     </g>
   </g>
-  <g s:height="96" s:type="res" s:width="32" transform="translate(192,16)">
+  <g s:height="96" s:type="res" s:width="32" transform="translate(320,144)">
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
     <rect fill="none" height="64" stroke="black" stroke-width="2.0" width="32" x="-16" y="16"/>
@@ -214,7 +220,7 @@ D1 N002 0 DSCHOTTKY
       <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">1</text>
     </g>
   </g>
-  <g s:height="96" s:type="res" s:width="32" transform="translate(192,112)">
+  <g s:height="96" s:type="res" s:width="32" transform="translate(320,240)">
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
     <rect fill="none" height="64" stroke="black" stroke-width="2.0" width="32" x="-16" y="16"/>
@@ -226,20 +232,20 @@ D1 N002 0 DSCHOTTKY
     </g>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="248.4">.dc V1 -1 1 0.01</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="160" y="56.4">金属-半導体オーミック接合 確認回路：Rc=接触抵抗(模式値)，Rb=半導体バルク抵抗(模式値) (chapter01 fig, sec1.7)</text>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="-47.6">金属-半導体オーミック接合 確認回路：Rc=接触抵抗(模式値)，Rb=半導体バルク抵抗(模式値) (chapter01 fig, sec1.7)</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="160" y="488.4">.dc V1 -1 1 0.01</text>
   </g>
   <g class="ground-flag">
-    <g transform="translate(64,112) rotate(0)">
+    <g transform="translate(160,288) rotate(0)">
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
     </g>
   </g>
   <g class="ground-flag">
-    <g transform="translate(192,208) rotate(0)">
+    <g transform="translate(320,384) rotate(0)">
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>

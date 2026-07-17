@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="9.599999999999998 -38.400000000000006 1352.7040000000015 302.06399999999996" width="100%">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="100.8 84.8 1406.7520000000015 420.5919999999999" width="100%">
   <title>ohmic_contact_iv.svg</title>
   <defs/>
-  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="64" x2="192" y1="16" y2="16"/>
-  <g s:height="96" s:type="voltage" s:width="40" transform="translate(64,16)">
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="160" x2="320" y1="144" y2="144"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="160" x2="160" y1="240" y2="288"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="320" x2="320" y1="336" y2="384"/>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(160,144)">
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
@@ -17,7 +19,7 @@
       <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">0</text>
     </g>
   </g>
-  <g s:height="96" s:type="res" s:width="32" transform="translate(192,16)">
+  <g s:height="96" s:type="res" s:width="32" transform="translate(320,144)">
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
     <rect fill="none" height="64" stroke="black" stroke-width="2.0" width="32" x="-16" y="16"/>
@@ -28,7 +30,7 @@
       <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">1</text>
     </g>
   </g>
-  <g s:height="96" s:type="res" s:width="32" transform="translate(192,112)">
+  <g s:height="96" s:type="res" s:width="32" transform="translate(320,240)">
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
     <rect fill="none" height="64" stroke="black" stroke-width="2.0" width="32" x="-16" y="16"/>
@@ -40,20 +42,20 @@
     </g>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="248.4">.dc V1 -1 1 0.01</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="160" y="56.4">金属-半導体オーミック接合 確認回路：Rc=接触抵抗(模式値)，Rb=半導体バルク抵抗(模式値) (chapter01 fig, sec1.7)</text>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="-47.6">金属-半導体オーミック接合 確認回路：Rc=接触抵抗(模式値)，Rb=半導体バルク抵抗(模式値) (chapter01 fig, sec1.7)</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="160" y="488.4">.dc V1 -1 1 0.01</text>
   </g>
   <g class="ground-flag">
-    <g transform="translate(64,112) rotate(0)">
+    <g transform="translate(160,288) rotate(0)">
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
     </g>
   </g>
   <g class="ground-flag">
-    <g transform="translate(192,208) rotate(0)">
+    <g transform="translate(320,384) rotate(0)">
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
