@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="-3.200000000000003 -51.2 1199.712000000001 583.4720000000001" width="100%">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="-3.200000000000003 -51.2 668.1120000000003 663.4720000000001" width="100%">
   <title>thyristor_two_transistor.svg</title>
   <defs/>
   <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="64" x2="160" y1="16" y2="16"/>
@@ -98,52 +98,28 @@
     </g>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="16.4">サイリスタ2トランジスタ等価回路 (chapter02, sec2.7, キャリアの動き～ラッチ動作)</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="-47.6">サイリスタ2トランジスタ等価回路 (chapter02, sec2.7)</text>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="40.4">Q2=PNP(アノード側), Q1=NPN(カソード側), 中央2層共有をクロスカップリングで表現</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="448.4">.model QNPN2 NPN(BF=50)</text>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="64.4">Q2エミッタ=アノード, Q2コレクタ-&gt;Q1ベース, Q1コレクタ-&gt;Q2ベース, Q1エミッタ=カソード(0V)</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="472.4">.model QPNP2 PNP(BF=50)</text>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="88.4">ゲート電流はQ1(NPN)ベースへPULSE(0 10mA 1m 1u 1u 1m 100m)で注入(1ms後に1ms幅で立つ)</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="496.4">.control</text>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="112.4">主回路: VAA=12V - RL=100ohm - アノード, カソード接地</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="520.4">tran 10u 10m</text>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="136.4">着目点: ゲートパルス消滅後(t&gt;2ms)もアノード電流が流れ続ける=ラッチ動作(教科書sec2.7の核心)</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="544.4">print v(anode) v(gbase) i(vaa)</text>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="160.4">Rshunt=1k(Q1ベース-カソード間)は実SCRのカソードショント抵抗の模擬。理想Ebers-Mollモデルの</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="568.4">write chapter02/thyristor_two_transistor.raw</text>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="184.4">正帰還ループはRshuntが無いと遮断状態が数値的に不安定になり、ゲート電流ゼロでも誤ってオン点に</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="208.4">収束してしまうため追加した(教科書本文には無いモデル化上の工夫、回路動作の主張には影響しない)</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="368.4">.model QNPN2 NPN(BF=50)</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="392.4">.model QPNP2 PNP(BF=50)</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="416.4">.control</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="440.4">tran 10u 10m</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="464.4">print v(anode) v(gbase) i(vaa)</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="488.4">write chapter02/thyristor_two_transistor.raw</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="512.4">.endc</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="592.4">.endc</text>
   </g>
   <g class="ground-flag">
     <g transform="translate(64,112) rotate(0)">

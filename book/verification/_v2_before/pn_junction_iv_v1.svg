@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="9.599999999999998 -38.400000000000006 825.904000000001 326.06399999999996" width="100%">
-  <title>schottky_iv.svg</title>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="9.599999999999998 -38.400000000000006 708.3040000000005 326.06399999999996" width="100%">
+  <title>pn_junction_iv.svg</title>
   <defs/>
   <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="64" x2="192" y1="16" y2="16"/>
   <g s:height="96" s:type="voltage" s:width="40" transform="translate(64,16)">
@@ -39,17 +39,17 @@
       <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">D1</text>
     </g>
     <g class="text-group">
-      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="88.4">DSCHOTTKY</text>
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="88.4">DMOD</text>
     </g>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="248.4">.model DSCHOTTKY D(Is=1e-9 N=1.05 Rs=0.05)</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="248.4">.model DMOD D(Is=1e-14 N=1.0 Rs=0.1)</text>
   </g>
   <g class="text-group">
     <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="272.4">.dc V1 -5 1 0.01</text>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="-47.6">ショットキー接合ダイオードI-V特性試験回路 (chapter01 fig, sec1.7)</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="16.4">pn接合ダイオードI-V特性試験回路 (chapter01 fig, sec1.6)</text>
   </g>
   <g class="ground-flag">
     <g transform="translate(64,112) rotate(0)">

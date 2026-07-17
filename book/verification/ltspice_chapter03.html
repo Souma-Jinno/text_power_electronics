@@ -19,7 +19,7 @@ a { color:#0e7490; }
 <p class='meta'>関連節: sec3.3 / ファイル: <code>chapter03/switching_loss_double_pulse.asc</code></p>
 <p>V1=100V-L1=50µH-M1(NMOS LEVEL=1 VTO=3V KP=2)の直列にD1(還流ダイオード)を並列配置し、PWLゲート駆動でダブルパルス(1発目5µsオンでIL≈10Aまで直線的に立ち上げ→1µs休止でターンオフ観測→2発目オンでターンオン観測)を実施。KCL i_sw=i(L1)-i(D1)で導出したスイッチ電流とv(sw)の積を積分し、E_off≈3.4µJ・E_on≈8.8µJ(共に正)を実測。『切り替えの途中で電圧と電流が同時に非ゼロになり損失が生じる』というsec3.3の核心的主張は定性的に確認できたが、本モデルはゲート容量(Miller効果)を持たないためターンオフ速度は収束安定化のため追加したCoss=470pFの充放電速度(≈4.65ns)で決まり、本文の例題3.2が仮定するt_on=t_off=50nsという数値そのものは再現していない(E_on+E_off≈12.3µJ、本文の50µJとは前提が異なる)。監査で2件の実装バグ(@d1[id]のsave漏れによる定数固定、Coss=0による収束破綻で109万A超の数値異常)をコミット前に発見・修正した。詳細はVERIFICATION_NOTES.md参照。</p>
 <div class='svgwrap'><?xml version="1.0" encoding="utf-8" ?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="-11.200000000000003 20.799999999999997 1691.5520000000008 549.552" width="100%">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="-11.200000000000003 20.799999999999997 1133.1520000000016 549.552" width="100%">
   <title>switching_loss_double_pulse.svg</title>
   <defs/>
   <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="64" x2="256" y1="96" y2="96"/>
@@ -123,37 +123,7 @@ a { color:#0e7490; }
     </g>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="16.4">クランプ誘導性ダブルパルス試験回路 (chapter03, sec3.3, 例題3.2のE_on/E_off検証用)</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="40.4">V1=100V(vtop)-L1=50uH-M1(スイッチ,ドレイン=sw)の直列。D1はL1に並列の還流ダイオード(anode=sw,cathode=vtop)</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="64.4">M1: NMOS(LEVEL=1 VTO=3V KP=2、chapter02のmosfet_output_charと同じモデル定数を流用、Ron実測は本文の目標50mΩに近い値)</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="88.4">VGはゲートPWL電圧源(0V-15V、tr=tf=50ns)でダブルパルスを生成:</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="112.4">1発目オン5usでL1電流を約10Aまで直線的に立ち上げ、1us休止でターンオフ過渡(電流約10Aのままv(sw)がvtop近くまで上昇しD1が還流)を観測、</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="136.4">2発目オンでターンオン過渡(v(sw)がvtopから0近くへ下降しつつ電流がD1からM1へ戻る)を同じ電流レベルで再観測する</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="160.4">スイッチ電流はKCL i_sw=i(L1)-i(D1)として後処理(Python)で導出する。LEVEL1モデルはゲート容量を持たないため</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="184.4">Rg/Cgsによる遅延回路は追加していない(VGのtr/tf=50ns自体が有限勾配ネットワークの役割を果たす、VERIFICATION_NOTES参照)</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="232.4">Coss=100pF(sw-GND間)はMOSFET出力容量+配線浮遊容量を模した現実的な寄生値。理想ノード(容量0)では</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="256.4">dV/dtが数値的に無限大となりngspiceのニュートン法が収束せず異常値(数値創作ではなく収束破綻)を出したため追加した(VERIFICATION_NOTES参照)</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="208.4">観測: v(sw)*[i(L1)-i(D1)]の時間積分からE_on,E_offを実測し、式3.8/3.9(E=0.5*V*I*t)・式3.10(P_sw)と比較する</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="-47.6">クランプ誘導性ダブルパルス試験回路 (chapter03, sec3.3, 例題3.2)</text>
   </g>
   <g class="text-group">
     <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="408.4">.model SWMOS NMOS(LEVEL=1 VTO=3 KP=2)</text>

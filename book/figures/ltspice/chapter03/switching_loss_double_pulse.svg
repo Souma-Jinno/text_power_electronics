@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="-11.200000000000003 20.799999999999997 1691.5520000000008 549.552" width="100%">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="-11.200000000000003 20.799999999999997 1133.1520000000016 549.552" width="100%">
   <title>switching_loss_double_pulse.svg</title>
   <defs/>
   <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="64" x2="256" y1="96" y2="96"/>
@@ -103,37 +103,7 @@
     </g>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="16.4">クランプ誘導性ダブルパルス試験回路 (chapter03, sec3.3, 例題3.2のE_on/E_off検証用)</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="40.4">V1=100V(vtop)-L1=50uH-M1(スイッチ,ドレイン=sw)の直列。D1はL1に並列の還流ダイオード(anode=sw,cathode=vtop)</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="64.4">M1: NMOS(LEVEL=1 VTO=3V KP=2、chapter02のmosfet_output_charと同じモデル定数を流用、Ron実測は本文の目標50mΩに近い値)</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="88.4">VGはゲートPWL電圧源(0V-15V、tr=tf=50ns)でダブルパルスを生成:</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="112.4">1発目オン5usでL1電流を約10Aまで直線的に立ち上げ、1us休止でターンオフ過渡(電流約10Aのままv(sw)がvtop近くまで上昇しD1が還流)を観測、</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="136.4">2発目オンでターンオン過渡(v(sw)がvtopから0近くへ下降しつつ電流がD1からM1へ戻る)を同じ電流レベルで再観測する</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="160.4">スイッチ電流はKCL i_sw=i(L1)-i(D1)として後処理(Python)で導出する。LEVEL1モデルはゲート容量を持たないため</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="184.4">Rg/Cgsによる遅延回路は追加していない(VGのtr/tf=50ns自体が有限勾配ネットワークの役割を果たす、VERIFICATION_NOTES参照)</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="232.4">Coss=100pF(sw-GND間)はMOSFET出力容量+配線浮遊容量を模した現実的な寄生値。理想ノード(容量0)では</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="256.4">dV/dtが数値的に無限大となりngspiceのニュートン法が収束せず異常値(数値創作ではなく収束破綻)を出したため追加した(VERIFICATION_NOTES参照)</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="208.4">観測: v(sw)*[i(L1)-i(D1)]の時間積分からE_on,E_offを実測し、式3.8/3.9(E=0.5*V*I*t)・式3.10(P_sw)と比較する</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="-47.6">クランプ誘導性ダブルパルス試験回路 (chapter03, sec3.3, 例題3.2)</text>
   </g>
   <g class="text-group">
     <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="408.4">.model SWMOS NMOS(LEVEL=1 VTO=3 KP=2)</text>

@@ -49,7 +49,7 @@
     <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="272.4">.dc V1 -5 1 0.01</text>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="16.4">pn接合ダイオードI-V特性試験回路 (chapter01 fig, sec1.6)</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="-47.6">pn接合ダイオードI-V特性試験回路 (chapter01 fig, sec1.6)</text>
   </g>
   <g class="ground-flag">
     <g transform="translate(64,112) rotate(0)">

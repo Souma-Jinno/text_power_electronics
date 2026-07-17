@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="1.5999999999999979 -46.400000000000006 915.5040000000006 472.94399999999996" width="100%">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="1.5999999999999979 -46.400000000000006 763.1040000000005 592.944" width="100%">
   <title>bjt_base_drive.svg</title>
   <defs/>
   <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="64" x2="192" y1="16" y2="16"/>
@@ -65,31 +65,25 @@
     </g>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="16.4">BJTベース駆動回路 (chapter02, sec2.4, 例題2.2)</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="-47.6">BJTベース駆動回路 (chapter02, sec2.4, 例題2.2)</text>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="40.4">beta=50 NPN, VCC=12V, RC=0.02ohm, IB=2A(電流源固定注入), エミッタ接地</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="408.4">.model QNPN NPN(BF=50)</text>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="64.4">期待値: iC = beta*iB = 50*2 = 100A, P_B = 0.7V*2A = 1.4W (教科書の値)</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="432.4">.control</text>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="288.4">.model QNPN NPN(BF=50)</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="456.4">op</text>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="312.4">.control</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="480.4">print v(ncoll) v(nbase) @q1[ic] @q1[ib] @q1[ie] @q1[vbe]</text>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="336.4">op</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="504.4">write chapter02/bjt_base_drive.raw</text>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="360.4">print v(ncoll) v(nbase) @q1[ic] @q1[ib] @q1[ie] @q1[vbe]</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="384.4">write chapter02/bjt_base_drive.raw</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="408.4">.endc</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="528.4">.endc</text>
   </g>
   <g class="ground-flag">
     <g transform="translate(64,112) rotate(0)">

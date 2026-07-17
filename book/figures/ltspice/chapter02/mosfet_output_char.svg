@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="84.8 4.799999999999997 916.5920000000002 417.71199999999993" width="100%">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="84.8 4.799999999999997 555.3920000000002 417.71199999999993" width="100%">
   <title>mosfet_output_char.svg</title>
   <defs/>
   <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="288" x2="352" y1="64" y2="64"/>
@@ -51,16 +51,7 @@
     </g>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="16.4">NMOS出力特性試験回路 (chapter02, sec2.5, fig2.5の概念・def2.2 Vth=2-4V)</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="40.4">M1: Vth=3V(教科書の2-4V範囲内), ソース接地(ボディもソースと同電位)</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="64.4">VGS=2V(Vthよりわずかに下)/3V/4V/5Vの4本の出力特性を掃引で比較</text>
-  </g>
-  <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="88.4">期待: VGS=2Vはほぼ電流ゼロ、VGS=4V,5Vは原点から直線的に立ち上がる(0.7V下駄なし)</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="-47.6">NMOS出力特性試験回路 (chapter02, sec2.5, def2.2)</text>
   </g>
   <g class="text-group">
     <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="288.4">.model MYNMOS NMOS(LEVEL=1 VTO=3 KP=2)</text>
