@@ -1,0 +1,219 @@
+#!/usr/bin/env python3
+"""
+asc_to_net.py -- .asc (LTspice schematic) -> SPICE netlist (.net) + connectivity check.
+
+Fallback tool used because this machine has no wine/LTspice installed
+(task 20260717_ltspice_asc_svg_pipeline_pwreletron.md, Phase 0 permits a
+self-implemented .asc -> netlist parser when the real environment is unavailable).
+
+Only supports the small custom symbol set in ../tools/symbols/ (voltage, res, diode)
+authored for this pipeline -- SYMBOL_PINS below must have an entry for every symbol
+type used in a schematic. Extend it when new chapters introduce new symbols.
+"""
+import argparse
+import math
+import sys
+from pathlib import Path
+
+# Local pin coordinates (x, y) at rotation R0, before mirror/rotate/translate.
+# Order matches the physical pin role documented in each .asy file.
+SYMBOL_PINS = {
+    "voltage": [(0, 0), (0, 96)],   # + , -
+    "res":     [(0, 0), (0, 96)],   # 1 , 2
+    "diode":   [(0, 0), (0, 96)],   # anode (A) , cathode (K)
+}
+
+SYMBOL_PREFIX = {
+    "voltage": "V",
+    "res": "R",
+    "diode": "D",
+}
+
+
+def transform_pin(local_xy, sym_x, sym_y, rotation):
+    x, y = local_xy
+    mirrored = rotation[0] == "M"
+    angle = int(rotation[1:])
+    if mirrored:
+        x = -x
+    theta = math.radians(angle)
+    xr = x * math.cos(theta) - y * math.sin(theta)
+    yr = x * math.sin(theta) + y * math.cos(theta)
+    xr = round(xr)
+    yr = round(yr)
+    return (xr + sym_x, yr + sym_y)
+
+
+class DSU:
+    def __init__(self):
+        self.parent = {}
+
+    def find(self, a):
+        self.parent.setdefault(a, a)
+        while self.parent[a] != a:
+            self.parent[a] = self.parent[self.parent[a]]
+            a = self.parent[a]
+        return a
+
+    def union(self, a, b):
+        ra, rb = self.find(a), self.find(b)
+        if ra != rb:
+            self.parent[ra] = rb
+
+
+def parse_asc(path):
+    wires = []
+    symbols = []
+    flags = []
+    spice_lines = []
+    cur = None
+    lines = Path(path).read_text(encoding="utf-8").splitlines()
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+        parts = line.split()
+        head = parts[0]
+        if head == "WIRE":
+            x1, y1, x2, y2 = map(int, parts[1:5])
+            wires.append(((x1, y1), (x2, y2)))
+        elif head == "SYMBOL":
+            name = parts[1]
+            x, y = int(parts[2]), int(parts[3])
+            rotation = parts[4] if len(parts) > 4 else "R0"
+            cur = {"symbol_name": name, "x": x, "y": y, "rotation": rotation,
+                   "inst_name": None, "value": None}
+            symbols.append(cur)
+        elif head == "SYMATTR" and cur is not None:
+            if parts[1] == "InstName":
+                cur["inst_name"] = " ".join(parts[2:])
+            elif parts[1] == "Value":
+                cur["value"] = " ".join(parts[2:])
+        elif head == "FLAG":
+            x, y = int(parts[1]), int(parts[2])
+            net_name = " ".join(parts[3:])
+            flags.append({"x": x, "y": y, "net_name": net_name})
+        elif head == "TEXT":
+            if "!" in line:
+                _, content = line.split("!", 1)
+                spice_lines.append(content.strip())
+    return wires, symbols, flags, spice_lines
+
+
+def build_netlist(asc_path):
+    wires, symbols, flags, spice_lines = parse_asc(asc_path)
+
+    dsu = DSU()
+    for (p1, p2) in wires:
+        dsu.union(p1, p2)
+
+    # SPICE convention: every GND flag (net_name "0") is the same global node,
+    # even when no wire physically links the separate flag points.
+    gnd_points = [(f["x"], f["y"]) for f in flags if f["net_name"] == "0"]
+    for p in gnd_points[1:]:
+        dsu.union(gnd_points[0], p)
+
+    # Register every symbol pin and every flag point as a node (union-find
+    # merges points that share exact coordinates automatically via dict key).
+    symbol_pin_abs = []  # (symbol, [abs pin coords])
+    errors = []
+    for sym in symbols:
+        stype = sym["symbol_name"]
+        if stype not in SYMBOL_PINS:
+            errors.append(f"未知のシンボル種別 '{stype}' (SYMBOL_PINSに未登録)")
+            continue
+        pins_abs = [transform_pin(p, sym["x"], sym["y"], sym["rotation"])
+                    for p in SYMBOL_PINS[stype]]
+        for p in pins_abs:
+            dsu.find(p)  # register node even if isolated
+        symbol_pin_abs.append((sym, pins_abs))
+
+    for f in flags:
+        dsu.find((f["x"], f["y"]))
+
+    # Assign net names per connected component (root -> name)
+    root_name = {}
+    # 1) ground first (net_name == "0")
+    for f in flags:
+        if f["net_name"] == "0":
+            root_name[dsu.find((f["x"], f["y"]))] = "0"
+    # 2) explicit non-ground net labels
+    for f in flags:
+        if f["net_name"] != "0":
+            r = dsu.find((f["x"], f["y"]))
+            root_name.setdefault(r, f["net_name"])
+    # 3) auto-numbered nets for anything left
+    counter = 1
+    for sym, pins_abs in symbol_pin_abs:
+        for p in pins_abs:
+            r = dsu.find(p)
+            if r not in root_name:
+                root_name[r] = f"N{counter:03d}"
+                counter += 1
+
+    # Connectivity check: every pin must be part of some net that has >=2
+    # distinct members overall (other pin or a FLAG) -- a dangling pin with
+    # no wire, no other component, and no flag is an error. The ground net
+    # ("0") is exempt from the >=2 rule: a single flag legitimately grounds
+    # one branch.
+    node_member_count = {}
+    for sym, pins_abs in symbol_pin_abs:
+        for p in pins_abs:
+            r = dsu.find(p)
+            node_member_count[r] = node_member_count.get(r, 0) + 1
+    for f in flags:
+        r = dsu.find((f["x"], f["y"]))
+        node_member_count[r] = node_member_count.get(r, 0) + 1
+    for sym, pins_abs in symbol_pin_abs:
+        for i, p in enumerate(pins_abs):
+            r = dsu.find(p)
+            net = root_name.get(r, "?")
+            if node_member_count[r] < 2 and net != "0":
+                errors.append(
+                    f"未接続ピン: {sym['inst_name']} pin{i+1} at {p} "
+                    f"(net={net}, 他のピン/配線/FLAGと接続されていない)"
+                )
+
+    has_ground = any(f["net_name"] == "0" for f in flags)
+    if not has_ground:
+        errors.append("回路にGND(FLAG ... 0)が存在しない")
+
+    # Build SPICE element lines
+    elem_lines = []
+    for sym, pins_abs in symbol_pin_abs:
+        stype = sym["symbol_name"]
+        nets = [root_name[dsu.find(p)] for p in pins_abs]
+        inst = sym["inst_name"] or f"{SYMBOL_PREFIX.get(stype,'X')}?"
+        value = sym["value"] or ""
+        elem_lines.append(f"{inst} {' '.join(nets)} {value}".rstrip())
+
+    return elem_lines, spice_lines, errors, root_name
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("asc_file")
+    ap.add_argument("-o", "--output", help="output .net path (default: alongside .asc)")
+    args = ap.parse_args()
+
+    asc_path = Path(args.asc_file)
+    out_path = Path(args.output) if args.output else asc_path.with_suffix(".net")
+
+    elem_lines, spice_lines, errors, root_name = build_netlist(asc_path)
+
+    header = f"* netlist auto-generated by asc_to_net.py from {asc_path.name}"
+    body = [header] + elem_lines + spice_lines + [".end"]
+    out_path.write_text("\n".join(body) + "\n", encoding="utf-8")
+
+    print(f"netlist written: {out_path} ({len(elem_lines)} elements, {len(spice_lines)} directive lines)")
+    if errors:
+        print("接続チェック NG:")
+        for e in errors:
+            print(f"  - {e}")
+        sys.exit(1)
+    else:
+        print("接続チェック OK: 未接続ピンなし、GNDあり")
+
+
+if __name__ == "__main__":
+    main()
