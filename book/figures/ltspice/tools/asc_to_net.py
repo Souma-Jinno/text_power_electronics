@@ -7,9 +7,17 @@ Fallback tool used because this machine has no wine/LTspice installed
 self-implemented .asc -> netlist parser when the real environment is unavailable).
 
 Only supports the small custom symbol set in ../tools/symbols/ (voltage, current, res,
-diode, npn, pnp, nmos, ind, cap, sw) authored for this pipeline -- SYMBOL_PINS below must
-have an entry for every symbol type used in a schematic. Extend it when new chapters
-introduce new symbols.
+diode, zener, npn, pnp, nmos, ind, cap, sw, opamp) authored for this pipeline --
+SYMBOL_PINS below must have an entry for every symbol type used in a schematic. Extend
+it when new chapters introduce new symbols.
+
+"opamp" is a special case (added chapter07): it has no real SPICE primitive of its own,
+so build_netlist() emits it as an ideal E-element (voltage-controlled voltage source)
+line "E<name> <out> 0 <in+> <in-> <gain>" instead of the generic "<inst> <nets> <value>"
+line every other symbol gets -- see the isinstance check near the bottom of
+build_netlist(). This approximates LTspice's UniversalOpamp2 macro model as a single
+high-gain VCVS with no output saturation/GB-limit; document that simplification in the
+chapter's VERIFICATION_NOTES.md wherever it's used.
 
 Symbol type names match real LTspice's own library part names (verified 2026-07-17/18
 against book/figures/ltspice/corpus/, a set of real .asc files -- 13 LTspice-bundled
@@ -34,6 +42,11 @@ SYMBOL_PINS = {
     "ind":      [(0, 0), (0, 96)],   # 1 , 2 (same 2-pin pattern as res)
     "cap":      [(0, 0), (0, 96)],   # 1 , 2 (same 2-pin pattern as res)
     "diode":    [(0, 0), (0, 96)],   # anode (A) , cathode (K)
+    "zener":    [(0, 0), (0, 96)],   # anode (A) , cathode (K) -- same footprint as
+                                      # diode, distinct .asy artwork (kinked cathode
+                                      # bar) and a D-model with BV/IBV for breakdown
+    # in+ (non-inverting), in- (inverting), out -- ideal op-amp, see module docstring
+    "opamp":    [(0, 16), (0, 80), (64, 48)],
     "npn":      [(32, 0), (0, 48), (32, 96)],   # collector, base, emitter
     "pnp":      [(32, 0), (0, 48), (32, 96)],   # collector, base, emitter
     # drain, gate, source, body -- body pin coordinate is deliberately the same
@@ -54,10 +67,12 @@ SYMBOL_PREFIX = {
     "ind": "L",
     "cap": "C",
     "diode": "D",
+    "zener": "D",
     "npn": "Q",
     "pnp": "Q",
     "nmos": "M",
     "sw": "S",
+    "opamp": "E",
 }
 
 
@@ -231,7 +246,14 @@ def build_netlist(asc_path):
         nets = [root_name[dsu.find(p)] for p in pins_abs]
         inst = sym["inst_name"] or f"{SYMBOL_PREFIX.get(stype,'X')}?"
         value = sym["value"] or ""
-        elem_lines.append(f"{inst} {' '.join(nets)} {value}".rstrip())
+        if stype == "opamp":
+            # SYMBOL_PINS["opamp"] pin order is (in+, in-, out); ngspice has no
+            # built-in opamp element, so emit it as an ideal E-source instead:
+            # E<name> <out+> <out-(gnd)> <in+> <in-> <gain>. See module docstring.
+            in_plus, in_minus, out = nets
+            elem_lines.append(f"{inst} {out} 0 {in_plus} {in_minus} {value or '1e5'}")
+        else:
+            elem_lines.append(f"{inst} {' '.join(nets)} {value}".rstrip())
 
     return elem_lines, spice_lines, errors, root_name
 
