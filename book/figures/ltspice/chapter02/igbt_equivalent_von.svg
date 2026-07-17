@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="89.6 -22.400000000000002 988.784 510.06399999999996" width="100%">
+  <title>igbt_equivalent_von.svg</title>
+  <defs/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="192" x2="288" y1="32" y2="32"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="144" x2="256" y1="80" y2="80"/>
+  <g s:height="96" s:type="mosfet_n" s:width="32" transform="translate(256,32)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="0" y2="24"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="20" x2="32" y1="24" y2="24"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="20" x2="20" y1="24" y2="72"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="20" x2="32" y1="72" y2="72"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="72" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="12" y1="48" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="12" x2="12" y1="36" y2="60"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="12" x2="20" y1="48" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="20" x2="14" y1="44" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="20" x2="14" y1="52" y2="48"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="32.4">M1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="80.4">MYNMOS</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="diode" s:width="32" transform="translate(288,128)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="32" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="32" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="32" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="64" y2="64"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">D1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="88.4">DMOD</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(144,80)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">VGG</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">15</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="current" s:width="40" transform="translate(192,128) rotate(180)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="34" y2="62"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="-6" y1="62" y2="50"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="6" y1="62" y2="50"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g transform="rotate(180, 24, 24)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="32.4">Isweep</text>
+      </g>
+    </g>
+    <g transform="rotate(180, 24, 72)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="80.4">0.1</text>
+      </g>
+    </g>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="16.4">IGBT簡易等価回路 (chapter02, sec2.6, 例題2.3の定性的検証用)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="40.4">【注記】これは実IGBTデバイスのSPICEマクロモデルではない。教育目的の簡易等価回路であり、</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="64.4">sec2.6本文の説明「縦型MOSFETの裏面n+層をp形に置き換えただけ」に基づき、</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="88.4">MOSFETチャネル(M1, ゲートは常時オン=VGG=15V&gt;&gt;Vth=3Vで固定)と</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="112.4">追加のpn接合1個分の電圧降下(D1, Is/N調整でVf~0.5-0.6V)を直列にしただけの</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="136.4">非公式マクロモデルである(IGBT実デバイスのSPICEモデルではない)。</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="160.4">vcol=M1ドレイン(等価コレクタ), vmid=M1ソース/D1アノード(M1とD1の間), emitter=0V</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="184.4">電流掃引0.1-60Aでvcolを観測し、回路2(mosfet_output_char)のRon*I型上昇と比較する</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="328.4">.model MYNMOS NMOS(LEVEL=1 VTO=3 KP=2)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="352.4">.model DMOD D(Is=1e-9 N=1.0 Rs=0.001)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="376.4">.control</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="400.4">dc Isweep 0.1 60 0.1</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="424.4">print v(vcol) v(vmid)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="448.4">write chapter02/igbt_equivalent_von.raw</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="472.4">.endc</text>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(144,176) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(192,128) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(288,224) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="288" y="40.4">vcol</text>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 288, 128)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="288" y="123.2">vmid</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+</svg>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="84.8 4.799999999999997 916.5920000000002 417.71199999999993" width="100%">
+  <title>mosfet_output_char.svg</title>
+  <defs/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="288" x2="352" y1="64" y2="64"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="144" x2="256" y1="112" y2="112"/>
+  <g s:height="96" s:type="mosfet_n" s:width="32" transform="translate(256,64)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="0" y2="24"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="20" x2="32" y1="24" y2="24"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="20" x2="20" y1="24" y2="72"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="20" x2="32" y1="72" y2="72"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="72" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="12" y1="48" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="12" x2="12" y1="36" y2="60"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="12" x2="20" y1="48" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="20" x2="14" y1="44" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="20" x2="14" y1="52" y2="48"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="32.4">M1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="80.4">MYNMOS</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(352,64)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">VDS</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">0</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(144,112)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">VGS</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">2</text>
+    </g>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="16.4">NMOS出力特性試験回路 (chapter02, sec2.5, fig2.5の概念・def2.2 Vth=2-4V)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="40.4">M1: Vth=3V(教科書の2-4V範囲内), ソース接地(ボディもソースと同電位)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="64.4">VGS=2V(Vthよりわずかに下)/3V/4V/5Vの4本の出力特性を掃引で比較</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="88.4">期待: VGS=2Vはほぼ電流ゼロ、VGS=4V,5Vは原点から直線的に立ち上がる(0.7V下駄なし)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="288.4">.model MYNMOS NMOS(LEVEL=1 VTO=3 KP=2)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="312.4">.control</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="336.4">dc VDS 0 10 0.2 VGS 2 5 1</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="360.4">print v(vd) v(vg) i(vds)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="384.4">write chapter02/mosfet_output_char.raw</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="408.4">.endc</text>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(288,160) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(352,160) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(144,208) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="288" y="72.4">vd</text>
+  </g>
+  <g class="net-label"/>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="256" y="120.4">vg</text>
+  </g>
+  <g class="net-label"/>
+</svg>
