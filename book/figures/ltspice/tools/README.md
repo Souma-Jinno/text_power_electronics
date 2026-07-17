@@ -27,7 +27,8 @@ book/figures/ltspice/ 配下に独立の補助資料（.asc/.net/.raw/.svg一式
 
 新しい回路を1つ作るときの流れ:
 
-1. `chapterNN/xxx.asc` を作成（`SYMBOL_PINS`に登録済みのシンボル種別=voltage/res/diodeのみ使用可。
+1. `chapterNN/xxx.asc` を作成（`SYMBOL_PINS`に登録済みのシンボル種別=
+   voltage/current/res/diode/bjt_npn/bjt_pnp/mosfet_n のみ使用可。
    新しい部品が要る章では `asc_to_net.py` の `SYMBOL_PINS`/`SYMBOL_PREFIX` と `symbols/*.asy` を追加する）
 2. `bash tools/run_pipeline.sh chapterNN/xxx.asc` で `.net`→ngspice `.raw`→`.svg` を一括生成
    （`asc_to_net.py`が接続チェックNGなら非ゼロ終了するので、このステップでコケたら.ascを直す）
@@ -38,7 +39,32 @@ book/figures/ltspice/ 配下に独立の補助資料（.asc/.net/.raw/.svg一式
 
 - `asc_to_net.py`は自作パーサであり、実LTspiceの`-netlist`出力と1:1で同じではない
   （回転はR0/R90/R180/R270とM0/M90/M180/M270の一般式に対応済みだが、実機での動作確認はできていない）。
-- 部品種別はチャプター1時点で voltage/res/diode の3種のみ。5章以降でMOSFET/インダクタ/変圧器等が
-  要る際は同じパターンで `.asy`と`SYMBOL_PINS`を追加する。
+- 部品種別はチャプター1時点で voltage/res/diode の3種のみ。チャプター2で3端子素子(BJT/MOSFET)と
+  電流源が必要になったため `bjt_npn`・`bjt_pnp`・`mosfet_n`・`current` の4種を追加した
+  （2026-07-17）。mosfet_nはD/G/S/Bの4ノードを持つが、SYMBOL_PINSでB座標をS座標と全く同じ点に
+  重ねることでUnion-Findが自動的にB=Sとして結線する（特別なコード分岐は追加していない）。
+  5章以降でインダクタ/変圧器等が要る際も同じパターンで`.asy`と`SYMBOL_PINS`を追加する。
+- `.control`/`.endc`ブロックを使うネットリスト（BJT/MOSFETの内部電流`@q1[ic]`等を`print`したい
+  場合や、複数行のシミュレーション制御をまとめたい場合に必要）では、`run_pipeline.sh`の
+  `ngspice -b -r <raw>`（-rフラグでの自動raw書き出し）と組み合わせると、このマシンでは
+  ngspiceが「binary raw file "..."」とログに出すにもかかわらず実際には.rawファイルが
+  生成されない現象を確認した（原因未特定、恐らく-rフラグと.controlブロック内の暗黙の
+  自動再解析が競合している）。回避策として`run_pipeline.sh`は`.net`に`.control`があれば
+  `-r`を付けずに`ngspice -b`のみで実行し、`.control`ブロック内に明示的な
+  `write chapterNN/xxx.raw`コマンドを置く方式に統一した。新しい回路で`.control`ブロックを
+  使う場合は、必ず末尾（`.endc`直前）に`write chapterNN/<回路名>.raw`を入れること。
 - wine/実LTspiceが将来使えるようになった場合は、`asc_to_net.py`の出力とLTspice実機の`-netlist`
   出力を突き合わせて自作パーサの妥当性を再検証すること。
+- **`fix_viewbox.py`（2026-07-17、図監査で発見・追加）**: `ltspice_to_svg`のviewBox自動計算
+  （site-packages内`ViewboxCalculator`）はwire/shape/symbol/flagの座標だけを見ており、
+  `<text>`要素（回路上のTEXTコメント・SPICE directiveの表示）の実際の描画幅を一切考慮しない。
+  そのため、コメント行を教科書的に詳しく書く（日本語を含む長い注記など）と、その行がSVGの
+  viewBox右端をはみ出し、`overflow:hidden`のデフォルト挙動で**サイレントに読めなくなる**
+  （chapter01の短い1行コメントでも実際に発生していたことを2026-07-17のchapter02図監査で発見、
+  3回路とも遡って修正済み）。`run_pipeline.sh`は`asc→svg`の直後に自動で
+  `fix_viewbox.py <svg>`を呼び、`<text>`の内容とfont-sizeからASCII≈0.55em/CJK≈1.0emの
+  概算幅ではみ出し量を推定してviewBoxを広げる（正確なフォントメトリクスではなく安全側の概算な
+  ので、広げすぎることはあっても文字が切れることは無いはず）。**新しい回路を追加したら、
+  `run_pipeline.sh`経由で実行する限り自動適用されるが、SVGを個別に再生成した場合は
+  `fix_viewbox.py`を忘れずに呼ぶこと**。verification HTMLはSVGを内容ごと埋め込むので、
+  SVGを修正したら対応する`ltspice_chapterNN.html`も`gen_verification_html.py`で再生成が必要。
