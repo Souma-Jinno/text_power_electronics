@@ -7,9 +7,9 @@ Fallback tool used because this machine has no wine/LTspice installed
 self-implemented .asc -> netlist parser when the real environment is unavailable).
 
 Only supports the small custom symbol set in ../tools/symbols/ (voltage, current, res,
-diode, npn, pnp, nmos, ind, cap) authored for this pipeline -- SYMBOL_PINS below must have
-an entry for every symbol type used in a schematic. Extend it when new chapters introduce
-new symbols.
+diode, npn, pnp, nmos, ind, cap, sw) authored for this pipeline -- SYMBOL_PINS below must
+have an entry for every symbol type used in a schematic. Extend it when new chapters
+introduce new symbols.
 
 Symbol type names match real LTspice's own library part names (verified 2026-07-17/18
 against book/figures/ltspice/corpus/, a set of real .asc files -- 13 LTspice-bundled
@@ -40,6 +40,11 @@ SYMBOL_PINS = {
     # point as the source pin so the union-find node merge (exact-coordinate
     # match) ties B=S automatically without any special-case code.
     "nmos":     [(32, 0), (0, 48), (32, 96), (32, 96)],
+    # N+ , N- , NC+ , NC-  (ngspice/SPICE "S" voltage-controlled switch element,
+    # matches the "sw" part the professor's own corpus/prof_00_boost.asc uses
+    # for the chopper switch, driven by a PULSE control source into NC+/NC-
+    # via matching net-name FLAGs, not a direct wire -- see named_groups above)
+    "sw":       [(32, 0), (32, 96), (0, 32), (0, 64)],
 }
 
 SYMBOL_PREFIX = {
@@ -52,6 +57,7 @@ SYMBOL_PREFIX = {
     "npn": "Q",
     "pnp": "Q",
     "nmos": "M",
+    "sw": "S",
 }
 
 
@@ -137,6 +143,21 @@ def build_netlist(asc_path):
     gnd_points = [(f["x"], f["y"]) for f in flags if f["net_name"] == "0"]
     for p in gnd_points[1:]:
         dsu.union(gnd_points[0], p)
+
+    # Same convention applies to any *named* net label, not just "0": in real
+    # LTspice, two FLAGs sharing a non-ground name (e.g. two "Vsw" labels) are
+    # the same electrical node even with no wire between them -- this is how
+    # the professor's own corpus (prof_00_boost.asc etc.) hops the switch
+    # gate-drive pulse across the sheet without a long physical wire. Union
+    # every group of same-named non-ground flags so our own connectivity
+    # checker (node_member_count below) doesn't false-flag them as dangling.
+    named_groups = {}
+    for f in flags:
+        if f["net_name"] != "0":
+            named_groups.setdefault(f["net_name"], []).append((f["x"], f["y"]))
+    for pts in named_groups.values():
+        for p in pts[1:]:
+            dsu.union(pts[0], p)
 
     # Register every symbol pin and every flag point as a node (union-find
     # merges points that share exact coordinates automatically via dict key).
