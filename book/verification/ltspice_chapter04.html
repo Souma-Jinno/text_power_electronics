@@ -1,0 +1,124 @@
+<!DOCTYPE html><html lang='ja'><head><meta charset='utf-8'>
+<title>LTspice検証: 第04章 リアクティブ素子とエネルギー</title>
+<style>
+body { font-family: "Hiragino Sans", "Noto Sans JP", sans-serif; background:#fff; color:#222; margin:2em auto; max-width: 960px; padding: 0 1em; }
+h1 { border-bottom: 3px solid #0891b2; padding-bottom: 0.3em; }
+h2 { color:#0e7490; border-left: 6px solid #0891b2; padding-left: 0.5em; margin-top: 2.5em; }
+.circuit { border: 1px solid #ddd; border-radius: 8px; padding: 1em 1.5em; margin: 1em 0; }
+.svgwrap { background:#fff; border: 1px solid #eee; padding: 0.5em; text-align:center; }
+.svgwrap svg { max-width: 100%; height: auto; }
+pre { background:#f8f8f8; border:1px solid #eee; padding:0.8em; overflow-x:auto; font-size: 0.85em; }
+.badge-ok { color:#fff; background:#0891b2; border-radius:4px; padding:0.15em 0.6em; font-size:0.85em; }
+.meta { color:#555; font-size:0.9em; }
+a { color:#0e7490; }
+</style></head><body>
+<h1>LTspice検証記録 -- 第04章 リアクティブ素子とエネルギー</h1>
+<p class='meta'>教科書figures(EPS)とは独立の補助資料。本ページの回路は book/figures/ltspice/ 配下の .asc/.net/.raw/.svg としてリポジトリに同梱し、読者が LTspice/ngspice で再現できるようにするためのもの。既存の本文・掲載図(fig*.eps)は変更していない。</p>
+<div class='circuit'>
+<h2>LCフィルタ+方形波電圧源(章末問題4.5の物理的検証) <span class='badge-ok'>接続チェック OK</span></h2>
+<p class='meta'>関連節: sec4.4 / ex4.5 / ファイル: <code>chapter04/lc_filter_square_wave.asc</code></p>
+<p>V1(PULSE 0-12V, D=0.5, f=100kHz)をL1=100µH-C1//R1=6Ωのローパスフィルタへ接続。十分な整定時間(数ms)をとってngspiceで検算した結果、(a)基準値(C=10µF)で出力平均6.00V(=D*V0)・リプル約38mV、(b)Cを100µFへ10倍にするとリプルが約3.9mV(基準比0.10倍)に減少、(c)f=5kHzへ下げると出力が-8.7V〜+20.7Vまで暴れる(共振)ことを確認し、章末問題4.5の3つの主張(a)(b)(c)すべてと定量的に整合した。</p>
+<div class='svgwrap'><?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="89.6 73.6 852.2240000000006 408.46399999999994" width="100%">
+  <title>lc_filter_square_wave.svg</title>
+  <defs/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="160" x2="320" y1="144" y2="144"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="320" x2="480" y1="240" y2="240"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="160" x2="160" y1="240" y2="288"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="320" x2="320" y1="336" y2="384"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="480" x2="480" y1="336" y2="384"/>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(160,144)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">V1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">PULSE(0 12 0 1n 1n 5u 10u)</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="ind" s:width="10" transform="translate(320,144)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="16" y2="24"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="24" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="32" y2="40"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="40" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="48" y2="56"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="56" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="64" y2="72"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="72" y2="80"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">L1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="96.4">100u</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="cap" s:width="32" transform="translate(320,240)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="44"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="44" y2="44"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="52" y2="52"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="52" y2="96"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">C1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">10u</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="res" s:width="32" transform="translate(480,240)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <rect fill="none" height="64" stroke="black" stroke-width="2.0" width="32" x="-16" y="16"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">R1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">6</text>
+    </g>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="160" y="56.4">LCフィルタ+方形波電圧源(ex4.5, D=0.5, f=100kHz) V1-L1-C1//R1</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="160" y="464.4">.tran 0.01u 300u 250u 0.01u</text>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(160,288) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(320,384) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(480,384) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+</svg>
+</div>
+<p><b>ネットリスト</b> (asc_to_net.py 自動生成):</p>
+<pre>* netlist auto-generated by asc_to_net.py from lc_filter_square_wave.asc
+V1 N001 0 PULSE(0 12 0 1n 1n 5u 10u)
+L1 N001 N002 100u
+C1 N002 0 10u
+R1 N002 0 6
+.tran 0.01u 300u 250u 0.01u
+.end
+</pre>
+</div>
+</body></html>
