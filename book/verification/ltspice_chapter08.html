@@ -1,0 +1,229 @@
+<!DOCTYPE html><html lang='ja'><head><meta charset='utf-8'>
+<title>LTspice検証: 第08章 交流-直流変換 整流回路</title>
+<style>
+body { font-family: "Hiragino Sans", "Noto Sans JP", sans-serif; background:#fff; color:#222; margin:2em auto; max-width: 960px; padding: 0 1em; }
+h1 { border-bottom: 3px solid #0891b2; padding-bottom: 0.3em; }
+h2 { color:#0e7490; border-left: 6px solid #0891b2; padding-left: 0.5em; margin-top: 2.5em; }
+.circuit { border: 1px solid #ddd; border-radius: 8px; padding: 1em 1.5em; margin: 1em 0; }
+.svgwrap { background:#fff; border: 1px solid #eee; padding: 0.5em; text-align:center; }
+.svgwrap svg { max-width: 100%; height: auto; }
+pre { background:#f8f8f8; border:1px solid #eee; padding:0.8em; overflow-x:auto; font-size: 0.85em; }
+.badge-ok { color:#fff; background:#0891b2; border-radius:4px; padding:0.15em 0.6em; font-size:0.85em; }
+.meta { color:#555; font-size:0.9em; }
+a { color:#0e7490; }
+</style></head><body>
+<h1>LTspice検証記録 -- 第08章 交流-直流変換 整流回路</h1>
+<p class='meta'>教科書figures(EPS)とは独立の補助資料。本ページの回路は book/figures/ltspice/ 配下の .asc/.net/.raw/.svg としてリポジトリに同梱し、読者が LTspice/ngspice で再現できるようにするためのもの。既存の本文・掲載図(fig*.eps)は変更していない。</p>
+<div class='circuit'>
+<h2>ダイオードブリッジ全波整流(sec8.2, ex8.6) <span class='badge-ok'>接続チェック OK</span></h2>
+<p class='meta'>関連節: sec8.2 / ex8.6 / ファイル: <code>chapter08/bridge_rectifier.asc</code></p>
+<p>交流振幅141V(実効値100V相当) 50Hz、C=1000/100uF(.control alter+tranでスイープ)、R=100ohm。Rsrc=5ohm+.options reltol/gmin緩和は理想電圧源直結時の突入電流発散を防ぐための最小限の追加(教科書指定の値は不変)。ngspice実測: C=1000uFでΔV=7.54V(式8.10見積り11.61Vの0.65倍)、C=100uFでΔV=58.35V(見積り103.98Vの0.56倍)、いずれも式8.10は過大評価(小リプル近似の限界、ex8.6(a)(c)で確認)。電源電流の波高率(Ipeak/Irms)はC=1000uFで2.248、C=100uFで2.084とCが大きいほどパルスが鋭くなることを定量確認(ex8.6(b))。</p>
+<div class='svgwrap'><?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="101.6 -98.4 1458.3040000000005 549.664" width="100%">
+  <title>bridge_rectifier.svg</title>
+  <defs/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="200" x2="500" y1="0" y2="0"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="500" x2="700" y1="0" y2="0"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="700" x2="800" y1="0" y2="0"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="200" x2="500" y1="192" y2="192"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="500" x2="700" y1="192" y2="192"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="700" x2="800" y1="192" y2="192"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="700" x2="700" y1="96" y2="192"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="800" x2="800" y1="96" y2="192"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="350" x2="296" y1="48" y2="48"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="200" x2="200" y1="48" y2="96"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="350" x2="500" y1="144" y2="144"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="500" x2="500" y1="144" y2="96"/>
+  <circle cx="700" cy="192" fill="black" r="3.0"/>
+  <g s:height="96" s:type="diode" s:width="32" transform="translate(200,96) rotate(180)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="32" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="32" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="32" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="64" y2="64"/>
+    <g transform="rotate(180, 24, 24)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="32.4">D1</text>
+      </g>
+    </g>
+    <g transform="rotate(180, 24, 80)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="88.4">DMOD</text>
+      </g>
+    </g>
+  </g>
+  <g s:height="96" s:type="diode" s:width="32" transform="translate(200,192) rotate(180)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="32" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="32" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="32" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="64" y2="64"/>
+    <g transform="rotate(180, 24, 24)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="32.4">D3</text>
+      </g>
+    </g>
+    <g transform="rotate(180, 24, 80)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="88.4">DMOD</text>
+      </g>
+    </g>
+  </g>
+  <g s:height="96" s:type="diode" s:width="32" transform="translate(500,96) rotate(180)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="32" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="32" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="32" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="64" y2="64"/>
+    <g transform="rotate(180, 24, 24)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="32.4">D2</text>
+      </g>
+    </g>
+    <g transform="rotate(180, 24, 80)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="88.4">DMOD</text>
+      </g>
+    </g>
+  </g>
+  <g s:height="96" s:type="diode" s:width="32" transform="translate(500,192) rotate(180)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="32" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="32" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="32" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="64" y2="64"/>
+    <g transform="rotate(180, 24, 24)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="32.4">D4</text>
+      </g>
+    </g>
+    <g transform="rotate(180, 24, 80)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="88.4">DMOD</text>
+      </g>
+    </g>
+  </g>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(350,48)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">V1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">SIN(0 141 50)</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="res" s:width="32" transform="translate(296,48) rotate(90)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <rect fill="none" height="64" stroke="black" stroke-width="2.0" width="32" x="-16" y="16"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">Rsrc</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">5</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="cap" s:width="32" transform="translate(700,0)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="44"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="44" y2="44"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="52" y2="52"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="52" y2="96"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">C1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">1000u</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="res" s:width="32" transform="translate(800,0)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <rect fill="none" height="64" stroke="black" stroke-width="2.0" width="32" x="-16" y="16"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">R1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">100</text>
+    </g>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="-111.6">ダイオードブリッジ全波整流(sec8.2, ex8.6基準)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="-79.6">交流振幅141V(実効値100V相当) 50Hz C=1000/100uF(alterでスイープ) R=100ohm</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="-47.6">Rsrc=5ohm(電源線抵抗相当)+.options reltol/gmin緩和(理想電圧源直結だと突入電流でNewton法が発散するため追加、収束目的の最小限)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="248.4">.model DMOD D(Is=1e-9 N=1.0 Rs=0.001)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="272.4">.options reltol=0.01 gmin=1e-9</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="288.4">.control</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="312.4">alter C1 = 1000u</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="336.4">tran 10u 200m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="360.4">alter C1 = 100u</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="384.4">tran 10u 200m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="408.4">write chapter08/bridge_rectifier.raw all</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="432.4">.endc</text>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(200,192) rotate(90)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="700" y="-4.800000000000001">vout</text>
+  </g>
+  <g class="net-label"/>
+</svg>
+</div>
+<p><b>ネットリスト</b> (asc_to_net.py 自動生成):</p>
+<pre>* netlist auto-generated by asc_to_net.py from bridge_rectifier.asc
+D1 N001 vout DMOD
+D3 0 N001 DMOD
+D2 N002 vout DMOD
+D4 0 N002 DMOD
+V1 N003 N002 SIN(0 141 50)
+Rsrc N003 N001 5
+C1 vout 0 1000u
+R1 vout 0 100
+.model DMOD D(Is=1e-9 N=1.0 Rs=0.001)
+.options reltol=0.01 gmin=1e-9
+.control
+alter C1 = 1000u
+tran 10u 200m
+alter C1 = 100u
+tran 10u 200m
+write chapter08/bridge_rectifier.raw all
+.endc
+.end
+</pre>
+</div>
+</body></html>

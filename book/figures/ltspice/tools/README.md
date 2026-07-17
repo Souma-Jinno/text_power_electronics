@@ -88,6 +88,12 @@ book/figures/ltspice/ 配下に独立の補助資料（.asc/.net/.raw/.svg一式
   anode top/cathode bottom）だが`.asy`のカソードバーに折れ線を足して視覚的に区別。電気的には
   `.model <name> D(... BV=<Vz> IBV=<試験電流>)`のBV/IBVパラメータで逆方向降伏を表現する
   （ngspice標準diodeモデルの機能、新規SPICE素子は不要）。
+- **理想AC電圧源+ダイオード+大容量Cの組合せは突入電流でNewton法が発散しやすい**
+  （2026-07-18chapter08のブリッジ整流回路で発見）。電源に直列で現実的な内部抵抗（`Rsrc`、
+  数Ω程度、電源線・簡易トランスの巻線抵抗に相当）を追加し、あわせて`.options reltol=0.01
+  gmin=1e-9`（デフォルトreltol=0.001から緩和）を指定すると解消する。片方だけでは不十分な
+  ケースがあることを確認済み（`chapter08/bridge_rectifier.asc`が実装例）。整流回路など
+  AC電源を扱う今後の章（9章以降）でも同じ罠に当たる可能性が高い。
 - **`fix_viewbox.py`（2026-07-17、図監査で発見・追加）**: `ltspice_to_svg`のviewBox自動計算
   （site-packages内`ViewboxCalculator`）はwire/shape/symbol/flagの座標だけを見ており、
   `<text>`要素（回路上のTEXTコメント・SPICE directiveの表示）の実際の描画幅を一切考慮しない。
