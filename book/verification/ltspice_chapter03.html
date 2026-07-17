@@ -1,0 +1,243 @@
+<!DOCTYPE html><html lang='ja'><head><meta charset='utf-8'>
+<title>LTspice検証: 第03章 デバイス特性とデバイス選択</title>
+<style>
+body { font-family: "Hiragino Sans", "Noto Sans JP", sans-serif; background:#fff; color:#222; margin:2em auto; max-width: 960px; padding: 0 1em; }
+h1 { border-bottom: 3px solid #0891b2; padding-bottom: 0.3em; }
+h2 { color:#0e7490; border-left: 6px solid #0891b2; padding-left: 0.5em; margin-top: 2.5em; }
+.circuit { border: 1px solid #ddd; border-radius: 8px; padding: 1em 1.5em; margin: 1em 0; }
+.svgwrap { background:#fff; border: 1px solid #eee; padding: 0.5em; text-align:center; }
+.svgwrap svg { max-width: 100%; height: auto; }
+pre { background:#f8f8f8; border:1px solid #eee; padding:0.8em; overflow-x:auto; font-size: 0.85em; }
+.badge-ok { color:#fff; background:#0891b2; border-radius:4px; padding:0.15em 0.6em; font-size:0.85em; }
+.meta { color:#555; font-size:0.9em; }
+a { color:#0e7490; }
+</style></head><body>
+<h1>LTspice検証記録 -- 第03章 デバイス特性とデバイス選択</h1>
+<p class='meta'>教科書figures(EPS)とは独立の補助資料。本ページの回路は book/figures/ltspice/ 配下の .asc/.net/.raw/.svg としてリポジトリに同梱し、読者が LTspice/ngspice で再現できるようにするためのもの。既存の本文・掲載図(fig*.eps)は変更していない。</p>
+<div class='circuit'>
+<h2>クランプ誘導性ダブルパルス試験回路（例題3.2の物理的検証） <span class='badge-ok'>接続チェック OK</span></h2>
+<p class='meta'>関連節: sec3.3 / ファイル: <code>chapter03/switching_loss_double_pulse.asc</code></p>
+<p>V1=100V-L1=50µH-M1(NMOS LEVEL=1 VTO=3V KP=2)の直列にD1(還流ダイオード)を並列配置し、PWLゲート駆動でダブルパルス(1発目5µsオンでIL≈10Aまで直線的に立ち上げ→1µs休止でターンオフ観測→2発目オンでターンオン観測)を実施。KCL i_sw=i(L1)-i(D1)で導出したスイッチ電流とv(sw)の積を積分し、E_off≈3.4µJ・E_on≈8.8µJ(共に正)を実測。『切り替えの途中で電圧と電流が同時に非ゼロになり損失が生じる』というsec3.3の核心的主張は定性的に確認できたが、本モデルはゲート容量(Miller効果)を持たないためターンオフ速度は収束安定化のため追加したCoss=470pFの充放電速度(≈4.65ns)で決まり、本文の例題3.2が仮定するt_on=t_off=50nsという数値そのものは再現していない(E_on+E_off≈12.3µJ、本文の50µJとは前提が異なる)。監査で2件の実装バグ(@d1[id]のsave漏れによる定数固定、Coss=0による収束破綻で109万A超の数値異常)をコミット前に発見・修正した。詳細はVERIFICATION_NOTES.md参照。</p>
+<div class='svgwrap'><?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="-11.200000000000003 20.799999999999997 1691.5520000000008 549.552" width="100%">
+  <title>switching_loss_double_pulse.svg</title>
+  <defs/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="64" x2="256" y1="96" y2="96"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="256" x2="352" y1="96" y2="96"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="256" x2="320" y1="192" y2="192"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="320" x2="352" y1="192" y2="192"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="144" x2="288" y1="240" y2="240"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="352" x2="432" y1="192" y2="192"/>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(64,96)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">V1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">100</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="inductor" s:width="10" transform="translate(256,96)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="16" y2="24"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="24" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="32" y2="40"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="40" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="48" y2="56"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="56" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="64" y2="72"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="72" y2="80"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">L1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="96.4">50u</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="diode" s:width="32" transform="translate(352,192) rotate(180)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="32" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="32" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="32" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="64" y2="64"/>
+    <g transform="rotate(180, 24, 24)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="32.4">D1</text>
+      </g>
+    </g>
+    <g transform="rotate(180, 24, 80)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="88.4">DFW</text>
+      </g>
+    </g>
+  </g>
+  <g s:height="96" s:type="mosfet_n" s:width="32" transform="translate(288,192)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="0" y2="24"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="20" x2="32" y1="24" y2="24"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="20" x2="20" y1="24" y2="72"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="20" x2="32" y1="72" y2="72"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="72" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="12" y1="48" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="12" x2="12" y1="36" y2="60"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="12" x2="20" y1="48" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="20" x2="14" y1="44" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="20" x2="14" y1="52" y2="48"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="32.4">M1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="80.4">SWMOS</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(144,240)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">VG</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">PWL(0 0 100n 0 150n 15 5150n 15 5200n 0 6200n 0 6250n 15 8250n 15 8300n 0 8500n 0)</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="cap" s:width="32" transform="translate(432,192)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="44"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="44" y2="44"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="52" y2="52"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="52" y2="96"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">Coss</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">470p</text>
+    </g>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="16.4">クランプ誘導性ダブルパルス試験回路 (chapter03, sec3.3, 例題3.2のE_on/E_off検証用)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="40.4">V1=100V(vtop)-L1=50uH-M1(スイッチ,ドレイン=sw)の直列。D1はL1に並列の還流ダイオード(anode=sw,cathode=vtop)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="64.4">M1: NMOS(LEVEL=1 VTO=3V KP=2、chapter02のmosfet_output_charと同じモデル定数を流用、Ron実測は本文の目標50mΩに近い値)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="88.4">VGはゲートPWL電圧源(0V-15V、tr=tf=50ns)でダブルパルスを生成:</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="112.4">1発目オン5usでL1電流を約10Aまで直線的に立ち上げ、1us休止でターンオフ過渡(電流約10Aのままv(sw)がvtop近くまで上昇しD1が還流)を観測、</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="136.4">2発目オンでターンオン過渡(v(sw)がvtopから0近くへ下降しつつ電流がD1からM1へ戻る)を同じ電流レベルで再観測する</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="160.4">スイッチ電流はKCL i_sw=i(L1)-i(D1)として後処理(Python)で導出する。LEVEL1モデルはゲート容量を持たないため</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="184.4">Rg/Cgsによる遅延回路は追加していない(VGのtr/tf=50ns自体が有限勾配ネットワークの役割を果たす、VERIFICATION_NOTES参照)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="232.4">Coss=100pF(sw-GND間)はMOSFET出力容量+配線浮遊容量を模した現実的な寄生値。理想ノード(容量0)では</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="256.4">dV/dtが数値的に無限大となりngspiceのニュートン法が収束せず異常値(数値創作ではなく収束破綻)を出したため追加した(VERIFICATION_NOTES参照)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="208.4">観測: v(sw)*[i(L1)-i(D1)]の時間積分からE_on,E_offを実測し、式3.8/3.9(E=0.5*V*I*t)・式3.10(P_sw)と比較する</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="408.4">.model SWMOS NMOS(LEVEL=1 VTO=3 KP=2)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="432.4">.model DFW D(Is=1e-9 N=1.0 Rs=0.001)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="456.4">.control</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="468.4">save all @d1[id]</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="480.4">tran 0.5n 8.5u 0 0.5n</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="504.4">wrdata chapter03/dpt_switching_loss.txt v(sw) v(vtop) v(gate) i(l1) @d1[id]</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="528.4">write chapter03/switching_loss_double_pulse.raw</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="552.4">.endc</text>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(64,192) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(320,288) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(144,336) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(432,288) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="64" y="104.4">vtop</text>
+  </g>
+  <g class="net-label"/>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="320" y="187.2">sw</text>
+  </g>
+  <g class="net-label"/>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="288" y="248.4">gate</text>
+  </g>
+  <g class="net-label"/>
+</svg>
+</div>
+<p><b>ネットリスト</b> (asc_to_net.py 自動生成):</p>
+<pre>* netlist auto-generated by asc_to_net.py from switching_loss_double_pulse.asc
+V1 vtop 0 100
+L1 vtop sw 50u
+D1 sw vtop DFW
+M1 sw gate 0 0 SWMOS
+VG gate 0 PWL(0 0 100n 0 150n 15 5150n 15 5200n 0 6200n 0 6250n 15 8250n 15 8300n 0 8500n 0)
+Coss sw 0 470p
+.model SWMOS NMOS(LEVEL=1 VTO=3 KP=2)
+.model DFW D(Is=1e-9 N=1.0 Rs=0.001)
+.control
+save all @d1[id]
+tran 0.5n 8.5u 0 0.5n
+wrdata chapter03/dpt_switching_loss.txt v(sw) v(vtop) v(gate) i(l1) @d1[id]
+write chapter03/switching_loss_double_pulse.raw
+.endc
+.end
+</pre>
+</div>
+</body></html>
