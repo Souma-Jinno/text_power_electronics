@@ -7,9 +7,9 @@ Fallback tool used because this machine has no wine/LTspice installed
 self-implemented .asc -> netlist parser when the real environment is unavailable).
 
 Only supports the small custom symbol set in ../tools/symbols/ (voltage, current, res,
-diode, bjt_npn, bjt_pnp, mosfet_n) authored for this pipeline -- SYMBOL_PINS below must
-have an entry for every symbol type used in a schematic. Extend it when new chapters
-introduce new symbols.
+diode, bjt_npn, bjt_pnp, mosfet_n, inductor, cap) authored for this pipeline -- SYMBOL_PINS
+below must have an entry for every symbol type used in a schematic. Extend it when new
+chapters introduce new symbols.
 """
 import argparse
 import math
@@ -24,6 +24,8 @@ SYMBOL_PINS = {
     "voltage":  [(0, 0), (0, 96)],   # + , -
     "current":  [(0, 0), (0, 96)],   # + , -  (I<name> n+ n- value)
     "res":      [(0, 0), (0, 96)],   # 1 , 2
+    "inductor": [(0, 0), (0, 96)],   # 1 , 2 (same 2-pin pattern as res)
+    "cap":      [(0, 0), (0, 96)],   # 1 , 2 (same 2-pin pattern as res)
     "diode":    [(0, 0), (0, 96)],   # anode (A) , cathode (K)
     "bjt_npn":  [(32, 0), (0, 48), (32, 96)],   # collector, base, emitter
     "bjt_pnp":  [(32, 0), (0, 48), (32, 96)],   # collector, base, emitter
@@ -37,6 +39,8 @@ SYMBOL_PREFIX = {
     "voltage": "V",
     "current": "I",
     "res": "R",
+    "inductor": "L",
+    "cap": "C",
     "diode": "D",
     "bjt_npn": "Q",
     "bjt_pnp": "Q",
