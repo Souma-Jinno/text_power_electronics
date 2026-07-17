@@ -19,7 +19,7 @@ a { color:#0e7490; }
 <p class='meta'>関連節: 1.6節 pn接合の物理 (バイアスと整流性) / ファイル: <code>chapter01/pn_junction_iv.asc</code></p>
 <p>V1をR1=1kΩ経由でD1(pn接合ダイオードモデル DMOD, Is=1e-14, N=1.0, Rs=0.1)へ直列接続し、-5V〜+1Vで.dcスイープ。ngspiceで検算した結果、逆バイアス〜低順バイアスでは電流がpAオーダーに留まり、0.6V付近から電流が急増する整流特性が確認できた(本文の「ダイオードの順方向電圧約0.7V」に対応)。</p>
 <div class='svgwrap'><?xml version="1.0" encoding="utf-8" ?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="9.599999999999998 -38.400000000000006 236.8 268.8" width="100%">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="9.599999999999998 -38.400000000000006 708.3040000000005 326.06399999999996" width="100%">
   <title>pn_junction_iv.svg</title>
   <defs/>
   <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="64" x2="192" y1="16" y2="16"/>
@@ -102,7 +102,7 @@ D1 N002 0 DMOD
 <p class='meta'>関連節: 1.7節 金属-半導体接合 (ショットキー接合とオーミック接合) / ファイル: <code>chapter01/schottky_iv.asc</code></p>
 <p>同一トポロジでD1をショットキーダイオードモデル(DSCHOTTKY, Is=1e-9, N=1.05, Rs=0.05)に置き換え。ngspice検算で順方向電圧の立ち上がりが約0.27〜0.36Vとなり、本文の「順方向電圧がpn接合より小さく(0.3〜0.4V)」と整合することを確認した。逆方向リーク電流もpn接合より大きい(nAオーダー)。</p>
 <div class='svgwrap'><?xml version="1.0" encoding="utf-8" ?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="9.599999999999998 -38.400000000000006 236.8 268.8" width="100%">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="9.599999999999998 -38.400000000000006 825.904000000001 326.06399999999996" width="100%">
   <title>schottky_iv.svg</title>
   <defs/>
   <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="64" x2="192" y1="16" y2="16"/>
@@ -185,7 +185,7 @@ D1 N002 0 DSCHOTTKY
 <p class='meta'>関連節: 1.7節 金属-半導体接合 (オーミック接合) / ファイル: <code>chapter01/ohmic_contact_iv.asc</code></p>
 <p>接触抵抗Rc=1Ω(模式値)と半導体バルク抵抗Rb=100Ω(模式値、例題1.2の桁数そのものではなく説明用の代表値)を直列にした純抵抗回路。-1V〜+1Vの.dcスイープでngspice検算した結果、原点対称の完全な直線(I=V/101Ω)となり、整流性接触(上記2回路)と対比してオーミック接合が「どちら向きにも低抵抗」であることを示す。</p>
 <div class='svgwrap'><?xml version="1.0" encoding="utf-8" ?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="9.599999999999998 -38.400000000000006 236.8 268.8" width="100%">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="9.599999999999998 -38.400000000000006 1352.7040000000015 302.06399999999996" width="100%">
   <title>ohmic_contact_iv.svg</title>
   <defs/>
   <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="64" x2="192" y1="16" y2="16"/>
