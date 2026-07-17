@@ -1,0 +1,8 @@
+[
+  {
+    "base": "flyback_converter",
+    "label": "フライバックコンバータ(Flyback converter, sec6.4, ex6.5)",
+    "section": "sec6.4 / ex6.5",
+    "note": "Vin=12V D=0.2941 f=20kHz L1=L2=700uH(N1:N2=1:1, K1 L1 L2 1) C=500uF R=5ohm(ex6.5基準+corpus prof_11_flyback_converter_back.ascと同一定数)。ngspice検算でVout_avg=4.462V(理想値5.00Vよりダイオード順方向降下分低い、既存章と同傾向)。ex6.5(b)の3ケース(降圧Vin=12V D=0.2941->4.46V/等倍Vin=12V D=0.5->11.41V/昇圧Vin=5V D=0.7059 R=28.8ohm->11.50V)をngspiceで検算し降圧・等倍・昇圧の傾向を確認(b/cはスクラッチ検算、コミットは(a)のみ)。1次電流i1と2次電流i2が時間的に排他(式6.17のとおりスイッチング瞬間に引き継がれ、N1:N2=1:1によりピーク値がほぼ一致)であることも直接確認。"
+  }
+]

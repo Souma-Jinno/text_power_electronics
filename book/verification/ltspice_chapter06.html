@@ -1,0 +1,259 @@
+<!DOCTYPE html><html lang='ja'><head><meta charset='utf-8'>
+<title>LTspice検証: 第06章 直流-直流変換(2) 絶縁型</title>
+<style>
+body { font-family: "Hiragino Sans", "Noto Sans JP", sans-serif; background:#fff; color:#222; margin:2em auto; max-width: 960px; padding: 0 1em; }
+h1 { border-bottom: 3px solid #0891b2; padding-bottom: 0.3em; }
+h2 { color:#0e7490; border-left: 6px solid #0891b2; padding-left: 0.5em; margin-top: 2.5em; }
+.circuit { border: 1px solid #ddd; border-radius: 8px; padding: 1em 1.5em; margin: 1em 0; }
+.svgwrap { background:#fff; border: 1px solid #eee; padding: 0.5em; text-align:center; }
+.svgwrap svg { max-width: 100%; height: auto; }
+pre { background:#f8f8f8; border:1px solid #eee; padding:0.8em; overflow-x:auto; font-size: 0.85em; }
+.badge-ok { color:#fff; background:#0891b2; border-radius:4px; padding:0.15em 0.6em; font-size:0.85em; }
+.meta { color:#555; font-size:0.9em; }
+a { color:#0e7490; }
+</style></head><body>
+<h1>LTspice検証記録 -- 第06章 直流-直流変換(2) 絶縁型</h1>
+<p class='meta'>教科書figures(EPS)とは独立の補助資料。本ページの回路は book/figures/ltspice/ 配下の .asc/.net/.raw/.svg としてリポジトリに同梱し、読者が LTspice/ngspice で再現できるようにするためのもの。既存の本文・掲載図(fig*.eps)は変更していない。</p>
+<div class='circuit'>
+<h2>フライバックコンバータ(Flyback converter, sec6.4, ex6.5) <span class='badge-ok'>接続チェック OK</span></h2>
+<p class='meta'>関連節: sec6.4 / ex6.5 / ファイル: <code>chapter06/flyback_converter.asc</code></p>
+<p>Vin=12V D=0.2941 f=20kHz L1=L2=700uH(N1:N2=1:1, K1 L1 L2 1) C=500uF R=5ohm(ex6.5基準+corpus prof_11_flyback_converter_back.ascと同一定数)。ngspice検算でVout_avg=4.462V(理想値5.00Vよりダイオード順方向降下分低い、既存章と同傾向)。ex6.5(b)の3ケース(降圧Vin=12V D=0.2941->4.46V/等倍Vin=12V D=0.5->11.41V/昇圧Vin=5V D=0.7059 R=28.8ohm->11.50V)をngspiceで検算し降圧・等倍・昇圧の傾向を確認(b/cはスクラッチ検算、コミットは(a)のみ)。1次電流i1と2次電流i2が時間的に排他(式6.17のとおりスイッチング瞬間に引き継がれ、N1:N2=1:1によりピーク値がほぼ一致)であることも直接確認。</p>
+<div class='svgwrap'><?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="-133.2 -133.2 1354.0320000000017 847.712" width="100%">
+  <title>flyback_converter.svg</title>
+  <defs/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="232" y1="0" y2="0"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="600" x2="768" y1="96" y2="96"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="768" x2="828" y1="192" y2="192"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="828" x2="948" y1="192" y2="192"/>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(0,0)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">V1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">12</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="sw" s:width="34" transform="translate(200,0)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="20" y1="32" y2="58"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="20" y1="32" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="20" y1="64" y2="64"/>
+    <circle cx="32.0" cy="32.0" fill="none" r="2.0" stroke="black" stroke-width="2.0"/>
+    <circle cx="32.0" cy="64.0" fill="none" r="2.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="16.4">S1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="88.4">SW</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="ind" s:width="10" transform="translate(232,96)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="16" y2="24"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="24" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="32" y2="40"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="40" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="48" y2="56"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="56" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="64" y2="72"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="72" y2="80"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">L1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="96.4">700u</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="ind" s:width="10" transform="translate(600,192) rotate(180)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="16" y2="24"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="24" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="32" y2="40"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="40" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="48" y2="56"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="56" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="64" y2="72"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="72" y2="80"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <g transform="rotate(180, 24, 24)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="32.4">L2</text>
+      </g>
+    </g>
+    <g transform="rotate(180, 24, 88)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="96.4">700u</text>
+      </g>
+    </g>
+  </g>
+  <g s:height="96" s:type="diode" s:width="32" transform="translate(768,96)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="32" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="32" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="32" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="64" y2="64"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">D1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="88.4">DMOD</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="cap" s:width="32" transform="translate(828,192)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="44"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="44" y2="44"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="52" y2="52"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="52" y2="96"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">C1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">500u</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="res" s:width="32" transform="translate(948,192)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <rect fill="none" height="64" stroke="black" stroke-width="2.0" width="32" x="-16" y="16"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">R1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">5</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(0,300)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">V2</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">PULSE(0 10 0 10n 10n {Tsw*D} {Tsw})</text>
+    </g>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="-111.6">フライバックコンバータ(sec6.4, ex6.5基準+corpus/prof_11_flyback_converter_back.ascと同一定数)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="-79.6">Vin=12V D=0.2941 f=20kHz L1=L2=700uH C=500uF R=5ohm(→Vout≈5V, N1:N2=1:1)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="400" y="56.4">K1 L1 L2 1</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="488.4">.model SW SW(Ron=1m Roff=1G Vt=0.01)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="528.4">.model DMOD D(Is=1e-9 N=1.0 Rs=0.001)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="568.4">.param fsw=20k</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="608.4">.param Tsw=1/fsw</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="648.4">.param D=0.2941</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="688.4">.tran 2u 100m 95m</text>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(0,96) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(200,64) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(232,192) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(600,192) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(828,288) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(948,288) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(0,396) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 200, 32)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="200" y="27.2">ctrl</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 0, 300)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="0" y="295.2">ctrl</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+</svg>
+</div>
+<p><b>ネットリスト</b> (asc_to_net.py 自動生成):</p>
+<pre>* netlist auto-generated by asc_to_net.py from flyback_converter.asc
+V1 N001 0 12
+S1 N001 N002 ctrl 0 SW
+L1 N002 0 700u
+L2 0 N003 700u
+D1 N003 N004 DMOD
+C1 N004 0 500u
+R1 N004 0 5
+V2 ctrl 0 PULSE(0 10 0 10n 10n {Tsw*D} {Tsw})
+K1 L1 L2 1
+.model SW SW(Ron=1m Roff=1G Vt=0.01)
+.model DMOD D(Is=1e-9 N=1.0 Rs=0.001)
+.param fsw=20k
+.param Tsw=1/fsw
+.param D=0.2941
+.tran 2u 100m 95m
+.end
+</pre>
+</div>
+</body></html>
