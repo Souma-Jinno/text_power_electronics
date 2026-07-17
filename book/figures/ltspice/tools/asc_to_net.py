@@ -6,9 +6,10 @@ Fallback tool used because this machine has no wine/LTspice installed
 (task 20260717_ltspice_asc_svg_pipeline_pwreletron.md, Phase 0 permits a
 self-implemented .asc -> netlist parser when the real environment is unavailable).
 
-Only supports the small custom symbol set in ../tools/symbols/ (voltage, res, diode)
-authored for this pipeline -- SYMBOL_PINS below must have an entry for every symbol
-type used in a schematic. Extend it when new chapters introduce new symbols.
+Only supports the small custom symbol set in ../tools/symbols/ (voltage, current, res,
+diode, bjt_npn, bjt_pnp, mosfet_n) authored for this pipeline -- SYMBOL_PINS below must
+have an entry for every symbol type used in a schematic. Extend it when new chapters
+introduce new symbols.
 """
 import argparse
 import math
@@ -16,17 +17,30 @@ import sys
 from pathlib import Path
 
 # Local pin coordinates (x, y) at rotation R0, before mirror/rotate/translate.
-# Order matches the physical pin role documented in each .asy file.
+# Order matches the physical pin role documented in each .asy file, and also
+# matches the SPICE node order expected for that element's card (e.g. Q: C B E,
+# M: D G S B).
 SYMBOL_PINS = {
-    "voltage": [(0, 0), (0, 96)],   # + , -
-    "res":     [(0, 0), (0, 96)],   # 1 , 2
-    "diode":   [(0, 0), (0, 96)],   # anode (A) , cathode (K)
+    "voltage":  [(0, 0), (0, 96)],   # + , -
+    "current":  [(0, 0), (0, 96)],   # + , -  (I<name> n+ n- value)
+    "res":      [(0, 0), (0, 96)],   # 1 , 2
+    "diode":    [(0, 0), (0, 96)],   # anode (A) , cathode (K)
+    "bjt_npn":  [(32, 0), (0, 48), (32, 96)],   # collector, base, emitter
+    "bjt_pnp":  [(32, 0), (0, 48), (32, 96)],   # collector, base, emitter
+    # drain, gate, source, body -- body pin coordinate is deliberately the same
+    # point as the source pin so the union-find node merge (exact-coordinate
+    # match) ties B=S automatically without any special-case code.
+    "mosfet_n": [(32, 0), (0, 48), (32, 96), (32, 96)],
 }
 
 SYMBOL_PREFIX = {
     "voltage": "V",
+    "current": "I",
     "res": "R",
     "diode": "D",
+    "bjt_npn": "Q",
+    "bjt_pnp": "Q",
+    "mosfet_n": "M",
 }
 
 
