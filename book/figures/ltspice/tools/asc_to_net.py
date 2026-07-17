@@ -7,9 +7,16 @@ Fallback tool used because this machine has no wine/LTspice installed
 self-implemented .asc -> netlist parser when the real environment is unavailable).
 
 Only supports the small custom symbol set in ../tools/symbols/ (voltage, current, res,
-diode, bjt_npn, bjt_pnp, mosfet_n, inductor, cap) authored for this pipeline -- SYMBOL_PINS
-below must have an entry for every symbol type used in a schematic. Extend it when new
-chapters introduce new symbols.
+diode, npn, pnp, nmos, ind, cap) authored for this pipeline -- SYMBOL_PINS below must have
+an entry for every symbol type used in a schematic. Extend it when new chapters introduce
+new symbols.
+
+Symbol type names match real LTspice's own library part names (verified 2026-07-17/18
+against book/figures/ltspice/corpus/, a set of real .asc files -- 13 LTspice-bundled
+examples + 16 of the author's own past circuits -- committed by the professor directly to
+this repo for few-shot .asc authoring). This machine still has no wine/real LTspice, so the
+*pin geometry* below remains this pipeline's own internally-consistent invention, not
+verified against the real .asy library; only the symbol *names* were aligned to the corpus.
 """
 import argparse
 import math
@@ -24,27 +31,27 @@ SYMBOL_PINS = {
     "voltage":  [(0, 0), (0, 96)],   # + , -
     "current":  [(0, 0), (0, 96)],   # + , -  (I<name> n+ n- value)
     "res":      [(0, 0), (0, 96)],   # 1 , 2
-    "inductor": [(0, 0), (0, 96)],   # 1 , 2 (same 2-pin pattern as res)
+    "ind":      [(0, 0), (0, 96)],   # 1 , 2 (same 2-pin pattern as res)
     "cap":      [(0, 0), (0, 96)],   # 1 , 2 (same 2-pin pattern as res)
     "diode":    [(0, 0), (0, 96)],   # anode (A) , cathode (K)
-    "bjt_npn":  [(32, 0), (0, 48), (32, 96)],   # collector, base, emitter
-    "bjt_pnp":  [(32, 0), (0, 48), (32, 96)],   # collector, base, emitter
+    "npn":      [(32, 0), (0, 48), (32, 96)],   # collector, base, emitter
+    "pnp":      [(32, 0), (0, 48), (32, 96)],   # collector, base, emitter
     # drain, gate, source, body -- body pin coordinate is deliberately the same
     # point as the source pin so the union-find node merge (exact-coordinate
     # match) ties B=S automatically without any special-case code.
-    "mosfet_n": [(32, 0), (0, 48), (32, 96), (32, 96)],
+    "nmos":     [(32, 0), (0, 48), (32, 96), (32, 96)],
 }
 
 SYMBOL_PREFIX = {
     "voltage": "V",
     "current": "I",
     "res": "R",
-    "inductor": "L",
+    "ind": "L",
     "cap": "C",
     "diode": "D",
-    "bjt_npn": "Q",
-    "bjt_pnp": "Q",
-    "mosfet_n": "M",
+    "npn": "Q",
+    "pnp": "Q",
+    "nmos": "M",
 }
 
 

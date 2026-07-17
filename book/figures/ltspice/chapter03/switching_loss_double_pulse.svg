@@ -22,7 +22,7 @@
       <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">100</text>
     </g>
   </g>
-  <g s:height="96" s:type="inductor" s:width="10" transform="translate(256,96)">
+  <g s:height="96" s:type="ind" s:width="10" transform="translate(256,96)">
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="16" y2="24"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="24" y2="32"/>
@@ -58,7 +58,7 @@
       </g>
     </g>
   </g>
-  <g s:height="96" s:type="mosfet_n" s:width="32" transform="translate(288,192)">
+  <g s:height="96" s:type="nmos" s:width="32" transform="translate(288,192)">
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="0" y2="24"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="20" x2="32" y1="24" y2="24"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="20" x2="20" y1="24" y2="72"/>
