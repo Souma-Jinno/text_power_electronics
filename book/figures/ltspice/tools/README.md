@@ -70,6 +70,24 @@ book/figures/ltspice/ 配下に独立の補助資料（.asc/.net/.raw/.svg一式
   使う場合は、必ず末尾（`.endc`直前）に`write chapterNN/<回路名>.raw`を入れること。
 - wine/実LTspiceが将来使えるようになった場合は、`asc_to_net.py`の出力とLTspice実機の`-netlist`
   出力を突き合わせて自作パーサの妥当性を再検証すること。
+- **`.step param <name> list <v1> <v2> ...`はngspiceのバッチモード(`-b`)では動作しない**
+  （`unimplemented control card`で即エラー、2026-07-17chapter07で発見。LTspice/ngspice対話
+  モードでは動くはずだが、本パイプラインは常に`-b`で回している）。負荷/パラメータスイープが
+  要る回路では、代わりに`.control`ブロック内で`alter <inst> = <値>`→`tran`をケースの数だけ
+  繰り返し、最後に`write chapterNN/xxx.raw all`で全plotを1本の`.raw`にまとめるパターンを
+  使うこと（chapter07の`linear_reg_zener.asc`/`linear_reg_opamp.asc`が実装例）。
+- **ngspiceの`.op`は、電流無制限の理想E素子（下記opampシンボル参照）を含む回路では収束しない
+  ことがある**（2026-07-18chapter07で発見）。`.tran`なら同じ回路が収束するため、DC動作点だけ
+  見たい場合でも`.op`ではなく短い`.tran`を使うこと。
+- **`opamp`シンボル（2026-07-18chapter07で追加）**: ngspiceに組み込みopamp素子が無いため、
+  `asc_to_net.py`は`SYMBOL_PINS["opamp"]`(in+/in-/out の3ピン)を通常の素子と別扱いし、
+  理想E素子`E<name> <out> 0 <in+> <in-> <gain>`（電流無制限の高ゲインVCVS、gain既定1e5）へ
+  変換する。LTspiceの`UniversalOpamp2`（内部補償・出力飽和あり）の代替であり、飽和/GB積を
+  再現しない点をそのシンボルを使う章のVERIFICATION_NOTES.mdに明記すること。
+- **`zener`シンボル（2026-07-18chapter07で追加）**: footprintは`diode`と同一（2ピン、
+  anode top/cathode bottom）だが`.asy`のカソードバーに折れ線を足して視覚的に区別。電気的には
+  `.model <name> D(... BV=<Vz> IBV=<試験電流>)`のBV/IBVパラメータで逆方向降伏を表現する
+  （ngspice標準diodeモデルの機能、新規SPICE素子は不要）。
 - **`fix_viewbox.py`（2026-07-17、図監査で発見・追加）**: `ltspice_to_svg`のviewBox自動計算
   （site-packages内`ViewboxCalculator`）はwire/shape/symbol/flagの座標だけを見ており、
   `<text>`要素（回路上のTEXTコメント・SPICE directiveの表示）の実際の描画幅を一切考慮しない。
