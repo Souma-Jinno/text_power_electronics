@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang='ja'><head><meta charset='utf-8'>
+<title>LTspice検証記録 -- 全章インデックス</title>
+<style>
+body { font-family: "Hiragino Sans", "Noto Sans JP", sans-serif; background:#fff; color:#222; margin:2em auto; max-width: 880px; padding: 0 1em; }
+h1 { border-bottom: 3px solid #0891b2; padding-bottom: 0.3em; }
+table { border-collapse: collapse; width: 100%; margin-top: 1.5em; }
+th, td { text-align: left; padding: 0.6em 0.8em; border-bottom: 1px solid #eee; vertical-align: top; }
+th { color:#0e7490; border-bottom: 2px solid #0891b2; }
+tr:hover { background:#f8fdff; }
+.count { color:#555; font-size:0.85em; }
+a { color:#0e7490; text-decoration: none; font-weight: bold; }
+a:hover { text-decoration: underline; }
+.meta { color:#555; font-size:0.95em; }
+</style></head><body>
+<h1>LTspice検証記録 -- 全章インデックス</h1>
+<p class='meta'>教科書『パワーエレクトロニクス』の各章末問題のうち【LTspiceで確かめよ】と明示された回路を、ngspiceで実測し本文の数値・式と突き合わせた補助資料一覧。既存の本文・掲載図(fig*.eps)は変更していない。各章の詳細（ネットリスト・SVG・VERIFICATION_NOTES.mdの検証根拠）はリンク先および book/figures/ltspice/chapterNN/ を参照。</p>
+<p class='meta'>全11章 / 全21回路</p>
+<table><tr><th>章</th><th>タイトル</th><th>回路</th><th></th></tr>
+<tr><td>第1章</td><td><a href='ltspice_chapter01.html'>半導体の物理</a></td><td class='meta'>pn接合ダイオードのI-V特性試験回路、ショットキー接合ダイオードのI-V特性試験回路、金属-半導体オーミック接合 確認回路</td><td class='count'>3回路</td></tr>
+<tr><td>第2章</td><td><a href='ltspice_chapter02.html'>パワー半導体の動作原理</a></td><td class='meta'>BJTベース駆動回路（例題2.2）、NMOS出力特性試験回路、IGBT等価回路（簡易・非公式マクロモデル）、サイリスタ2トランジスタ等価回路（ラッチ動作の実演）</td><td class='count'>4回路</td></tr>
+<tr><td>第3章</td><td><a href='ltspice_chapter03.html'>デバイス特性とデバイス選択</a></td><td class='meta'>クランプ誘導性ダブルパルス試験回路（例題3.2の物理的検証）</td><td class='count'>1回路</td></tr>
+<tr><td>第4章</td><td><a href='ltspice_chapter04.html'>リアクティブ素子とエネルギー</a></td><td class='meta'>LCフィルタ+方形波電圧源</td><td class='count'>1回路</td></tr>
+<tr><td>第5章</td><td><a href='ltspice_chapter05.html'>直流-直流変換(1) 非絶縁型</a></td><td class='meta'>降圧チョッパ、昇圧チョッパ、昇降圧チョッパ</td><td class='count'>3回路</td></tr>
+<tr><td>第6章</td><td><a href='ltspice_chapter06.html'>直流-直流変換(2) 絶縁型</a></td><td class='meta'>フライバックコンバータ</td><td class='count'>1回路</td></tr>
+<tr><td>第7章</td><td><a href='ltspice_chapter07.html'>直流-直流変換(3) リニアレギュレータ</a></td><td class='meta'>ツェナー基準リニアレギュレータ、オペアンプ負帰還リニアレギュレータ</td><td class='count'>2回路</td></tr>
+<tr><td>第8章</td><td><a href='ltspice_chapter08.html'>交流-直流変換 整流回路</a></td><td class='meta'>ダイオードブリッジ全波整流</td><td class='count'>1回路</td></tr>
+<tr><td>第9章</td><td><a href='ltspice_chapter09.html'>直流-交流変換 インバータ</a></td><td class='meta'>フルブリッジ正弦波PWM・バイポーラ変調、フルブリッジ正弦波PWM・ユニポーラ変調</td><td class='count'>2回路</td></tr>
+<tr><td>第10章</td><td><a href='ltspice_chapter10.html'>交流-交流変換</a></td><td class='meta'>交流位相調整回路・抵抗負荷、交流位相調整回路・RL負荷版</td><td class='count'>2回路</td></tr>
+<tr><td>第11章</td><td><a href='ltspice_chapter11.html'>電力変換で生じる電磁ノイズとEMC</a></td><td class='meta'>直列RLC寄生共振回路のステップ応答リンギング</td><td class='count'>1回路</td></tr>
+</table>
+</body></html>

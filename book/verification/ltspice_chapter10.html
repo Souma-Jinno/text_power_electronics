@@ -1,0 +1,902 @@
+<!DOCTYPE html><html lang='ja'><head><meta charset='utf-8'>
+<title>LTspice検証: 第10章 交流-交流変換</title>
+<style>
+body { font-family: "Hiragino Sans", "Noto Sans JP", sans-serif; background:#fff; color:#222; margin:2em auto; max-width: 960px; padding: 0 1em; }
+h1 { border-bottom: 3px solid #0891b2; padding-bottom: 0.3em; }
+h2 { color:#0e7490; border-left: 6px solid #0891b2; padding-left: 0.5em; margin-top: 2.5em; }
+.circuit { border: 1px solid #ddd; border-radius: 8px; padding: 1em 1.5em; margin: 1em 0; }
+.svgwrap { background:#fff; border: 1px solid #eee; padding: 0.5em; text-align:center; }
+.svgwrap svg { max-width: 100%; height: auto; }
+pre { background:#f8f8f8; border:1px solid #eee; padding:0.8em; overflow-x:auto; font-size: 0.85em; }
+.badge-ok { color:#fff; background:#0891b2; border-radius:4px; padding:0.15em 0.6em; font-size:0.85em; }
+.meta { color:#555; font-size:0.9em; }
+a { color:#0e7490; }
+</style></head><body>
+<h1>LTspice検証記録 -- 第10章 交流-交流変換</h1>
+<p class='meta'>教科書figures(EPS)とは独立の補助資料。本ページの回路は book/figures/ltspice/ 配下の .asc/.net/.raw/.svg としてリポジトリに同梱し、読者が LTspice/ngspice で再現できるようにするためのもの。既存の本文・掲載図(fig*.eps)は変更していない。</p>
+<div class='circuit'>
+<h2>交流位相調整回路・抵抗負荷(sec10.3, ex10.5(a)(b)) <span class='badge-ok'>接続チェック OK</span></h2>
+<p class='meta'>関連節: sec10.3 / ex10.5 / ファイル: <code>chapter10/phase_control_r_load.asc</code></p>
+<p>単相交流(振幅141V,50Hz)を逆並列サイリスタ(2章の2トランジスタ等価回路を2組、cathode/anodeの片側を回路グラウンド0に固定した構成)で位相制御し抵抗負荷100Ωへ与える回路。Rsrc=0.5Ω(電源線抵抗相当)。点弧角α=30/60/90/120/150degの5ケースを.param+alterparam+reset+tran(単純なalter @inst[pulse]=[...]構文はこのngspice(ngspice-41)では動作しないため不採用、alterparamでPULSE遅延の.paramを書き換えreset+tranで完全に独立な5回のトランジェント解析として実行)で1本のnetlistにまとめた。ngspice実測RMS(I(Vin)×Rload)は式10.3予測に対しα=30/60/90/120/150degそれぞれ98.77%/98.79%/98.73%/98.49%/97.60%の高い一致率(実測がわずかに低いのはRsrcでの分圧+サイリスタのオン電圧降下という物理的に妥当な系統誤差)。α=30→60degでのV_rms低下8.7Vに対しα=120→150degでは26.9Vと低下幅が3倍超に拡大し「点弧角を遅らせるほど実効値が急速に下がる」ことを定量確認。ex10.5(b)のα=90degでは実測69.608V(式10.3の理論値ちょうど70.500V=V0/2の98.73%)で「約70.5V」の主張を波形・式10.3の両方で確認。ngspice.meas RMSの結果はPythonでraw波形から直接sqrt(mean(v^2))台形積分した値と誤差0.0006%で一致し、この回路波形に対する.meas RMSの信頼性を実測で裏取りした。単一サイリスタでのAC自然転流(電圧反転で電流が自動的にゼロへ戻る挙動)を2章のモデルのまま追加改造なしで確認できたこと、および両サイリスタの端子を両方とも浮遊ノードにすると2個目の点弧時にNewton法が収束破綻する(トポロジー上、片側を回路グラウンドに固定する必要がある)ことを検証過程で発見し、tools/README.mdに追記した。</p>
+<div class='svgwrap'><?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="-66.60000000000001 -114.60000000000001 1648.516000000002 1525.6960000000001" width="100%">
+  <title>phase_control_r_load.svg</title>
+  <defs/>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(64,16)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">Vin</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">SIN(0 141 50)</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="res" s:width="32" transform="translate(224,16)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <rect fill="none" height="64" stroke="black" stroke-width="2.0" width="32" x="-16" y="16"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">Rsrc</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">0.5</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="res" s:width="32" transform="translate(384,16)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <rect fill="none" height="64" stroke="black" stroke-width="2.0" width="32" x="-16" y="16"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">Rload</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">100</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="pnp" s:width="32" transform="translate(560,250)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="16" y1="32" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="16" y1="24" y2="72"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="16" y1="48" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="32" y1="48" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="18" x2="24" y1="50" y2="52"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="18" x2="20" y1="50" y2="56"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="32.4">Q2p</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="80.4">QPNP2</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="npn" s:width="32" transform="translate(560,394)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="16" y1="32" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="16" y1="24" y2="72"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="16" y1="48" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="32" y1="48" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="26" x2="20" y1="58" y2="56"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="26" x2="24" y1="58" y2="64"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="32.4">Q1p</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="80.4">QNPN2</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="res" s:width="32" transform="translate(760,442)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <rect fill="none" height="64" stroke="black" stroke-width="2.0" width="32" x="-16" y="16"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">Rshuntp</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">1k</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="current" s:width="40" transform="translate(176,538) rotate(180)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="34" y2="62"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="-6" y1="62" y2="50"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="6" y1="62" y2="50"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g transform="rotate(180, 24, 24)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="32.4">Igatep</text>
+      </g>
+    </g>
+    <g transform="rotate(180, 24, 72)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="80.4">PULSE(0 10m {adelp} 1u 1u 1m 20m)</text>
+      </g>
+    </g>
+  </g>
+  <g s:height="96" s:type="pnp" s:width="32" transform="translate(560,650)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="16" y1="32" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="16" y1="24" y2="72"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="16" y1="48" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="32" y1="48" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="18" x2="24" y1="50" y2="52"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="18" x2="20" y1="50" y2="56"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="32.4">Q2n</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="80.4">QPNP2</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="npn" s:width="32" transform="translate(560,794)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="16" y1="32" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="16" y1="24" y2="72"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="16" y1="48" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="32" y1="48" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="26" x2="20" y1="58" y2="56"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="26" x2="24" y1="58" y2="64"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="32.4">Q1n</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="80.4">QNPN2</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="res" s:width="32" transform="translate(760,842)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <rect fill="none" height="64" stroke="black" stroke-width="2.0" width="32" x="-16" y="16"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">Rshuntn</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">1k</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="current" s:width="40" transform="translate(176,938) rotate(180)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="34" y2="62"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="-6" y1="62" y2="50"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="6" y1="62" y2="50"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g transform="rotate(180, 24, 24)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="32.4">Igaten</text>
+      </g>
+    </g>
+    <g transform="rotate(180, 24, 72)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="80.4">PULSE(0 10m {adeln} 1u 1u 1m 20m)</text>
+      </g>
+    </g>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="-81.6">交流位相調整回路(sec10.3, ex10.5(a)(b))。逆並列サイリスタ(2章の2トランジスタ等価回路を2組使用)で</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="-57.6">単相交流(振幅141V,50Hz)を位相制御し、抵抗負荷100Ωへ与える。T_pos(Q2p/Q1p)は正の半周期、</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="-33.6">T_neg(Q2n/Q1n)は負の半周期を受け持つ。両者はnode "mid"(負荷側)とnode "0"(電源側)を共有する。</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="-9.600000000000001">点弧角alphaはGateパルスの遅延{adelp}/{adeln}(=alpha/360*20ms、negは+10ms)で与える。5ケースはalterparam+reset+tranで実行。</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="1008.4">.param adelp=1.6667m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="1032.4">.param adeln=11.6667m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="1056.4">.model QNPN2 NPN(BF=50)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="1080.4">.model QPNP2 PNP(BF=50)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="1104.4">.control</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="1128.4">tran 10u 100m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="1152.4">meas tran irms_a30 RMS i(Vin) FROM=60m TO=99.9m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="1176.4">alterparam adelp = 3.3333m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="1200.4">alterparam adeln = 13.3333m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="1224.4">reset</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="1248.4">tran 10u 100m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="1272.4">meas tran irms_a60 RMS i(Vin) FROM=60m TO=99.9m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="1296.4">alterparam adelp = 5.0m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="1320.4">alterparam adeln = 15.0m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="1344.4">reset</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="1368.4">tran 10u 100m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="416" y="1008.4">meas tran irms_a90 RMS i(Vin) FROM=60m TO=99.9m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="416" y="1032.4">alterparam adelp = 6.6667m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="416" y="1056.4">alterparam adeln = 16.6667m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="416" y="1080.4">reset</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="416" y="1104.4">tran 10u 100m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="416" y="1128.4">meas tran irms_a120 RMS i(Vin) FROM=60m TO=99.9m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="416" y="1152.4">alterparam adelp = 8.3333m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="416" y="1176.4">alterparam adeln = 18.3333m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="416" y="1200.4">reset</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="416" y="1224.4">tran 10u 100m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="416" y="1248.4">meas tran irms_a150 RMS i(Vin) FROM=60m TO=99.9m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="416" y="1272.4">write chapter10/phase_control_r_load.raw all</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="416" y="1296.4">.endc</text>
+  </g>
+  <g transform="rotate(-90, 64, 16)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="64" y="11.2">vin_p</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(64,112) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 224, 16)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="224" y="11.2">vin_p</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 224, 112)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="224" y="107.2">vline</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 384, 16)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="384" y="11.2">vline</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 384, 112)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="384" y="107.2">mid</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 592, 346)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="592" y="341.2">mid</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 592, 250)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="592" y="245.2">gbasep</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 560, 298)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="560" y="293.2">bbasep</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 592, 394)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="592" y="389.2">bbasep</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 560, 442)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="560" y="437.2">gbasep</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(592,490) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 760, 442)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="760" y="437.2">gbasep</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(760,538) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(176,538) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 176, 442)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="176" y="437.2">gbasep</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(592,746) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 592, 650)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="592" y="645.2">gbasen</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 560, 698)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="560" y="693.2">bbasen</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 592, 794)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="592" y="789.2">bbasen</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 560, 842)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="560" y="837.2">gbasen</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 592, 890)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="592" y="885.2">mid</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 760, 842)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="760" y="837.2">gbasen</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 760, 938)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="760" y="933.2">mid</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 176, 938)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="176" y="933.2">mid</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 176, 842)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="176" y="837.2">gbasen</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+</svg>
+</div>
+<p><b>ネットリスト</b> (asc_to_net.py 自動生成):</p>
+<pre>* netlist auto-generated by asc_to_net.py from phase_control_r_load.asc
+Vin vin_p 0 SIN(0 141 50)
+Rsrc vin_p vline 0.5
+Rload vline mid 100
+Q2p gbasep bbasep mid QPNP2
+Q1p bbasep gbasep 0 QNPN2
+Rshuntp gbasep 0 1k
+Igatep 0 gbasep PULSE(0 10m {adelp} 1u 1u 1m 20m)
+Q2n gbasen bbasen 0 QPNP2
+Q1n bbasen gbasen mid QNPN2
+Rshuntn gbasen mid 1k
+Igaten mid gbasen PULSE(0 10m {adeln} 1u 1u 1m 20m)
+.param adelp=1.6667m
+.param adeln=11.6667m
+.model QNPN2 NPN(BF=50)
+.model QPNP2 PNP(BF=50)
+.control
+tran 10u 100m
+meas tran irms_a30 RMS i(Vin) FROM=60m TO=99.9m
+alterparam adelp = 3.3333m
+alterparam adeln = 13.3333m
+reset
+tran 10u 100m
+meas tran irms_a60 RMS i(Vin) FROM=60m TO=99.9m
+alterparam adelp = 5.0m
+alterparam adeln = 15.0m
+reset
+tran 10u 100m
+meas tran irms_a90 RMS i(Vin) FROM=60m TO=99.9m
+alterparam adelp = 6.6667m
+alterparam adeln = 16.6667m
+reset
+tran 10u 100m
+meas tran irms_a120 RMS i(Vin) FROM=60m TO=99.9m
+alterparam adelp = 8.3333m
+alterparam adeln = 18.3333m
+reset
+tran 10u 100m
+meas tran irms_a150 RMS i(Vin) FROM=60m TO=99.9m
+write chapter10/phase_control_r_load.raw all
+.endc
+.end
+</pre>
+</div>
+<div class='circuit'>
+<h2>交流位相調整回路・RL負荷版(sec10.3, ex10.5(c)) <span class='badge-ok'>接続チェック OK</span></h2>
+<p class='meta'>関連節: sec10.3 / ex10.5(c) / ファイル: <code>chapter10/phase_control_rl_load.asc</code></p>
+<p>phase_control_r_loadのRload=100Ωに直列でLload=300mHを追加した点のみが異なる回路(α=60degで固定、R版の同αケースと比較するために作成)。負荷角phi=atan(2*pi*50*0.3/100)≈43.3deg。ngspiceのraw波形をPythonで直接読みi(Vin)のゼロクロス時刻を検出したところ、R版では電流がv(vin)の零点(定常t≈50.0003ms)とほぼ同時(遅れ検出不能なレベル)に消弧するのに対し、RL版では零点から2.3250ms=41.85deg遅れたt=52.3253msで消弧することを確認。導通区間はR版の120deg(点弧角60deg〜自然消弧180deg)に対しRL版は161.85deg(約35%拡大)で、章末問題(c)が要求する「電流が電圧の零点より遅れて消弧し、抵抗負荷のときより導通区間が広がる」という主張を定量的に確認した。実測の消弧遅れ角41.85degは負荷角phi=43.3degに近い(96.6%)が、位相制御RL回路の消弧角は超越方程式で決まり定常位相角と厳密には一致しないため、この差は物理的に妥当なものとして正直に記録し、消弧角の解析解との比較はスコープ外とした。式10.3は抵抗負荷前提のためRL負荷の実効値との数値比較は意図的に行っていない(参考値としてI_rms=0.638253Aのみ記録)。</p>
+<div class='svgwrap'><?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="-66.60000000000001 -114.60000000000001 1322.1160000000016 1285.6960000000001" width="100%">
+  <title>phase_control_rl_load.svg</title>
+  <defs/>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(64,16)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">Vin</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">SIN(0 141 50)</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="res" s:width="32" transform="translate(224,16)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <rect fill="none" height="64" stroke="black" stroke-width="2.0" width="32" x="-16" y="16"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">Rsrc</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">0.5</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="res" s:width="32" transform="translate(384,16)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <rect fill="none" height="64" stroke="black" stroke-width="2.0" width="32" x="-16" y="16"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">Rload</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">100</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="ind" s:width="10" transform="translate(544,16)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="16" y2="24"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="24" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="32" y2="40"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="40" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="48" y2="56"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="56" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="64" y2="72"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="72" y2="80"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">Lload</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="96.4">300m</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="pnp" s:width="32" transform="translate(560,250)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="16" y1="32" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="16" y1="24" y2="72"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="16" y1="48" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="32" y1="48" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="18" x2="24" y1="50" y2="52"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="18" x2="20" y1="50" y2="56"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="32.4">Q2p</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="80.4">QPNP2</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="npn" s:width="32" transform="translate(560,394)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="16" y1="32" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="16" y1="24" y2="72"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="16" y1="48" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="32" y1="48" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="26" x2="20" y1="58" y2="56"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="26" x2="24" y1="58" y2="64"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="32.4">Q1p</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="80.4">QNPN2</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="res" s:width="32" transform="translate(760,442)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <rect fill="none" height="64" stroke="black" stroke-width="2.0" width="32" x="-16" y="16"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">Rshuntp</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">1k</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="current" s:width="40" transform="translate(176,538) rotate(180)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="34" y2="62"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="-6" y1="62" y2="50"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="6" y1="62" y2="50"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g transform="rotate(180, 24, 24)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="32.4">Igatep</text>
+      </g>
+    </g>
+    <g transform="rotate(180, 24, 72)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="80.4">PULSE(0 10m 3.3333m 1u 1u 1m 20m)</text>
+      </g>
+    </g>
+  </g>
+  <g s:height="96" s:type="pnp" s:width="32" transform="translate(560,650)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="16" y1="32" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="16" y1="24" y2="72"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="16" y1="48" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="32" y1="48" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="18" x2="24" y1="50" y2="52"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="18" x2="20" y1="50" y2="56"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="32.4">Q2n</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="80.4">QPNP2</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="npn" s:width="32" transform="translate(560,794)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="16" y1="32" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="16" y1="24" y2="72"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="16" y1="48" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="32" y1="48" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="26" x2="20" y1="58" y2="56"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="26" x2="24" y1="58" y2="64"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="32.4">Q1n</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="80.4">QNPN2</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="res" s:width="32" transform="translate(760,842)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <rect fill="none" height="64" stroke="black" stroke-width="2.0" width="32" x="-16" y="16"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">Rshuntn</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">1k</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="current" s:width="40" transform="translate(176,938) rotate(180)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="34" y2="62"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="-6" y1="62" y2="50"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="6" y1="62" y2="50"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g transform="rotate(180, 24, 24)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="32.4">Igaten</text>
+      </g>
+    </g>
+    <g transform="rotate(180, 24, 72)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="80.4">PULSE(0 10m 13.3333m 1u 1u 1m 20m)</text>
+      </g>
+    </g>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="-81.6">交流位相調整回路・RL負荷版(sec10.3, ex10.5(c))。R負荷版(phase_control_r_load.asc)のRload=100Ωに</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="-57.6">直列でLload=300mHを追加した点のみが異なる(alpha=60degで固定、R版の同alphaケースと比較する)。</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="-33.6">負荷角phi=atan(omega*L/R)=atan(2*pi*50*0.3/100)=約43.3度。電流がv(vin)の零点より遅れて</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="-9.600000000000001">消弧し、抵抗負荷のときより導通区間が広がる様子をraw波形から確認する(VERIFICATION_NOTES参照)。</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="1008.4">.model QNPN2 NPN(BF=50)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="1032.4">.model QPNP2 PNP(BF=50)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="1056.4">.control</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="1080.4">tran 5u 100m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="1104.4">write chapter10/phase_control_rl_load.raw all</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="16" y="1128.4">.endc</text>
+  </g>
+  <g transform="rotate(-90, 64, 16)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="64" y="11.2">vin_p</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(64,112) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 224, 16)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="224" y="11.2">vin_p</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 224, 112)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="224" y="107.2">vline</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 384, 16)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="384" y="11.2">vline</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 384, 112)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="384" y="107.2">rl_mid</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 544, 16)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="544" y="11.2">rl_mid</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 544, 112)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="544" y="107.2">mid</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 592, 346)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="592" y="341.2">mid</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 592, 250)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="592" y="245.2">gbasep</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 560, 298)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="560" y="293.2">bbasep</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 592, 394)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="592" y="389.2">bbasep</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 560, 442)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="560" y="437.2">gbasep</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(592,490) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 760, 442)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="760" y="437.2">gbasep</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(760,538) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(176,538) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 176, 442)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="176" y="437.2">gbasep</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(592,746) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 592, 650)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="592" y="645.2">gbasen</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 560, 698)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="560" y="693.2">bbasen</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 592, 794)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="592" y="789.2">bbasen</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 560, 842)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="560" y="837.2">gbasen</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 592, 890)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="592" y="885.2">mid</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 760, 842)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="760" y="837.2">gbasen</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 760, 938)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="760" y="933.2">mid</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 176, 938)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="176" y="933.2">mid</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 176, 842)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="176" y="837.2">gbasen</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+</svg>
+</div>
+<p><b>ネットリスト</b> (asc_to_net.py 自動生成):</p>
+<pre>* netlist auto-generated by asc_to_net.py from phase_control_rl_load.asc
+Vin vin_p 0 SIN(0 141 50)
+Rsrc vin_p vline 0.5
+Rload vline rl_mid 100
+Lload rl_mid mid 300m
+Q2p gbasep bbasep mid QPNP2
+Q1p bbasep gbasep 0 QNPN2
+Rshuntp gbasep 0 1k
+Igatep 0 gbasep PULSE(0 10m 3.3333m 1u 1u 1m 20m)
+Q2n gbasen bbasen 0 QPNP2
+Q1n bbasen gbasen mid QNPN2
+Rshuntn gbasen mid 1k
+Igaten mid gbasen PULSE(0 10m 13.3333m 1u 1u 1m 20m)
+.model QNPN2 NPN(BF=50)
+.model QPNP2 PNP(BF=50)
+.control
+tran 5u 100m
+write chapter10/phase_control_rl_load.raw all
+.endc
+.end
+</pre>
+</div>
+</body></html>
