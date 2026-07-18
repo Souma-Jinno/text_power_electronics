@@ -107,3 +107,26 @@ book/figures/ltspice/ 配下に独立の補助資料（.asc/.net/.raw/.svg一式
   `run_pipeline.sh`経由で実行する限り自動適用されるが、SVGを個別に再生成した場合は
   `fix_viewbox.py`を忘れずに呼ぶこと**。verification HTMLはSVGを内容ごと埋め込むので、
   SVGを修正したら対応する`ltspice_chapterNN.html`も`gen_verification_html.py`で再生成が必要。
+- **PWM比較器等の連続時間ロジックは`voltage`シンボル流用のbehavioral source(B-element)で実装
+  できる（2026-07-18、chapter09で追加）**: `SYMBOL voltage`のInstNameを`B<name>`にし、
+  `SYMATTR Value V=<式>`（式にasin/sin/三項演算子`?:`等を含めてよい、ngspice B-source式
+  パーサーが対応済み）とするだけで、`asc_to_net.py`のコード変更なしにSPICE B-element行
+  `B<name> <net+> <net-> V=<式>`が生成される（genericなSYMATTR処理がそのまま通る、opamp用の
+  特別処理は不要）。三角搬送波は`(2/pi*asin(sin(2*pi*fc*time)))`で振幅±1を生成できる。
+  視覚上は電圧源記号になるため、opamp/zenerと同じく「実体は制御ブロック」である旨を
+  VERIFICATION_NOTES.mdに明記すること。
+- **`.meas ... to=<tran終了時刻>`ちょうどの境界でアーティファクトが出る（2026-07-18、
+  chapter09で発見）**: スイッチング回路で測定窓の上端をtranのtstopちょうどに合わせると、
+  最終強制サンプル点で桁違いの異常値が出ることがある（実測例: 期待100Vに対し24847V）。
+  `to=<tstop-0.1ms程度>`のように終了時刻より僅かに手前までの窓にすること。
+- **`.control`内の`let`式は`.param`を直接参照できない（2026-07-18、chapter09で発見）**:
+  `let x = sin(2*pi*fm*time)`のように`.param`名を`let`式に書くと`vector fm is not available`
+  で失敗する。`let`はSPICEデッキの`.param`置換とは独立した別スクリプト言語のため。`let`式では
+  数値を直接埋め込むこと（SYMATTR Value等のSPICEカード内では`.param`置換は問題なく機能する）。
+- **`.four`組込みFourier解析は高周波PWM波形を過小評価する（2026-07-18、chapter09で発見）**:
+  デフォルトgridsize=200点固定のため、搬送波周期を200点未満でしか解像できない場合に基本波
+  振幅を大きく誤る（実測例: 期待80Vに対し127V）。フーリエ係数の正確な抽出には代わりに相関積分法
+  （`let ib=vab*sin(wt)`等を作り`meas tran ... integ ib from=<1周期分>`でフーリエ係数を数値
+  積分、既知振幅の校正テストで誤差<0.01%を確認済み）を使うこと。`fft`コマンドは定性的な
+  「どの周波数帯に集まるか」の確認には使えるが、ゼロパディングでビン間隔が理論値と僅かにずれ
+  基本波がリークするため、絶対値の抽出には向かない。
