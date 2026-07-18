@@ -1,0 +1,14 @@
+[
+  {
+    "base": "hbridge_pwm_bipolar",
+    "label": "フルブリッジ正弦波PWM・バイポーラ変調(sec9.5, ex9.6(a)(b)(d))",
+    "section": "sec9.5 / ex9.6",
+    "note": "E=100V(本文はex9.6でE未指定のためrei9.3/ex9.1(c)と同じ100Vを採用)、fc=5kHz、fm=50Hz、R=10ohm、L=10mH。対角ペア(S1,S4)と(S2,S3)が単一の比較器出力で連動(バイポーラ=出力+-Eの2値)。PWM比較器・三角搬送波・正弦波基準はvoltageシンボルを流用したngspice behavioral source(B-element)で実装。ngspice実測(m=0.8): Vab=+-100.16V(理論E=100Vと一致)、負荷電流Irms=5.401A、Ipeak=7.839A(RL直列インピーダンス10.48ohmからの理論値7.63Aと整合)。基本波振幅を相関積分(2/T)∫Vab*sin(wt)dtで実測: m=0.5→49.93V、m=0.8→79.84V、m=1.0→100.0V(いずれもmEとの一致率99.8%以上、線形領域を定量確認、ex9.6(d))。m=1.2(過変調)は110.23V<mE=120Vで線形から明確に下方乖離(飽和、方形波極限4E/pi=127.3Vへ向かう、ex9.6(d)後半)。FFTで高調波が搬送波周波数fc=5kHz付近に集まることを確認(ex9.6(b))。"
+  },
+  {
+    "base": "hbridge_pwm_unipolar",
+    "label": "フルブリッジ正弦波PWM・ユニポーラ変調(sec9.5, ex9.6(c)、bipolarとの比較用)",
+    "section": "sec9.5 / ex9.6(c)",
+    "note": "bipolarと同一定数(E=100V, fc=5kHz, fm=50Hz, m=0.8, R=10ohm, L=10mH)。左レグ(S1,S2)は+v_ref、右レグ(S3,S4)は-v_refで独立制御し、出力は+E,0,-Eの3値(ユニポーラ)。ngspice実測: Vab=+-100.04V、平均値≈0.0049V(ゼロ、直流成分なしを確認)、Irms=5.392A、Ipeak=7.714A(bipolarとほぼ同水準)。基本波振幅(相関積分)=79.81V(bipolarのm=0.8ケース79.84Vとほぼ一致、変調方式によらず基本波は不変という本文の主張と整合)。FFTで高調波はfc=5kHz付近には現れず2fc=10kHz付近に集中(bipolarとの明確な対比、実効スイッチング周波数が2倍になるという本文9.5節の主張を定量確認、ex9.6(c))。"
+  }
+]

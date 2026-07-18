@@ -1,0 +1,1049 @@
+<!DOCTYPE html><html lang='ja'><head><meta charset='utf-8'>
+<title>LTspice検証: 第09章 直流-交流変換 インバータ</title>
+<style>
+body { font-family: "Hiragino Sans", "Noto Sans JP", sans-serif; background:#fff; color:#222; margin:2em auto; max-width: 960px; padding: 0 1em; }
+h1 { border-bottom: 3px solid #0891b2; padding-bottom: 0.3em; }
+h2 { color:#0e7490; border-left: 6px solid #0891b2; padding-left: 0.5em; margin-top: 2.5em; }
+.circuit { border: 1px solid #ddd; border-radius: 8px; padding: 1em 1.5em; margin: 1em 0; }
+.svgwrap { background:#fff; border: 1px solid #eee; padding: 0.5em; text-align:center; }
+.svgwrap svg { max-width: 100%; height: auto; }
+pre { background:#f8f8f8; border:1px solid #eee; padding:0.8em; overflow-x:auto; font-size: 0.85em; }
+.badge-ok { color:#fff; background:#0891b2; border-radius:4px; padding:0.15em 0.6em; font-size:0.85em; }
+.meta { color:#555; font-size:0.9em; }
+a { color:#0e7490; }
+</style></head><body>
+<h1>LTspice検証記録 -- 第09章 直流-交流変換 インバータ</h1>
+<p class='meta'>教科書figures(EPS)とは独立の補助資料。本ページの回路は book/figures/ltspice/ 配下の .asc/.net/.raw/.svg としてリポジトリに同梱し、読者が LTspice/ngspice で再現できるようにするためのもの。既存の本文・掲載図(fig*.eps)は変更していない。</p>
+<div class='circuit'>
+<h2>フルブリッジ正弦波PWM・バイポーラ変調(sec9.5, ex9.6(a)(b)(d)) <span class='badge-ok'>接続チェック OK</span></h2>
+<p class='meta'>関連節: sec9.5 / ex9.6 / ファイル: <code>chapter09/hbridge_pwm_bipolar.asc</code></p>
+<p>E=100V(本文はex9.6でE未指定のためrei9.3/ex9.1(c)と同じ100Vを採用)、fc=5kHz、fm=50Hz、R=10ohm、L=10mH。対角ペア(S1,S4)と(S2,S3)が単一の比較器出力で連動(バイポーラ=出力+-Eの2値)。PWM比較器・三角搬送波・正弦波基準はvoltageシンボルを流用したngspice behavioral source(B-element)で実装。ngspice実測(m=0.8): Vab=+-100.16V(理論E=100Vと一致)、負荷電流Irms=5.401A、Ipeak=7.839A(RL直列インピーダンス10.48ohmからの理論値7.63Aと整合)。基本波振幅を相関積分(2/T)∫Vab*sin(wt)dtで実測: m=0.5→49.93V、m=0.8→79.84V、m=1.0→100.0V(いずれもmEとの一致率99.8%以上、線形領域を定量確認、ex9.6(d))。m=1.2(過変調)は110.23V<mE=120Vで線形から明確に下方乖離(飽和、方形波極限4E/pi=127.3Vへ向かう、ex9.6(d)後半)。FFTで高調波が搬送波周波数fc=5kHz付近に集まることを確認(ex9.6(b))。</p>
+<div class='svgwrap'><?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="-128.4 -78.4 2624.304000000002 2005.6240000000003" width="100%">
+  <title>hbridge_pwm_bipolar.svg</title>
+  <defs/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="332" y1="100" y2="100"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="332" x2="732" y1="100" y2="100"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="196" y2="396"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="332" y1="396" y2="396"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="332" x2="732" y1="396" y2="396"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="332" x2="332" y1="196" y2="300"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="732" x2="732" y1="196" y2="300"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="332" x2="380" y1="196" y2="196"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="380" x2="380" y1="196" y2="550"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="380" x2="450" y1="550" y2="550"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="642" x2="680" y1="550" y2="550"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="680" x2="680" y1="550" y2="196"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="680" x2="732" y1="196" y2="196"/>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(0,100)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">V1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">100</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="sw" s:width="34" transform="translate(300,100)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="20" y1="32" y2="58"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="20" y1="32" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="20" y1="64" y2="64"/>
+    <circle cx="32.0" cy="32.0" fill="none" r="2.0" stroke="black" stroke-width="2.0"/>
+    <circle cx="32.0" cy="64.0" fill="none" r="2.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="16.4">S1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="88.4">SW</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="sw" s:width="34" transform="translate(300,300)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="20" y1="32" y2="58"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="20" y1="32" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="20" y1="64" y2="64"/>
+    <circle cx="32.0" cy="32.0" fill="none" r="2.0" stroke="black" stroke-width="2.0"/>
+    <circle cx="32.0" cy="64.0" fill="none" r="2.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="16.4">S2</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="88.4">SW</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="sw" s:width="34" transform="translate(700,100)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="20" y1="32" y2="58"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="20" y1="32" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="20" y1="64" y2="64"/>
+    <circle cx="32.0" cy="32.0" fill="none" r="2.0" stroke="black" stroke-width="2.0"/>
+    <circle cx="32.0" cy="64.0" fill="none" r="2.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="16.4">S3</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="88.4">SW</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="sw" s:width="34" transform="translate(700,300)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="20" y1="32" y2="58"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="20" y1="32" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="20" y1="64" y2="64"/>
+    <circle cx="32.0" cy="32.0" fill="none" r="2.0" stroke="black" stroke-width="2.0"/>
+    <circle cx="32.0" cy="64.0" fill="none" r="2.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="16.4">S4</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="88.4">SW</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="res" s:width="32" transform="translate(450,550) rotate(270)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <rect fill="none" height="64" stroke="black" stroke-width="2.0" width="32" x="-16" y="16"/>
+    <g transform="rotate(180, 24, 24)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="32.4">R1</text>
+      </g>
+    </g>
+    <g transform="rotate(180, 24, 72)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="80.4">10</text>
+      </g>
+    </g>
+  </g>
+  <g s:height="96" s:type="ind" s:width="10" transform="translate(546,550) rotate(270)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="16" y2="24"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="24" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="32" y2="40"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="40" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="48" y2="56"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="56" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="64" y2="72"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="72" y2="80"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <g transform="rotate(180, 24, 24)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="32.4">L1</text>
+      </g>
+    </g>
+    <g transform="rotate(180, 24, 88)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="96.4">10m</text>
+      </g>
+    </g>
+  </g>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(900,50)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">Bcarr</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">V=(2/pi*asin(sin(2*pi*fc*time)))</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(900,250)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">Bref</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">V=(m*sin(2*pi*fm*time))</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(900,450)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">BctrlA</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">V=((V(ref)&gt;V(carr))?1:0)</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(900,650)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">BctrlAn</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">V=((V(ref)&lt;V(carr))?1:0)</text>
+    </g>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="-151.6">フルブリッジ正弦波PWM・バイポーラ変調(sec9.5, ex9.6基準)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="-119.6">E=100V(本文はex9.6でE未指定、rei9.3/ex9.1(c)と同じ100Vを採用) fc=5kHz(搬送波) fm=50Hz(変調波) m=0.8(既定、章末問題(d)でスイープ)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="-87.6">負荷R=10ohm L=10mH(RL直列、本文指定値)。対角ペア(S1,S4)と(S2,S3)が同時にON/OFFする(バイポーラ=出力+-Eの2値)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="900" y="-23.6">制御ブロック(Bcarr/Bref/BctrlA/BctrlAn): voltageシンボルを流用したngspice behavioral source(B-element, Value=V=式)。</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="900" y="0.3999999999999986">視覚上は電圧源記号だが実体は三角搬送波生成・正弦波基準・比較器(PWMコンパレータ)というcontrol block(opamp/zenerと同じ簡略化方針)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="788.4">.model SW SW(Ron=10m Roff=1G Vt=0.5)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="812.4">.param E=100 fc=5k fm=50 m=0.8 R=10 L=10m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="836.4">.options reltol=0.01 gmin=1e-9</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="860.4">.control</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="884.4">* m=0.5</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="908.4">alterparam m = 0.5</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="932.4">reset</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="956.4">tran 0.5u 40m 20m 2u</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="980.4">let vab = v(a) - v(b)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1004.4">let sinref = sin(2*3.14159265358979*50*time)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1028.4">let ib = vab*sinref</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1052.4">meas tran vmax_m05 max vab from=20m to=39.9m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1076.4">meas tran ib_m05 integ ib from=20m to=39.9m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1100.4">* m=0.8 (主要ケース, ex9.6(a)(b)(c)の基準)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1124.4">alterparam m = 0.8</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1148.4">reset</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1172.4">tran 0.5u 40m 20m 2u</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1196.4">let vab = v(a) - v(b)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1220.4">let sinref = sin(2*3.14159265358979*50*time)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1244.4">let ib = vab*sinref</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1268.4">meas tran vmax_m08 max vab from=20m to=39.9m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1292.4">meas tran vmin_m08 min vab from=20m to=39.9m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1316.4">meas tran irms_m08 rms i(l1) from=20m to=39.9m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1340.4">meas tran ipeak_m08 max i(l1) from=20m to=39.9m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1364.4">meas tran ib_m08 integ ib from=20m to=39.9m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1388.4">linearize vab</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1412.4">fft vab</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1436.4">* m=1.0</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1460.4">alterparam m = 1.0</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1484.4">reset</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1508.4">tran 0.5u 40m 20m 2u</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1532.4">let vab = v(a) - v(b)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1556.4">let sinref = sin(2*3.14159265358979*50*time)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1580.4">let ib = vab*sinref</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1604.4">meas tran vmax_m10 max vab from=20m to=39.9m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1628.4">meas tran ib_m10 integ ib from=20m to=39.9m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1652.4">* m=1.2 (過変調)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1676.4">alterparam m = 1.2</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1700.4">reset</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1724.4">tran 0.5u 40m 20m 2u</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1748.4">let vab = v(a) - v(b)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1772.4">let sinref = sin(2*3.14159265358979*50*time)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1796.4">let ib = vab*sinref</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1820.4">meas tran vmax_m12 max vab from=20m to=39.9m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1844.4">meas tran ib_m12 integ ib from=20m to=39.9m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1868.4">write chapter09/hbridge_pwm_bipolar.raw all</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1892.4">.endc</text>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(0,396) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 380, 196)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="380" y="191.2">a</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 680, 196)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="680" y="191.2">b</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 300, 132)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="300" y="127.2">ctrlA</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(300,164) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 300, 332)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="300" y="327.2">ctrlAn</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(300,364) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 700, 132)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="700" y="127.2">ctrlAn</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(700,164) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 700, 332)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="700" y="327.2">ctrlA</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(700,364) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 900, 50)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="900" y="45.2">carr</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(900,146) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 900, 250)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="900" y="245.2">ref</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(900,346) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 900, 450)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="900" y="445.2">ctrlA</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(900,546) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 900, 650)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="900" y="645.2">ctrlAn</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(900,746) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+</svg>
+</div>
+<p><b>ネットリスト</b> (asc_to_net.py 自動生成):</p>
+<pre>* netlist auto-generated by asc_to_net.py from hbridge_pwm_bipolar.asc
+V1 N001 0 100
+S1 N001 a ctrlA 0 SW
+S2 a 0 ctrlAn 0 SW
+S3 N001 b ctrlAn 0 SW
+S4 b 0 ctrlA 0 SW
+R1 a N002 10
+L1 N002 b 10m
+Bcarr carr 0 V=(2/pi*asin(sin(2*pi*fc*time)))
+Bref ref 0 V=(m*sin(2*pi*fm*time))
+BctrlA ctrlA 0 V=((V(ref)>V(carr))?1:0)
+BctrlAn ctrlAn 0 V=((V(ref)<V(carr))?1:0)
+.model SW SW(Ron=10m Roff=1G Vt=0.5)
+.param E=100 fc=5k fm=50 m=0.8 R=10 L=10m
+.options reltol=0.01 gmin=1e-9
+.control
+* m=0.5
+alterparam m = 0.5
+reset
+tran 0.5u 40m 20m 2u
+let vab = v(a) - v(b)
+let sinref = sin(2*3.14159265358979*50*time)
+let ib = vab*sinref
+meas tran vmax_m05 max vab from=20m to=39.9m
+meas tran ib_m05 integ ib from=20m to=39.9m
+* m=0.8 (主要ケース, ex9.6(a)(b)(c)の基準)
+alterparam m = 0.8
+reset
+tran 0.5u 40m 20m 2u
+let vab = v(a) - v(b)
+let sinref = sin(2*3.14159265358979*50*time)
+let ib = vab*sinref
+meas tran vmax_m08 max vab from=20m to=39.9m
+meas tran vmin_m08 min vab from=20m to=39.9m
+meas tran irms_m08 rms i(l1) from=20m to=39.9m
+meas tran ipeak_m08 max i(l1) from=20m to=39.9m
+meas tran ib_m08 integ ib from=20m to=39.9m
+linearize vab
+fft vab
+* m=1.0
+alterparam m = 1.0
+reset
+tran 0.5u 40m 20m 2u
+let vab = v(a) - v(b)
+let sinref = sin(2*3.14159265358979*50*time)
+let ib = vab*sinref
+meas tran vmax_m10 max vab from=20m to=39.9m
+meas tran ib_m10 integ ib from=20m to=39.9m
+* m=1.2 (過変調)
+alterparam m = 1.2
+reset
+tran 0.5u 40m 20m 2u
+let vab = v(a) - v(b)
+let sinref = sin(2*3.14159265358979*50*time)
+let ib = vab*sinref
+meas tran vmax_m12 max vab from=20m to=39.9m
+meas tran ib_m12 integ ib from=20m to=39.9m
+write chapter09/hbridge_pwm_bipolar.raw all
+.endc
+.end
+</pre>
+</div>
+<div class='circuit'>
+<h2>フルブリッジ正弦波PWM・ユニポーラ変調(sec9.5, ex9.6(c)、bipolarとの比較用) <span class='badge-ok'>接続チェック OK</span></h2>
+<p class='meta'>関連節: sec9.5 / ex9.6(c) / ファイル: <code>chapter09/hbridge_pwm_unipolar.asc</code></p>
+<p>bipolarと同一定数(E=100V, fc=5kHz, fm=50Hz, m=0.8, R=10ohm, L=10mH)。左レグ(S1,S2)は+v_ref、右レグ(S3,S4)は-v_refで独立制御し、出力は+E,0,-Eの3値(ユニポーラ)。ngspice実測: Vab=+-100.04V、平均値≈0.0049V(ゼロ、直流成分なしを確認)、Irms=5.392A、Ipeak=7.714A(bipolarとほぼ同水準)。基本波振幅(相関積分)=79.81V(bipolarのm=0.8ケース79.84Vとほぼ一致、変調方式によらず基本波は不変という本文の主張と整合)。FFTで高調波はfc=5kHz付近には現れず2fc=10kHz付近に集中(bipolarとの明確な対比、実効スイッチング周波数が2倍になるという本文9.5節の主張を定量確認、ex9.6(c))。</p>
+<div class='svgwrap'><?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="-148.4 -98.4 2857.904000000003 1330.8240000000003" width="100%">
+  <title>hbridge_pwm_unipolar.svg</title>
+  <defs/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="332" y1="100" y2="100"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="332" x2="732" y1="100" y2="100"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="196" y2="396"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="332" y1="396" y2="396"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="332" x2="732" y1="396" y2="396"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="332" x2="332" y1="196" y2="300"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="732" x2="732" y1="196" y2="300"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="332" x2="380" y1="196" y2="196"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="380" x2="380" y1="196" y2="550"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="380" x2="450" y1="550" y2="550"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="642" x2="680" y1="550" y2="550"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="680" x2="680" y1="550" y2="196"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="680" x2="732" y1="196" y2="196"/>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(0,100)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">V1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">100</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="sw" s:width="34" transform="translate(300,100)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="20" y1="32" y2="58"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="20" y1="32" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="20" y1="64" y2="64"/>
+    <circle cx="32.0" cy="32.0" fill="none" r="2.0" stroke="black" stroke-width="2.0"/>
+    <circle cx="32.0" cy="64.0" fill="none" r="2.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="16.4">S1</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="88.4">SW</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="sw" s:width="34" transform="translate(300,300)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="20" y1="32" y2="58"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="20" y1="32" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="20" y1="64" y2="64"/>
+    <circle cx="32.0" cy="32.0" fill="none" r="2.0" stroke="black" stroke-width="2.0"/>
+    <circle cx="32.0" cy="64.0" fill="none" r="2.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="16.4">S2</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="88.4">SW</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="sw" s:width="34" transform="translate(700,100)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="20" y1="32" y2="58"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="20" y1="32" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="20" y1="64" y2="64"/>
+    <circle cx="32.0" cy="32.0" fill="none" r="2.0" stroke="black" stroke-width="2.0"/>
+    <circle cx="32.0" cy="64.0" fill="none" r="2.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="16.4">S3</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="88.4">SW</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="sw" s:width="34" transform="translate(700,300)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="0" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="20" y1="32" y2="58"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="32" x2="32" y1="64" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="20" y1="32" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="20" y1="64" y2="64"/>
+    <circle cx="32.0" cy="32.0" fill="none" r="2.0" stroke="black" stroke-width="2.0"/>
+    <circle cx="32.0" cy="64.0" fill="none" r="2.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="16.4">S4</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="40" y="88.4">SW</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="res" s:width="32" transform="translate(450,550) rotate(270)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <rect fill="none" height="64" stroke="black" stroke-width="2.0" width="32" x="-16" y="16"/>
+    <g transform="rotate(180, 24, 24)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="32.4">R1</text>
+      </g>
+    </g>
+    <g transform="rotate(180, 24, 72)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="80.4">10</text>
+      </g>
+    </g>
+  </g>
+  <g s:height="96" s:type="ind" s:width="10" transform="translate(546,550) rotate(270)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="16" y2="24"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="24" y2="32"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="32" y2="40"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="40" y2="48"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="48" y2="56"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="56" y2="64"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="64" y2="72"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="72" y2="80"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <g transform="rotate(180, 24, 24)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="32.4">L1</text>
+      </g>
+    </g>
+    <g transform="rotate(180, 24, 88)">
+      <g class="text-group">
+        <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="end" x="24" y="96.4">10m</text>
+      </g>
+    </g>
+  </g>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(900,50)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">Bcarr</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">V=(2/pi*asin(sin(2*pi*fc*time)))</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(900,250)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">Bref</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">V=(m*sin(2*pi*fm*time))</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(900,450)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">Brefn</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">V=(-m*sin(2*pi*fm*time))</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(900,650)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">BctrlA</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">V=((V(ref)&gt;V(carr))?1:0)</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(1100,50)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">BctrlAn</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">V=((V(ref)&lt;V(carr))?1:0)</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(1100,250)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">BctrlB</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">V=((V(refn)&gt;V(carr))?1:0)</text>
+    </g>
+  </g>
+  <g s:height="96" s:type="voltage" s:width="40" transform="translate(1100,450)">
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="30" y2="46"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="38" y2="38"/>
+    <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-8" x2="8" y1="62" y2="62"/>
+    <ellipse cx="0.0" cy="48.0" fill="none" rx="20.0" ry="32.0" stroke="black" stroke-width="2.0"/>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="32.4">BctrlBn</text>
+    </g>
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">V=((V(refn)&lt;V(carr))?1:0)</text>
+    </g>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="-151.6">フルブリッジ正弦波PWM・ユニポーラ変調(sec9.5, ex9.6(c)基準、bipolarとの比較用)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="-119.6">E=100V(bipolarと同じ採用値) fc=5kHz(搬送波) fm=50Hz(変調波) m=0.8 負荷R=10ohm L=10mH(bipolarと同一定数)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="-87.6">左レグ(S1,S2)は+v_ref、右レグ(S3,S4)は-v_refで独立制御(bipolarは対角ペアが単一指令で連動)。出力は+E,0,-Eの3値</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="900" y="-23.6">制御ブロック(Bcarr/Bref/Brefn/BctrlA/BctrlAn/BctrlB/BctrlBn): voltageシンボルを流用したngspice behavioral source(B-element, Value=V=式)。</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="900" y="0.3999999999999986">視覚上は電圧源記号だが実体は三角搬送波生成・正弦波基準(+/-)・比較器(PWMコンパレータ)というcontrol block(opamp/zenerと同じ簡略化方針)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="788.4">.model SW SW(Ron=10m Roff=1G Vt=0.5)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="812.4">.param E=100 fc=5k fm=50 m=0.8 R=10 L=10m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="836.4">.options reltol=0.01 gmin=1e-9</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="860.4">.control</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="884.4">tran 0.5u 60m 20m 2u</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="908.4">let vab = v(a) - v(b)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="932.4">let sinref = sin(2*3.14159265358979*50*time)</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="956.4">let ib = vab*sinref</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="980.4">meas tran vmax max vab from=20m to=59.9m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1004.4">meas tran vmin min vab from=20m to=59.9m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1028.4">meas tran vzero_check avg vab from=20m to=59.9m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1052.4">meas tran irms rms i(l1) from=20m to=59.9m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1076.4">meas tran ipeak max i(l1) from=20m to=59.9m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1100.4">meas tran ib_1 integ ib from=20m to=39.9m</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1124.4">write chapter09/hbridge_pwm_unipolar.raw all</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1148.4">linearize vab</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1172.4">fft vab</text>
+  </g>
+  <g class="text-group">
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="1196.4">.endc</text>
+  </g>
+  <g class="ground-flag">
+    <g transform="translate(0,396) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 380, 196)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="380" y="191.2">a</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 680, 196)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="680" y="191.2">b</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g transform="rotate(-90, 300, 132)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="300" y="127.2">ctrlA</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(300,164) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 300, 332)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="300" y="327.2">ctrlAn</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(300,364) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 700, 132)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="700" y="127.2">ctrlB</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(700,164) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 700, 332)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="700" y="327.2">ctrlBn</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(700,364) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 900, 50)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="900" y="45.2">carr</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(900,146) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 900, 250)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="900" y="245.2">ref</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(900,346) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 900, 450)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="900" y="445.2">refn</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(900,546) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 900, 650)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="900" y="645.2">ctrlA</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(900,746) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 1100, 50)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="1100" y="45.2">ctrlAn</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(1100,146) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 1100, 250)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="1100" y="245.2">ctrlB</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(1100,346) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+  <g transform="rotate(-90, 1100, 450)">
+    <g class="text-group">
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="1100" y="445.2">ctrlBn</text>
+    </g>
+  </g>
+  <g class="net-label"/>
+  <g class="ground-flag">
+    <g transform="translate(1100,546) rotate(0)">
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
+      <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
+    </g>
+  </g>
+</svg>
+</div>
+<p><b>ネットリスト</b> (asc_to_net.py 自動生成):</p>
+<pre>* netlist auto-generated by asc_to_net.py from hbridge_pwm_unipolar.asc
+V1 N001 0 100
+S1 N001 a ctrlA 0 SW
+S2 a 0 ctrlAn 0 SW
+S3 N001 b ctrlB 0 SW
+S4 b 0 ctrlBn 0 SW
+R1 a N002 10
+L1 N002 b 10m
+Bcarr carr 0 V=(2/pi*asin(sin(2*pi*fc*time)))
+Bref ref 0 V=(m*sin(2*pi*fm*time))
+Brefn refn 0 V=(-m*sin(2*pi*fm*time))
+BctrlA ctrlA 0 V=((V(ref)>V(carr))?1:0)
+BctrlAn ctrlAn 0 V=((V(ref)<V(carr))?1:0)
+BctrlB ctrlB 0 V=((V(refn)>V(carr))?1:0)
+BctrlBn ctrlBn 0 V=((V(refn)<V(carr))?1:0)
+.model SW SW(Ron=10m Roff=1G Vt=0.5)
+.param E=100 fc=5k fm=50 m=0.8 R=10 L=10m
+.options reltol=0.01 gmin=1e-9
+.control
+tran 0.5u 60m 20m 2u
+let vab = v(a) - v(b)
+let sinref = sin(2*3.14159265358979*50*time)
+let ib = vab*sinref
+meas tran vmax max vab from=20m to=59.9m
+meas tran vmin min vab from=20m to=59.9m
+meas tran vzero_check avg vab from=20m to=59.9m
+meas tran irms rms i(l1) from=20m to=59.9m
+meas tran ipeak max i(l1) from=20m to=59.9m
+meas tran ib_1 integ ib from=20m to=39.9m
+write chapter09/hbridge_pwm_unipolar.raw all
+linearize vab
+fft vab
+.endc
+.end
+</pre>
+</div>
+</body></html>
