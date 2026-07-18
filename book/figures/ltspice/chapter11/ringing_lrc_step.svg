@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="96.0 -48.0 989.4400000000003 1027.12" width="100%">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="65.6 -78.4 1033.6640000000002 1059.344" width="100%">
   <title>ringing_lrc_step.svg</title>
   <defs/>
-  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="160" x2="320" y1="16" y2="16"/>
+  <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="160" x2="720" y1="16" y2="16"/>
   <g s:height="96" s:type="voltage" s:width="40" transform="translate(160,16)">
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
@@ -17,7 +17,7 @@
       <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">PULSE(0 10 0 {tr} {tr} 5000n 10000n)</text>
     </g>
   </g>
-  <g s:height="96" s:type="ind" s:width="10" transform="translate(320,16)">
+  <g s:height="96" s:type="ind" s:width="10" transform="translate(720,16)">
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="10" y1="16" y2="24"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="10" x2="0" y1="24" y2="32"/>
@@ -35,7 +35,7 @@
       <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="96.4">40n</text>
     </g>
   </g>
-  <g s:height="96" s:type="res" s:width="32" transform="translate(320,112)">
+  <g s:height="96" s:type="res" s:width="32" transform="translate(720,112)">
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="16"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="80" y2="96"/>
     <rect fill="none" height="64" stroke="black" stroke-width="2.0" width="32" x="-16" y="16"/>
@@ -46,7 +46,7 @@
       <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="24" y="80.4">0.1</text>
     </g>
   </g>
-  <g s:height="96" s:type="cap" s:width="32" transform="translate(320,208)">
+  <g s:height="96" s:type="cap" s:width="32" transform="translate(720,208)">
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="0" y1="0" y2="44"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="44" y2="44"/>
     <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="52" y2="52"/>
@@ -143,14 +143,14 @@
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
     </g>
   </g>
-  <g transform="rotate(-90, 320, 208)">
+  <g transform="rotate(-90, 720, 208)">
     <g class="text-group">
-      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="320" y="203.2">vcp</text>
+      <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="middle" x="720" y="203.2">vcp</text>
     </g>
   </g>
   <g class="net-label"/>
   <g class="ground-flag">
-    <g transform="translate(320,304) rotate(0)">
+    <g transform="translate(720,304) rotate(0)">
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="16" y1="0" y2="0"/>
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="-16" x2="0" y1="0" y2="16"/>
       <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="16" x2="0" y1="0" y2="16"/>
