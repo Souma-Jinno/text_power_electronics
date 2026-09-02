@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# fig7.1（第7章）: リニアレギュレータの原理。入力電源V0と負荷RLの間に
+# fig7.1（第7章）: リニアレギュレータの原理。入力電源Vinと負荷RLの間に
 # 直列に可変抵抗Rxを入れ，Rxで余分な電圧を落として出力Voutを作る。
 # 落とした電圧×電流がそのままRxでの発熱（損失）になる。
 import os
@@ -84,13 +84,13 @@ dot(ax, xN, yB)
 
 # 素子
 source(ax, xV, yB, yT)
-ax.text(xV - 0.5, 0.5 * (yB + yT), r"$V_0$", ha="right", va="center", fontsize=9)
+ax.text(xV - 0.5, 0.5 * (yB + yT), r"$V_{\mathrm{in}}$", ha="right", va="center", fontsize=9)
 res_v(ax, xR, yT, yB)
 ax.text(xR - 0.34, 0.5 * (yB + yT), r"$R_L$", ha="right", va="center", fontsize=9)
 
 # ラベル
 ax.text(0.5 * (xRx0 + xRx1), yT + 0.62, r"$R_x$", ha="center", fontsize=9, color=RED)
-ax.text(0.5 * (xRx0 + xRx1), yT - 0.66, r"$V_0-V_{\mathrm{out}}$",
+ax.text(0.5 * (xRx0 + xRx1), yT - 0.66, r"$V_{\mathrm{in}}-V_{\mathrm{out}}$",
         ha="center", fontsize=7.5, color=RED)
 # 出力電圧の表示（負荷の右）
 xvo = xR + 1.05

@@ -47,47 +47,50 @@ def cap(ax, x, yc, w=0.22, gap=0.08):
 def res_v(ax, x, y0, y1, w=0.14):
     ax.add_patch(plt.Rectangle((x - w, y0), 2 * w, y1 - y0, fc="w", ec="k", lw=1.1))
 
-fig = plt.figure(figsize=(4.3, 3.9))
-gs = fig.add_gridspec(3, 1, height_ratios=[2.3, 1.0, 1.15], hspace=0.5)
+# 回路図は本文幅いっぱい（5章の回路図と同じ大きさ）に置き，
+# 波形は下に 2 段並べる。
+fig = plt.figure(figsize=(4.1, 5.1))
+gs = fig.add_gridspec(2, 1, height_ratios=[1.0, 1.15], top=0.535, bottom=0.12,
+                      left=0.14, right=0.97, hspace=0.5)
 
 # ============ (a) 回路 ============
-ax = fig.add_subplot(gs[0])
+ax = fig.add_axes([0.0, 0.58, 1.0, 0.42])
 YT, YB = 2.4, 0.0
-source(ax, 0.0, 1.2, label=r"$V_{in}$")
+source(ax, 0.0, 1.2, label=r"$V_{\mathrm{in}}$")
 ax.plot([0.0, 0.0], [1.5, YT], lw=1.1, color="k")
 ax.plot([0.0, 0.0], [0.9, YB], lw=1.1, color="k")
 # スイッチ（上側）
-ax.plot([0.0, 0.8], [YT, YT], lw=1.1, color="k")
-ax.plot([0.8, 1.35], [YT, YT + 0.28], lw=1.2, color="k")
-ax.plot(0.8, YT, "o", ms=2.6, mfc="w", mec="k", mew=0.9)
-ax.plot(1.4, YT, "o", ms=2.6, mfc="w", mec="k", mew=0.9)
-ax.text(1.1, 2.95, r"$\mathrm{S}$", fontsize=8)
-ax.plot([1.4, 2.3], [YT, YT], lw=1.1, color="k")
+# スイッチ S（5章と同じ「四角に S」の記号）
+ax.plot([0.0, 0.77], [YT, YT], lw=1.1, color="k")
+ax.add_patch(plt.Rectangle((0.77, YT - 0.23), 0.66, 0.46, fc="w", ec="k",
+                           lw=1.1, zorder=2))
+ax.text(1.1, YT, "S", ha="center", va="center", fontsize=8, zorder=3)
+ax.plot([1.43, 2.3], [YT, YT], lw=1.1, color="k")
 # 1次巻線（励磁インダクタンス）
 coil_v(ax, 2.3, 1.0, YT, n=4, side=-1, color=BLUE)
 ax.plot(2.17, 2.22, "o", ms=2.4, color="k")     # ドット上
-ax.text(1.58, 1.85, r"$N_1$", fontsize=7.5, ha="center")
+ax.text(1.58, 1.85, r"$N_1$", fontsize=8, ha="center")
 ax.plot([2.3, 2.3], [1.0, YB], lw=1.1, color="k")
 ax.plot([0.0, 2.3], [YB, YB], lw=1.1, color="k")
 ax.annotate("", xy=(1.95, 1.15), xytext=(1.95, 1.75),
             arrowprops=dict(arrowstyle="-|>", lw=1.0, color=GREEN))
-ax.text(1.66, 1.2, r"$i_1$", fontsize=7.5, color=GREEN)
+ax.text(1.66, 1.2, r"$i_1$", fontsize=8, color=GREEN)
 # 鉄心
 ax.plot([2.58, 2.58], [0.85, 2.55], lw=1.1, color="#777")
 ax.plot([2.68, 2.68], [0.85, 2.55], lw=1.1, color="#777")
 # 2次巻線（ドットは下側＝逆向き）
 coil_v(ax, 2.96, 1.0, YT, n=4, side=1, color=BLUE)
 ax.plot(3.09, 1.18, "o", ms=2.4, color="k")     # ドット下
-ax.text(3.42, 0.6, r"$N_2$", fontsize=7.5, ha="center")
+ax.text(3.42, 0.6, r"$N_2$", fontsize=8, ha="center")
 ax.annotate("", xy=(3.55, 1.95), xytext=(3.55, 1.35),
             arrowprops=dict(arrowstyle="-|>", lw=1.0, color=GREEN))
-ax.text(3.72, 1.3, r"$i_2$", fontsize=7.5, color=GREEN)
+ax.text(3.72, 1.3, r"$i_2$", fontsize=8, color=GREEN)
 ax.plot([2.96, 2.96], [1.0, YB], lw=1.1, color="k")
 ax.plot([2.96, 5.6], [YB, YB], lw=1.1, color="k")
 # D → C, R
 ax.plot([2.96, 4.0], [YT, YT], lw=1.1, color="k")
 diode(ax, 4.2, YT, ang=0)
-ax.text(4.2, 2.72, r"$\mathrm{D}$", fontsize=7.5, ha="center")
+ax.text(4.2, 2.72, r"$\mathrm{D}$", fontsize=8, ha="center")
 ax.plot([4.4, 4.9], [YT, YT], lw=1.1, color="k")
 ax.plot(4.9, YT, "o", ms=2.0, color="k")
 ax.plot([4.9, 4.9], [YB, 1.08], lw=1.1, color="k")
@@ -102,7 +105,7 @@ ax.plot([5.6, 5.6], [1.55, YT], lw=1.1, color="k")
 ax.text(5.85, 1.2, r"$R$", fontsize=8)
 ax.annotate("", xy=(6.4, 1.65), xytext=(6.4, 0.75),
             arrowprops=dict(arrowstyle="-|>", lw=0.9, color="k"))
-ax.text(6.57, 1.2, r"$V_o$", fontsize=8.5, va="center")
+ax.text(6.57, 1.2, r"$V_{\mathrm{out}}$", fontsize=8.5, va="center")
 ax.text(3.35, 3.1, "極性マークが上下逆", fontsize=6.6, fontproperties=JP,
         ha="left", color=RED)
 ax.annotate("", xy=(2.75, 2.65), xytext=(3.45, 3.02),
@@ -128,7 +131,7 @@ Im_avg = Io / (1 - D)
 dIm = Vin * D * T * 1e-6 / Lm
 i1 = np.where(on, Im_avg - dIm / 2 + dIm * ph / (D * T), np.nan)
 i2 = np.where(~on, Im_avg + dIm / 2 - dIm * (ph - D * T) / ((1 - D) * T), np.nan)
-axs = [fig.add_subplot(gs[i]) for i in range(1, 3)]
+axs = [fig.add_subplot(gs[i]) for i in range(2)]
 for a in axs:
     for k in range(2):
         a.axvspan(k * T, (k + D) * T, color="#eef3fb", zorder=0)
@@ -137,16 +140,15 @@ for a in axs:
 
 axs[0].plot(t, vLm, lw=1.3, color=RED)
 axs[0].axhline(0, lw=0.5, color="#999")
-axs[0].set_ylim(-9, 17)
+axs[0].set_ylim(-12, 17)
 axs[0].set_yticks([-5, 0, 12])
 axs[0].set_ylabel(r"$v_{Lm}$ [V]", fontsize=7.5)
-axs[0].text(3, 13.3, r"$V_{in}$", fontsize=7.5, color=RED)
-axs[0].text(30, -7.8, r"$-\frac{N_1}{N_2}V_o$", fontsize=7.5, color=RED)
-axs[0].text(1.5, -7.2, "(b) 動作波形", fontsize=7.2, fontproperties=JP,
-            color="#555")
+axs[0].text(3, 13.3, r"$V_{\mathrm{in}}$", fontsize=7.5, color=RED)
+axs[0].text(30, -6.0, r"$-\frac{N_1}{N_2}V_{\mathrm{out}}$", fontsize=7.5,
+            color=RED, va="top")
 
 axs[1].plot(t, i1, lw=1.3, color=BLUE, label=r"$i_1$")
-axs[1].plot(t, i2, lw=1.3, color=GREEN, label=r"$i_2$")
+axs[1].plot(t, i2, lw=1.3, color=GREEN, ls=(0, (4, 2)), label=r"$i_2$")
 axs[1].set_ylim(0, 2.1)
 axs[1].set_yticks([0, 1, 2])
 axs[1].set_ylabel(r"$i_1,\ i_2$ [A]", fontsize=7.5)
@@ -161,8 +163,8 @@ axs[1].text(D * T + 4.0, 1.72, "引き継ぎ", fontsize=6.4, fontproperties=JP,
 axs[1].set_xlabel(r"$t$ [$\mu$s]", fontsize=7.5)
 
 fig.align_ylabels(axs)
+fig.text(0.555, 0.0, "(b) 動作波形", fontsize=7.4, fontproperties=JP,
+         color="#555", ha="center", va="bottom")
 EPS = os.path.expanduser("~/text_power_electronics/book/figures/fig6.5.eps")
 fig.savefig(EPS, format="eps", bbox_inches="tight")
-PNG = "/tmp/claude-1000/-home-soumajinno/e7688596-6b6f-45e4-950d-929e196c5bb6/scratchpad/fig6.5.png"
-fig.savefig(PNG, format="png", dpi=160, bbox_inches="tight")
 print("wrote", EPS)

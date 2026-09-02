@@ -75,7 +75,7 @@ def res_v(ax, x, y1, y2, c=BK):
 
 
 fig = plt.figure(figsize=(4.25, 3.05))
-gs = fig.add_gridspec(2, 1, height_ratios=[1.25, 1.0], hspace=0.32)
+gs = fig.add_gridspec(2, 1, height_ratios=[1.15, 1.0], hspace=0.12)
 
 # --- (a) 回路
 ax = fig.add_subplot(gs[0])
@@ -128,11 +128,12 @@ ax.text(0.5 * (xL0 + xL1), yT + 0.30, "$L$", ha="center", fontsize=7.5)
 ax.text(xA + 0.15, yB - 0.55, "電流が正弦波になるよう S を制御", ha="center",
         fontsize=6.0, fontproperties=JP, color=RED)
 ax.set_xlim(0, 6.7)
-ax.set_ylim(-1.0, 3.7)
+ax.set_ylim(-1.1, 3.1)
 ax.set_aspect("equal")
 ax.axis("off")
-ax.text(3.3, 3.55, "(a) 昇圧型PFC（整流＋昇圧チョッパ）", ha="center", fontsize=6.8,
-        fontproperties=JP, color="#555")
+# 副題は (b) と同じく図の下に置く
+ax.text(3.3, -0.95, "(a) 昇圧型PFC（整流＋昇圧チョッパ）", ha="center", fontsize=6.8,
+        fontproperties=JP, color="#555", va="center")
 
 # --- (b) 入力電流整形
 ax = fig.add_subplot(gs[1])
@@ -144,7 +145,7 @@ ax.plot(t, vs, color="#9aa7bd", lw=1.1, ls="--", zorder=2)
 ig = 0.8 * vs + 0.03 * np.sin(2 * np.pi * 40 * t) * np.sign(vs)
 ax.plot(t, ig, color=BLUE, lw=1.4, zorder=3)
 ax.text(0.02, 1.02, r"$v_S$", fontsize=7.5, color="#888")
-ax.text(0.30, 0.55, r"$i_S$（正弦波に整形）", fontsize=7, color=BLUE, fontproperties=JP)
+ax.text(0.53, 0.60, r"$i_S$（正弦波に整形）", fontsize=7, color=BLUE, fontproperties=JP)
 for x in [0.5, 1.0, 1.5, 2.0]:
     ax.plot([x, x], [-0.05, 0.05], color=BK, lw=0.8)
 ax.text(2.07, -0.02, r"$\omega t$", ha="left", va="top", fontsize=7)

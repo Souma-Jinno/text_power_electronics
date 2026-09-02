@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # fig5.3（第5章）: 昇圧チョッパの回路構成と，オン期間・オフ期間の等価回路。
-# 灰色は電流が流れない（切り離された）部分，赤矢印は電流の経路を表す。
+# 灰色は電流が流れない（切り離された）部分，太い矢印は電流の経路を表す。
 import os
 import numpy as np
 import matplotlib
@@ -88,10 +88,17 @@ def dio_h(ax, x1, x2, y, c=BK):
     ax.plot([xc + a, xc + a], [y - s, y + s], color=c, lw=1.2, zorder=2)
 
 
-def iarr(ax, x, y, dx, dy, c=RED):
-    ax.annotate("", xy=(x + dx, y + dy), xytext=(x, y),
-                arrowprops=dict(arrowstyle="-|>", lw=1.1, color=c,
-                                mutation_scale=8), zorder=4)
+def iarr(ax, x, y, dx, dy, c=None):
+    # c=None のとき「電流の経路」を示す太い矢印（色に依らず太さで区別する）。
+    # 色を指定したときは細い矢印（i_L の向きなど）。
+    if c is None:
+        ax.annotate("", xy=(x + dx, y + dy), xytext=(x, y),
+                    arrowprops=dict(arrowstyle="-|>", lw=1.9, color=BK,
+                                    mutation_scale=10), zorder=4)
+    else:
+        ax.annotate("", xy=(x + dx, y + dy), xytext=(x, y),
+                    arrowprops=dict(arrowstyle="-|>", lw=1.1, color=c,
+                                    mutation_scale=8), zorder=4)
 
 
 def draw_boost(ax, mode, small=False):
@@ -147,7 +154,7 @@ def draw_boost(ax, mode, small=False):
     # 電流経路の矢印
     if mode == "on":
         iarr(ax, 0.95, yT, 0.3, 0)
-        iarr(ax, xA + 0.35, 2.0, 0, -0.6)
+        iarr(ax, xA + 0.55, 2.0, 0, -0.6)
         iarr(ax, 2.7, yB, -0.6, 0)
         iarr(ax, 7.1, yT, 0.4, 0)  # CからRへ
     elif mode == "off":

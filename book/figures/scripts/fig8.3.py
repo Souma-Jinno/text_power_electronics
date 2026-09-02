@@ -18,7 +18,7 @@ RED = "#c0392b"
 SHADE = "#eef3fb"
 
 Tr = 0.5              # リプル周期（全波なので電源半周期）
-tau = 2.2            # 放電時定数（RC）
+tau = 1.4            # 放電時定数（RC）。リプルが見える程度に選ぶ
 peak_t = 0.25        # 最初のピーク位置
 t = np.linspace(0, 2.0, 4000)
 env = np.abs(np.sin(np.pi * t / Tr))     # 整流電圧の包絡線
@@ -44,13 +44,18 @@ ax.plot(t, env, color="#9aa7bd", lw=1.0, ls="--", zorder=2)
 ax.fill_between(t, 0, vc, color=SHADE, zorder=1)
 ax.plot(t, vc, color=BLUE, lw=1.6, zorder=3)
 vtop, vbot = 1.0, np.exp(-Tr / tau)
-xr = peaks[1] + 0.03
+# ΔV は放電の谷（次のピークの直前，vC が最小になる点）で示す
+seg = (t > peaks[1]) & (t < peaks[2])
+iv = np.flatnonzero(seg)[np.argmin(vc[seg])]
+xr, vbot = t[iv], vc[iv]
+ax.plot([peaks[1], xr + 0.02], [vtop, vtop], color=BK, lw=0.5, ls=":", zorder=2)
 ax.annotate("", xy=(xr, vtop), xytext=(xr, vbot),
             arrowprops=dict(arrowstyle="<->", lw=0.9, color=BK, mutation_scale=6))
-ax.text(xr + 0.04, 0.5 * (vtop + vbot), r"$\Delta V$", fontsize=7.5, va="center")
+ax.text(xr, vtop + 0.04, r"$\Delta V$", fontsize=7.5, ha="center", va="bottom")
 ax.text(0.30, 1.12, "整流電圧", fontsize=6.6, fontproperties=JP, color="#888")
-ax.text(1.02, 0.55, r"$v_C$（出力）", fontsize=7.4, fontproperties=JP, color=BLUE)
-ax.text(0.60, 0.86, "放電", fontsize=6.4, fontproperties=JP, color="#555")
+ax.text(1.10, 0.14, r"$v_C$（出力）", fontsize=7.4, fontproperties=JP, color=BLUE)
+ax.text(0.60, 1.00, "放電", fontsize=6.4, fontproperties=JP, color="#555",
+        va="bottom")
 ax.set_ylim(-0.05, 1.32)
 ax.axis("off")
 
@@ -64,9 +69,10 @@ for lp in peaks:
         isrc[seg] = 1.0 * (1 - (lp - t[seg]) / 0.10)
 ax.fill_between(t, 0, isrc, color="#fbecea", zorder=1)
 ax.plot(t, isrc, color=RED, lw=1.4, zorder=3)
-ax.text(1.02, 0.74, r"$i_S$（電源電流）", fontsize=7.4, fontproperties=JP, color=RED)
-ax.text(0.50, 0.34, "充電時だけ\nパルス状に流れる", fontsize=6.2,
-        fontproperties=JP, color="#555")
+ax.text(1.29, 0.80, "$i_S$\n（電源電流）", fontsize=7.2, fontproperties=JP, color=RED,
+        va="top")
+ax.text(0.29, 1.02, "充電時だけ\nパルス状に\n流れる", fontsize=6.4,
+        fontproperties=JP, color="#555", va="top")
 for x in [0.5, 1.0, 1.5, 2.0]:
     ax.plot([x, x], [-0.04, 0.04], color=BK, lw=0.8)
 ax.text(2.06, -0.02, r"$t$", ha="left", va="top", fontsize=7)

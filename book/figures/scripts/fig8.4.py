@@ -29,8 +29,9 @@ ax = axes[0]
 ax.axhline(0, color=BK, lw=0.8)
 ax.plot(t, v, color=BLUE, lw=1.5, zorder=3)
 vrms = 1 / np.sqrt(2)
-ax.axhline(vrms, color=RED, lw=1.1, ls="--", zorder=2)
-ax.axhline(-vrms, color=RED, lw=1.1, ls="--", zorder=2)
+# 破線は波形の範囲（0〜2）だけに引き，右のラベルを貫かないようにする
+ax.plot([0, 2.0], [vrms, vrms], color=RED, lw=1.1, ls="--", zorder=2)
+ax.plot([0, 2.0], [-vrms, -vrms], color=RED, lw=1.1, ls="--", zorder=2)
 ax.text(2.02, vrms, r"$V_{\mathrm{rms}}=V_m/\sqrt{2}$", color=RED, fontsize=7,
         va="center", ha="left")
 ax.text(0.25, 1.10, r"$v(t)=V_m\sin\omega t$", fontsize=7, color=BLUE)
@@ -43,12 +44,12 @@ ax = axes[1]
 ax.axhline(0, color=BK, lw=0.8)
 ax.fill_between(t, 0, p, color=SHADE, zorder=1)
 ax.plot(t, p, color=BLUE, lw=1.4, zorder=3)
-ax.axhline(pavg, color=RED, lw=1.3, zorder=4)
+ax.plot([0, 2.0], [pavg, pavg], color=RED, lw=1.3, zorder=4)
 ax.text(2.02, pavg, r"平均 $=V_{\mathrm{rms}}^2/R$", color=RED, fontsize=7,
         va="center", ha="left", fontproperties=JP)
 ax.text(0.20, 1.02, r"$p(t)=v^2/R$", fontsize=7, color=BLUE)
-ax.text(0.62, 0.30, "山と谷が\nならされる", fontsize=6.2, fontproperties=JP,
-        color="#555", ha="center")
+ax.text(2.02, pavg - 0.16, "（山と谷がならされる）", fontsize=6.2,
+        fontproperties=JP, color="#555", ha="left", va="center")
 for x in [0.5, 1.0, 1.5, 2.0]:
     ax.plot([x, x], [-0.04, 0.04], color=BK, lw=0.8)
 ax.text(2.06, -0.02, r"$t$", ha="left", va="top", fontsize=7)

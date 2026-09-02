@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # fig6.4（第6章）: フォワードコンバータ。(a)リセット巻線付き回路，
-# (b)動作波形（Vin=100V, N1:N2=10:1, N3=N1, D=0.3, T=50us, L=1mH, Vo=3V）。
+# (b)動作波形（Vin=100V, N1:N2=10:1, N3=N1, D=0.3, T=50us, L=1mH, Vout=3V）。
 import os
 import numpy as np
 import matplotlib
@@ -56,14 +56,17 @@ def cap(ax, x, yc, w=0.22, gap=0.08):
 def res_v(ax, x, y0, y1, w=0.14):
     ax.add_patch(plt.Rectangle((x - w, y0), 2 * w, y1 - y0, fc="w", ec="k", lw=1.1))
 
-fig = plt.figure(figsize=(4.3, 4.1))
-gs = fig.add_gridspec(4, 1, height_ratios=[2.5, 1.0, 1.0, 1.0], hspace=0.5)
+# 回路図は本文幅いっぱい（5章の回路図と同じ大きさ）に置き，
+# 波形は下に 3 段並べる。
+fig = plt.figure(figsize=(4.1, 5.4))
+gs = fig.add_gridspec(3, 1, top=0.555, bottom=0.115, left=0.14, right=0.97,
+                      hspace=0.5)
 
 # ============ (a) 回路 ============
-ax = fig.add_subplot(gs[0])
+ax = fig.add_axes([0.0, 0.60, 1.0, 0.40])
 YT, YB = 2.4, 0.0
 # 電源
-source(ax, 0.0, 1.2, label=r"$V_{in}$")
+source(ax, 0.0, 1.2, label=r"$V_{\mathrm{in}}$")
 ax.plot([0.0, 0.0], [1.5, YT], lw=1.1, color="k")
 ax.plot([0.0, 0.0], [0.9, YB], lw=1.1, color="k")
 ax.plot([0.0, 2.2], [YT, YT], lw=1.1, color="k")
@@ -75,8 +78,8 @@ ax.plot([1.0, 1.0], [1.55, 1.75], lw=1.1, color="k")
 diode(ax, 1.0, 1.95, ang=90, color="k")
 ax.plot([1.0, 1.0], [2.15, YT], lw=1.1, color="k")
 ax.plot(1.13, 0.62, "o", ms=2.4, color="k")   # ドット（下側）
-ax.text(0.62, 1.0, r"$N_3$", fontsize=7.5, ha="center")
-ax.text(0.62, 1.95, r"$\mathrm{D_3}$", fontsize=7.5, ha="center")
+ax.text(0.62, 1.0, r"$N_3$", fontsize=8, ha="center")
+ax.text(0.62, 1.95, r"$\mathrm{D_3}$", fontsize=8, ha="center")
 ax.text(1.0, 2.75, "リセット巻線", fontsize=6.6, fontproperties=JP,
         ha="center", color=BLUE)
 ax.plot(1.0, YT, "o", ms=2.0, color="k")
@@ -84,26 +87,26 @@ ax.plot(1.0, YB, "o", ms=2.0, color="k")
 # 1次巻線 N1 とスイッチ
 coil_v(ax, 2.2, 1.0, YT, n=4, side=-1, color=BLUE)
 ax.plot(2.07, 2.22, "o", ms=2.4, color="k")   # ドット（上側）
-ax.text(1.85, 1.6, r"$N_1$", fontsize=7.5, ha="center")
-ax.plot([2.2, 2.2], [1.0, 0.8], lw=1.1, color="k")
-ax.plot([2.2, 2.45], [0.8, 0.25], lw=1.2, color="k")   # スイッチ
-ax.plot(2.2, 0.8, "o", ms=2.6, mfc="w", mec="k", mew=0.9)
-ax.plot(2.2, 0.25, "o", ms=2.6, mfc="w", mec="k", mew=0.9)
+ax.text(1.85, 1.6, r"$N_1$", fontsize=8, ha="center")
+# スイッチ S（5章と同じ「四角に S」の記号）
+ax.plot([2.2, 2.2], [1.0, 0.85], lw=1.1, color="k")
+ax.add_patch(plt.Rectangle((2.2 - 0.25, 0.25), 0.5, 0.6, fc="w", ec="k",
+                           lw=1.1, zorder=2))
+ax.text(2.2, 0.55, "S", ha="center", va="center", fontsize=8, zorder=3)
 ax.plot([2.2, 2.2], [0.25, YB], lw=1.1, color="k")
-ax.text(2.62, 0.55, r"$\mathrm{S}$", fontsize=8)
 # 鉄心
 ax.plot([2.48, 2.48], [0.85, 2.55], lw=1.1, color="#777")
 ax.plot([2.58, 2.58], [0.85, 2.55], lw=1.1, color="#777")
 # 2次巻線 N2
 coil_v(ax, 2.86, 1.0, YT, n=4, side=1, color=BLUE)
 ax.plot(2.99, 2.22, "o", ms=2.4, color="k")   # ドット（上側）
-ax.text(3.22, 1.6, r"$N_2$", fontsize=7.5, ha="center")
+ax.text(3.22, 1.6, r"$N_2$", fontsize=8, ha="center")
 ax.plot([2.86, 2.86], [1.0, YB], lw=1.1, color="k")
 ax.plot([2.86, 5.75], [YB, YB], lw=1.1, color="k")
 # D1 → L → 出力
 ax.plot([2.86, 3.3], [YT, YT], lw=1.1, color="k")
 diode(ax, 3.5, YT, ang=0)
-ax.text(3.5, 2.72, r"$\mathrm{D_1}$", fontsize=7.5, ha="center")
+ax.text(3.5, 2.72, r"$\mathrm{D_1}$", fontsize=8, ha="center")
 ax.plot([3.7, 4.0], [YT, YT], lw=1.1, color="k")
 ax.plot(4.0, YT, "o", ms=2.0, color="k")
 # D2（還流）
@@ -111,7 +114,7 @@ diode(ax, 4.0, 1.2, ang=90)
 ax.plot([4.0, 4.0], [YB, 1.0], lw=1.1, color="k")
 ax.plot([4.0, 4.0], [1.4, YT], lw=1.1, color="k")
 ax.plot(4.0, YB, "o", ms=2.0, color="k")
-ax.text(4.32, 1.2, r"$\mathrm{D_2}$", fontsize=7.5, ha="center")
+ax.text(4.32, 1.2, r"$\mathrm{D_2}$", fontsize=8, ha="center")
 # L
 coil_h(ax, 4.25, 5.05, YT, n=4)
 ax.plot([4.0, 4.25], [YT, YT], lw=1.1, color="k")
@@ -119,7 +122,7 @@ ax.plot([5.05, 5.75], [YT, YT], lw=1.1, color="k")
 ax.text(4.65, 2.75, r"$L$", fontsize=8, ha="center")
 ax.annotate("", xy=(5.0, 2.18), xytext=(4.35, 2.18),
             arrowprops=dict(arrowstyle="-|>", lw=1.0, color=GREEN))
-ax.text(4.65, 2.0, r"$i_L$", fontsize=7.5, ha="center", va="top", color=GREEN)
+ax.text(4.65, 2.0, r"$i_L$", fontsize=8, ha="center", va="top", color=GREEN)
 # C, R
 ax.plot([5.05, 5.05], [YB, 1.08], lw=1.1, color="k")
 ax.plot([5.05, 5.05], [1.32, YT], lw=1.1, color="k")
@@ -133,10 +136,10 @@ ax.plot([5.75, 5.75], [1.55, YT], lw=1.1, color="k")
 ax.text(6.0, 1.2, r"$R$", fontsize=8)
 ax.annotate("", xy=(6.55, 1.65), xytext=(6.55, 0.75),
             arrowprops=dict(arrowstyle="-|>", lw=0.9, color="k"))
-ax.text(6.72, 1.2, r"$V_o$", fontsize=8.5, va="center")
+ax.text(6.72, 1.2, r"$V_{\mathrm{out}}$", fontsize=8.5, va="center")
 ax.text(3.1, -0.6, "(a) 回路", ha="center", fontsize=7.4,
         fontproperties=JP, color="#555")
-ax.set_xlim(-0.75, 7.0)
+ax.set_xlim(-1.0, 7.45)
 ax.set_ylim(-0.9, 3.05)
 ax.set_aspect("equal")
 ax.axis("off")
@@ -158,7 +161,7 @@ Impk = 100.0 / 10e-3 * D * T * 1e-6     # = 0.15 A
 im = np.where(on, Impk * ph / (D * T),
               np.where(ph < 2 * D * T, Impk * (1 - (ph - D * T) / (D * T)), 0.0))
 
-axs = [fig.add_subplot(gs[i]) for i in range(1, 4)]
+axs = [fig.add_subplot(gs[i]) for i in range(3)]
 for a in axs:
     for k in range(2):
         a.axvspan(k * T, (k + D) * T, color="#eef3fb", zorder=0)
@@ -167,14 +170,13 @@ for a in axs:
 
 axs[0].plot(t, vL, lw=1.3, color=RED)
 axs[0].axhline(0, lw=0.5, color="#999")
-axs[0].set_ylim(-5.5, 10.5)
+axs[0].set_ylim(-8, 13)
 axs[0].set_yticks([-3, 0, 7])
 axs[0].set_ylabel(r"$v_L$ [V]", fontsize=7.5)
-axs[0].text(16, 7.4, r"$\frac{N_2}{N_1}V_{in}-V_o$", fontsize=7.5, color=RED)
-axs[0].text(31, -2.6, r"$-V_o$", fontsize=7.5, color=RED, va="top")
-axs[0].text(2.0, 8.2, "オン", fontsize=6.4, fontproperties=JP, color="#555")
-axs[0].text(97.5, 7.6, "(b) 動作波形", fontsize=7.2, fontproperties=JP,
-            color="#555", ha="right")
+axs[0].text(17, 7.8, r"$\frac{N_2}{N_1}V_{\mathrm{in}}-V_{\mathrm{out}}$",
+            fontsize=7.5, color=RED, va="bottom")
+axs[0].text(31, -3.8, r"$-V_{\mathrm{out}}$", fontsize=7.5, color=RED, va="top")
+axs[0].text(2.0, 8.4, "オン", fontsize=6.4, fontproperties=JP, color="#555")
 
 axs[1].plot(t, iL, lw=1.3, color=GREEN)
 axs[1].set_ylim(0.47, 0.73)
@@ -189,8 +191,8 @@ axs[2].set_xlabel(r"$t$ [$\mu$s]", fontsize=7.5)
 axs[2].text(20.5, 0.13, "リセット", fontsize=6.8, fontproperties=JP, color=BLUE)
 
 fig.align_ylabels(axs)
+fig.text(0.555, 0.0, "(b) 動作波形", fontsize=7.4, fontproperties=JP,
+         color="#555", ha="center", va="bottom")
 EPS = os.path.expanduser("~/text_power_electronics/book/figures/fig6.4.eps")
 fig.savefig(EPS, format="eps", bbox_inches="tight")
-PNG = "/tmp/claude-1000/-home-soumajinno/e7688596-6b6f-45e4-950d-929e196c5bb6/scratchpad/fig6.4.png"
-fig.savefig(PNG, format="png", dpi=160, bbox_inches="tight")
 print("wrote", EPS)

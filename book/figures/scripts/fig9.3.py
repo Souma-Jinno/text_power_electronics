@@ -58,8 +58,8 @@ ax.annotate("", xy=(0.5 + td, 1.38), xytext=(0.5 - td, 1.38),
             arrowprops=dict(arrowstyle="<->", lw=0.8, color=BK, mutation_scale=6))
 ax.text(0.5, 1.52, r"デッドタイム $t_d$", ha="center", fontsize=6.4,
         fontproperties=JP, color="#333")
-ax.text(0.5, -0.28, "両アームがオフ", ha="center", fontsize=6.0,
-        fontproperties=JP, color="#a0630a")
+ax.text(0.5, -0.28, "両アームがオフ", ha="center", fontsize=6.4,
+        fontproperties=JP, color=BK)
 ax.set_xlim(-0.15, 1.1)
 ax.set_ylim(-0.4, 1.7)
 ax.axis("off")
@@ -117,8 +117,9 @@ ax.annotate("", xy=(xL + 0.5, yM - 0.02), xytext=(xLoad - 0.3, yM - 0.02),
             arrowprops=dict(arrowstyle="-|>", lw=1.3, color=RED, mutation_scale=8))
 ax.annotate("", xy=(xL + 0.5, yB + 0.35), xytext=(xL + 0.5, yM - 0.35),
             arrowprops=dict(arrowstyle="-|>", lw=1.3, color=RED, mutation_scale=8))
-ax.text(xL + 0.5, 1.02, r"$\mathrm{D}_2$", ha="left", va="center", fontsize=6.4,
-        color=RED)
+# D2 のラベルは素子記号の右に置く（記号と重ねない）
+ax.text(xL + 0.5 + 0.28, 1.02, r"$\mathrm{D}_2$", ha="left", va="center",
+        fontsize=6.6, color=RED)
 ax.set_xlim(0.5, 4.0)
 ax.set_ylim(-0.2, 3.5)
 ax.set_aspect("equal")

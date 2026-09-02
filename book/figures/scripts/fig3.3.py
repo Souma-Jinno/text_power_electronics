@@ -58,6 +58,4 @@ ax.tick_params(labelsize=7)
 fig.tight_layout()
 EPS = os.path.expanduser("~/text_power_electronics/book/figures/fig3.3.eps")
 fig.savefig(EPS, format="eps", bbox_inches="tight")
-fig.savefig("/tmp/claude-1000/-home-soumajinno/e7688596-6b6f-45e4-950d-929e196c5bb6/scratchpad/fig3.3.png",
-            dpi=180, bbox_inches="tight")
 print("wrote", EPS)

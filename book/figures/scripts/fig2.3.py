@@ -15,7 +15,7 @@ plt.rcParams["axes.unicode_minus"] = False
 BLUE = "#2a5db0"
 RED = "#c0392b"
 
-fig, ax = plt.subplots(figsize=(4.2, 2.7))
+fig, ax = plt.subplots(figsize=(4.2, 2.85))
 
 # 概念図なので軸は目盛りなし（順方向と逆方向でスケールが違うことを注記）
 # 順方向: 0.7V付近から立ち上がる指数カーブ
@@ -45,26 +45,27 @@ ax.text(0.12, 6.6, r"$i_D$", fontsize=9)
 
 # 注釈
 ax.annotate("約0.7 Vから\n電流が流れる", xy=(0.72, 1.3), xytext=(1.6, 3.3),
-            fontsize=7.2, fontproperties=JP, ha="center", color="#333",
+            fontsize=8, fontproperties=JP, ha="center", color="#333",
             arrowprops=dict(arrowstyle="->", lw=0.8, color="#777"))
 ax.plot([0.7, 0.7], [0, -0.4], ls=":", color="#999", lw=0.8)
-ax.text(0.7, -1.1, "0.7 V", ha="center", fontsize=7.2, color="#555")
-ax.text(-1.7, -1.15, "漏れ電流（ごく小さい）", ha="center", fontsize=7.2,
+ax.text(0.7, -1.1, "0.7 V", ha="center", fontsize=8, color="#555")
+ax.text(-1.7, -1.15, "漏れ電流（ごく小さい）", ha="center", fontsize=8,
         fontproperties=JP, color="#555")
 ax.annotate("降伏\n（絶縁が破れる）", xy=(-3.62, -3.6), xytext=(-2.4, -4.6),
-            fontsize=7.2, fontproperties=JP, ha="center", color=RED,
+            fontsize=8, fontproperties=JP, ha="center", color=RED,
             arrowprops=dict(arrowstyle="->", lw=0.8, color=RED))
 ax.plot([-3.4, -3.4], [0, 0.4], ls=":", color="#999", lw=0.8)
-ax.text(-3.4, 0.75, r"$-V_{BR}$", ha="center", fontsize=7.6, color="#555")
+ax.text(-3.4, 0.75, r"$-V_{BR}$", ha="center", fontsize=8, color="#555")
 
-ax.text(0.65, 5.9, "順方向\n（オン）", ha="left", fontsize=7.6, fontproperties=JP, color=BLUE)
-ax.text(-2.6, 2.2, "逆方向（オフ）", ha="center", fontsize=7.6,
+ax.text(0.65, 5.9, "順方向\n（オン）", ha="left", fontsize=8, fontproperties=JP, color=BLUE)
+ax.text(-2.6, 2.2, "逆方向（オフ）", ha="center", fontsize=8,
         fontproperties=JP, color=BLUE)
-ax.text(-4.2, -5.9, "※順方向と逆方向で電圧・電流のスケールは大きく異なる",
-        fontsize=6.6, fontproperties=JP, color="#888", ha="left")
+# 注記は図の最下段（縦軸の矢印より下）に置き，降伏の縦線と重ねない
+ax.text(-4.4, -6.75, "※順方向と逆方向で電圧・電流のスケールは大きく異なる",
+        fontsize=8, fontproperties=JP, color="#666", ha="left", va="top")
 
 ax.set_xlim(-4.5, 2.6)
-ax.set_ylim(-6.4, 7.3)
+ax.set_ylim(-7.7, 7.3)
 ax.axis("off")
 fig.tight_layout()
 EPS = os.path.expanduser("~/text_power_electronics/book/figures/fig2.3.eps")

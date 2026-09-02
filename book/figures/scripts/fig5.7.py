@@ -74,6 +74,8 @@ ax.plot(t, tri_wave(t, mean, AMP), color=BLUE, lw=1.2, zorder=3)
 ax.plot([0, TMAX], [mean] * 2, color=RED, lw=0.8, ls="--", zorder=2)
 ax.text(-0.08 * TMAX, mean, r"$\frac{\Delta I_L}{2}$", ha="right",
         va="center", fontsize=7.0, color=RED)
+ax.text(-0.08 * TMAX, YM, "$i_L$", ha="right", va="center", fontsize=7.2,
+        color=BLUE)
 ax.text(TMAX / 2, -0.5 * YM, "(b) 境界", ha="center", fontsize=6.6,
         fontproperties=JP, color="#555")
 
@@ -87,6 +89,8 @@ iL = np.where(tt < D * T, peak * tt / (D * T),
               np.where(tt < D * T + t2,
                        peak * (1 - (tt - D * T) / t2), 0.0))
 ax.plot(t, iL, color=BLUE, lw=1.2, zorder=3)
+ax.text(-0.08 * TMAX, YM, "$i_L$", ha="right", va="center", fontsize=7.2,
+        color=BLUE)
 ax.annotate("", xy=(T, 0.52 * YM), xytext=(D * T + t2, 0.52 * YM),
             arrowprops=dict(arrowstyle="<->", lw=0.7, color=BK,
                             mutation_scale=6))

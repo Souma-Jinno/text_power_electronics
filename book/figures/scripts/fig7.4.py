@@ -31,8 +31,9 @@ def opamp(ax, xl, xr, yc, hh=0.85):
     # 左に底辺，右に頂点の三角形
     ax.add_patch(Polygon([(xl, yc + hh), (xl, yc - hh), (xr, yc)],
                          closed=True, fc="white", ec=BK, lw=1.1, zorder=2))
-    ax.text(xl + 0.22, yc + 0.40, "$-$", ha="center", va="center", fontsize=9)
-    ax.text(xl + 0.22, yc - 0.40, "$+$", ha="center", va="center", fontsize=9)
+    # 入力端子は図7.5と同じく「+」が上，「−」が下
+    ax.text(xl + 0.22, yc + 0.40, "$+$", ha="center", va="center", fontsize=9)
+    ax.text(xl + 0.22, yc - 0.40, "$-$", ha="center", va="center", fontsize=9)
 
 
 def res_v(ax, x, y1, y2, c=BK):
@@ -56,8 +57,8 @@ fig, ax = plt.subplots(figsize=(4.0, 2.5))
 # オペアンプ
 xl, xr, yc = 3.0, 4.7, 2.3
 opamp(ax, xl, xr, yc)
-yp = yc - 0.42   # + 入力
-ym = yc + 0.42   # - 入力
+yp = yc + 0.42   # + 入力（上）
+ym = yc - 0.42   # - 入力（下）
 
 # + 入力：基準電圧
 wire(ax, [(1.0, yp), (xl, yp)])

@@ -90,10 +90,17 @@ def dio_h_left(ax, x1, x2, y, c=BK):
     ax.plot([xc - a, xc - a], [y - s, y + s], color=c, lw=1.2, zorder=2)
 
 
-def iarr(ax, x, y, dx, dy, c=RED):
-    ax.annotate("", xy=(x + dx, y + dy), xytext=(x, y),
-                arrowprops=dict(arrowstyle="-|>", lw=1.1, color=c,
-                                mutation_scale=8), zorder=4)
+def iarr(ax, x, y, dx, dy, c=None):
+    # c=None のとき「電流の経路」を示す太い矢印（色に依らず太さで区別する）。
+    # 色を指定したときは細い矢印（i_L の向きなど）。
+    if c is None:
+        ax.annotate("", xy=(x + dx, y + dy), xytext=(x, y),
+                    arrowprops=dict(arrowstyle="-|>", lw=1.9, color=BK,
+                                    mutation_scale=10), zorder=4)
+    else:
+        ax.annotate("", xy=(x + dx, y + dy), xytext=(x, y),
+                    arrowprops=dict(arrowstyle="-|>", lw=1.1, color=c,
+                                    mutation_scale=8), zorder=4)
 
 
 def draw_bb(ax, mode, small=False):
@@ -141,10 +148,11 @@ def draw_bb(ax, mode, small=False):
     if not small:
         iarr(ax, xA + 0.55, 2.15, 0, -0.5, c=BLUE)
         ax.text(xA + 0.75, 1.9, "$i_L$", ha="left", fontsize=fsd, color=BLUE)
-        ax.text(xR + 1.05, yT - 0.45, "$-$", ha="center", fontsize=fsd)
+        # 極性表示は V_in と同じく「上を正」で測る（本文の約束）。V_out は負になる
+        ax.text(xR + 1.05, yT - 0.45, "$+$", ha="center", fontsize=fsd)
         ax.text(xR + 1.05, 0.5 * (yB + yT), r"$V_{\mathrm{out}}$",
                 ha="center", va="center", fontsize=fs)
-        ax.text(xR + 1.05, yB + 0.45, "$+$", ha="center", fontsize=fsd)
+        ax.text(xR + 1.05, yB + 0.45, "$-$", ha="center", fontsize=fsd)
     # 電流経路の矢印
     if mode == "on":
         iarr(ax, 0.95, yT, 0.3, 0)

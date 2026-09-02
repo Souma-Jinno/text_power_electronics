@@ -39,9 +39,12 @@ gs = fig.add_gridspec(1, 2, width_ratios=[1.3, 1.0], wspace=0.30)
 ax = fig.add_subplot(gs[0, 0])
 ax.axhline(0, color=BK, lw=0.7)
 ax.plot(wt, sq(wt), color="#999", lw=1.0, ls="-", label="方形波", zorder=1)
-ax.plot(wt, partial(wt, 1), color=BLUE, lw=1.2, label="1次のみ", zorder=3)
-ax.plot(wt, partial(wt, 3), color=GRN, lw=1.2, label="1+3次", zorder=3)
-ax.plot(wt, partial(wt, 5), color=RED, lw=1.2, label="1+3+5次", zorder=3)
+# 3 本は色だけでなく線種（実線・破線・点線）でも区別する
+ax.plot(wt, partial(wt, 1), color=BLUE, lw=1.2, ls="-", label="1次のみ", zorder=3)
+ax.plot(wt, partial(wt, 3), color=GRN, lw=1.2, ls=(0, (4, 2)), label="1+3次",
+        zorder=3)
+ax.plot(wt, partial(wt, 5), color=RED, lw=1.3, ls=(0, (1, 1.5)), label="1+3+5次",
+        zorder=4)
 ax.set_xlim(0, 2 * np.pi)
 ax.set_ylim(-1.5, 1.5)
 ax.set_xticks([0, np.pi, 2 * np.pi])

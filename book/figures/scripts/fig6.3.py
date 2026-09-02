@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # fig6.3（第6章）: 励磁電流と負荷電流。N1=N2, Lm=1mH, 負荷500Ω,
-# ±10V・半周期1μsの方形波駆動。i1 = im（三角波）+ iℓ（方形波）。
+# ±10V・半周期1μsの方形波駆動。i1 = im（励磁電流，三角波）+ iℓ（反射電流，方形波）。
 import os
 import numpy as np
 import matplotlib
@@ -43,7 +43,7 @@ axes[2].plot(t, il, lw=1.3, color=GREEN)
 axes[2].set_ylabel(r"$i_{\ell}$ [mA]", fontsize=7.5)
 axes[2].set_ylim(-30, 30)
 axes[2].set_yticks([-20, 0, 20])
-axes[2].text(3.92, 21, "電力を運ぶ（方形波）", ha="right", fontsize=6.8,
+axes[2].text(3.92, 21, "反射電流：電力を運ぶ（方形波）", ha="right", fontsize=6.8,
              fontproperties=JP, color=GREEN)
 
 axes[3].plot(t, i1, lw=1.3, color=BLUE)
@@ -54,6 +54,8 @@ axes[3].set_yticks([-25, 0, 25])
 axes[3].set_xlabel(r"$t$ [$\mu$s]", fontsize=7.5)
 axes[3].text(3.92, 24.5, r"$i_1=i_m+i_{\ell}$", ha="right", fontsize=7.5,
              color=BLUE)
+axes[3].text(3.92, -30, r"破線は反射電流 $i_{\ell}$", ha="right", va="bottom",
+             fontsize=6.8, fontproperties=JP, color=GREEN)
 
 for ax in axes:
     ax.tick_params(labelsize=7)
@@ -66,6 +68,4 @@ fig.align_ylabels(axes)
 fig.tight_layout(h_pad=0.4)
 EPS = os.path.expanduser("~/text_power_electronics/book/figures/fig6.3.eps")
 fig.savefig(EPS, format="eps", bbox_inches="tight")
-PNG = "/tmp/claude-1000/-home-soumajinno/e7688596-6b6f-45e4-950d-929e196c5bb6/scratchpad/fig6.3.png"
-fig.savefig(PNG, format="png", dpi=160, bbox_inches="tight")
 print("wrote", EPS)
