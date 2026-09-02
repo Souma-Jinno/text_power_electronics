@@ -23,13 +23,32 @@ $0 < D < 1$では$V_1 > V_0$，すなわち\textbf{出力電圧が入力より�
 \mathit{\Delta}i_L = \frac{1}{L}(1-D)V_0 \times DT = \frac{D(1-D)V_0 T}{L}
 \end{equation*}
 だけ直線的に増える。これが$I_{\max} - I_{\min}$である。
-数値を代入すると，$T = 1/f_{\mathrm{SW}} = 10\,\mathrm{\mu s}$だから
+\rev{数値を代入すると，$T = 1/f = 10\,\mathrm{\mu s}$だから}
 \begin{equation*}
 \mathit{\Delta}i_L = \frac{0.5\times0.5\times12\times10\times10^{-6}}{100\times10^{-6}}
 = 0.3\,\mathrm{A}
 \end{equation*}
-リプルは$L$に反比例し，$f_{\mathrm{SW}}$を上げても小さくなる。
+\rev{リプルは$L$に反比例し，$f$を上げても小さくなる。}
 また$D(1-D)$は$D = 0.5$のとき最大になるから，この数値は最悪条件での値である。
+
+\rev{$\mathit{\Delta}i_L \le 0.1$\,Aにするには，上の式を$L$について解いて}
+\begin{equation*}
+\rev{L \ge \frac{D(1-D)V_0 T}{\mathit{\Delta}i_L}
+= \frac{0.5\times0.5\times12\times10\times10^{-6}}{0.1} = 300\,\mathrm{\mu H}}
+\end{equation*}
+\rev{すなわち$300\,\mathrm{\mu H}$以上にすればよい。
+負荷電流が$2$\,Aなら$I_{\mathrm{avg}} = 2$\,Aだから，式\ref{eq4.dWL}より1周期に往復するエネルギーは}
+\begin{equation*}
+\rev{\mathit{\Delta}W_L = L\,I_{\mathrm{avg}}\,\mathit{\Delta}i_L
+= 300\times10^{-6}\times2\times0.1 = 60\,\mathrm{\mu J}}
+\end{equation*}
+\rev{一方$L = 100\,\mathrm{\mu H}$では$\mathit{\Delta}i_L = 0.3$\,Aで
+$\mathit{\Delta}W_L = 100\times10^{-6}\times2\times0.3 = 60\,\mathrm{\mu J}$ ― 同じである。
+往復するエネルギーは，負荷へ送る電力$P = V_1I_{\mathrm{avg}} = 6\times2 = 12$\,Wのうち
+オフ期間の分$(1-D)P/f = 0.5\times12/10^{5} = 60\,\mathrm{\mu J}$で決まり，$L$にはよらない（\ref{sec4.2}節）。
+$L$を3倍にすると，同じ$60\,\mathrm{\mu J}$の往復を3倍の$LI_{\mathrm{avg}}$で受け持つので，
+式\ref{eq4.dWL2}のとおりリプルだけが$1/3$に減る。
+インダクタを大きくしても「運ぶエネルギー」は変わらず，変わるのは「電流の振れ幅」である。}
 
 %%--- 章末問題 4.3 ---
 \item[\ref{ex4.3}]
@@ -57,10 +76,15 @@ W_C = \frac{1}{2}\times100\times10^{-6}\times400^2 = 8\,\mathrm{J}
 \end{equation*}
 (b) 1周期は$T = 10\,\mathrm{\mu s}$だから，毎周期$5$\,mJを受け渡すと平均電力は
 \begin{equation*}
-P = W_L f_{\mathrm{SW}} = 5\times10^{-3}\times10^{5} = 500\,\mathrm{W}
+\rev{P = W_L f = 5\times10^{-3}\times10^{5} = 500\,\mathrm{W}}
 \end{equation*}
 1回に蓄えられる量はわずか$5$\,mJでも，受け渡しを毎秒10万回繰り返せば
 $500$\,Wもの電力を運べる。
+\rev{ただしこれは，電流が毎周期$0$から$10$\,Aまで振れて蓄えを空にする運転
+（電流が途切れる境界，または不連続の運転）での値である。
+電流が途切れない運転では，往復するのは式\ref{eq4.dWL}の$\mathit{\Delta}W_L$だけで，
+たとえば章末問題\ref{ex4.2}の条件（$I_{\mathrm{avg}} = 2$\,A，$\mathit{\Delta}i_L = 0.3$\,A）では
+$60\,\mathrm{\mu J}$，電力にして$6$\,W分（負荷電力$12$\,Wのオフ期間の分）にすぎない。}
 スイッチング周波数を高くするほど，同じインダクタ（あるいはもっと小さなインダクタ）で
 大きな電力を扱える ― 電源装置の小型化が高周波化とともに進んできた理由である。
 
@@ -72,9 +96,9 @@ $500$\,Wもの電力を運べる。
 波形の平均を取る区間は定常状態に入った後に選ぶこと。
 (b) リプル電圧はほぼ$C$に反比例するから，$C = 100\,\mathrm{\mu F}$では
 約$1/10$になる。
-(c) $f_{\mathrm{SW}} = 5$\,kHzは$f_0 = 1/(2\pi\sqrt{LC}) \approx 5.0$\,kHzとほぼ一致し，
+(c) \rev{$f = 5$\,kHzは$f_0 = 1/(2\pi\sqrt{LC}) \approx 5.0$\,kHzとほぼ一致し，}
 スイッチング成分が共振で増幅されて出力は大きく振動する。
-「$f_0 \ll f_{\mathrm{SW}}$」というフィルタ設計の条件（式\ref{eq4.13}）が
+\rev{「$f_0 \ll f$」というフィルタ設計の条件（式\ref{eq4.13}）が}
 崩れるとどうなるかを目で確かめられる。
 
 \end{enumerate}

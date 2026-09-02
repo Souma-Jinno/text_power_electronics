@@ -59,8 +59,28 @@ $V_{\mathrm{out}} = DV_{\mathrm{in}} = 5$\,V。式\ref{eq5.19}より
 \end{equation*}
 出力$5$\,Vに対して約2\,\%のリプルである。
 
-%% 5章 問7（5.7節）
-\item[5.7節 問7]
+%% 5章 問7（5.6節）
+\item[\rev{5.6節 問7}]
+\rev{式\ref{eq5.24b}の右辺の単位は，$D$が無次元であることに注意して}
+\begin{equation*}
+\rev{\frac{\mathrm{A}}{\mathrm{Hz}\cdot\mathrm{F}}
+= \frac{\mathrm{A\cdot s}}{\mathrm{F}}
+= \frac{\mathrm{A\cdot s}}{\mathrm{A\cdot s/V}} = \mathrm{V}}
+\end{equation*}
+\rev{となり，左辺（リプル電圧）と一致する。
+分子の$\mathrm{A\cdot s}$は，オン期間に$C$から失われる電荷$\mathit{\Delta}Q$の単位そのものである。
+章末問題\ref{ex5.2}の昇圧チョッパでは$D = 1 - 12/48 = 0.75$，$I_{\mathrm{out}} = 0.5$\,Aだから，
+式\ref{eq5.25b}より}
+\begin{equation*}
+\rev{C = \frac{I_{\mathrm{out}}\,D}{f\,\mathit{\Delta}V_{\mathrm{out}}}
+= \frac{0.5\times0.75}{100\times10^{3}\times0.5} = 7.5\,\mathrm{\mu F}}
+\end{equation*}
+\rev{降圧チョッパの式\ref{eq5.25}と違ってリプル電流ではなく負荷電流そのものが効くので，
+同じ$C$では降圧よりずっと大きなリプルが出る。
+実際にはESR（\ref{sec5.6}節の注意）を見込んで，これより大きめの値を選ぶ。}
+
+%% 5章 問8（5.7節）
+\item[\rev{5.7節 問8}]
 式\ref{eq5.27}より，境界の負荷電流は
 $I_{\mathrm{out}} = \mathit{\Delta}I_L/2 = 0.2$\,Aであり，
 これ以下でDCMに入る。負荷抵抗では
