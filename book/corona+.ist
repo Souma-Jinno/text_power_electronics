@@ -12,11 +12,13 @@ lethead_flag 1
 lethead_prefix "{"
 lethead_suffix "}"
 letter_head 2
-group_skip "\n\n  \ \indexspace"
+group_skip "\n\n  \\indexspace"
 
 
 character_order "JES"
-symbol_flag 0
+%% 数字・記号見出しを出す（0 だと \indexspace に引数が無く直後の \item を飲み込む）
+symbol_flag 1
+symhead_positive "数字"
 
 
 preamble
