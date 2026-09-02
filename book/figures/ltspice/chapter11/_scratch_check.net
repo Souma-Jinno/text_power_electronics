@@ -1,0 +1,24 @@
+* scratch check v3: envelope decay comparison R=0.1 vs R=1
+.param tr=1n
+V1 n1 0 PULSE(0 10 0 {tr} {tr} 5000n 10000n)
+L1 n1 n2 40n
+R1 n2 n3 0.1
+C1 n3 0 0.1n
+.control
+tran 5p 3u
+meas tran pk1_r01 MAX v(n3) FROM=0 TO=12.5n
+meas tran pk2_r01 MAX v(n3) FROM=12.5n TO=25n
+meas tran pk3_r01 MAX v(n3) FROM=25n TO=37.5n
+meas tran pk4_r01 MAX v(n3) FROM=37.5n TO=50n
+print pk1_r01 pk2_r01 pk3_r01 pk4_r01
+alterparam tr=1n
+reset
+alter R1=1
+tran 5p 3u
+meas tran pk1_r1 MAX v(n3) FROM=0 TO=12.5n
+meas tran pk2_r1 MAX v(n3) FROM=12.5n TO=25n
+meas tran pk3_r1 MAX v(n3) FROM=25n TO=37.5n
+meas tran pk4_r1 MAX v(n3) FROM=37.5n TO=50n
+print pk1_r1 pk2_r1 pk3_r1 pk4_r1
+.endc
+.end
