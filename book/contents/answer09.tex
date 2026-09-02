@@ -30,34 +30,47 @@ $\hat{V}_3 \approx 42$\,V，$\hat{V}_5 \approx 25$\,V。
 
 %%--- 章末問題 9.2 ---
 \item[\ref{ex9.2}]
-(a) 出力は$0 \le t < T/2-\mathit{\Delta}t$で$+E$，$T/2 \le t < T-\mathit{\Delta}t$で$-E$，
-それ以外で$0$。$0$の区間は積分に寄与しないので，式\ref{eq9.4}の$B_n$の積分は
-$+E$と$-E$の2区間だけが残り，設問の式になる。
+(a) \rev{$+E$のパルスは$t = T/4$を中心に，$-E$のパルスは$t = 3T/4$を中心に置かれており，
+$v(t + T/2) = -v(t)$かつ$v(-t) = -v(t)$を満たす奇関数である。
+奇関数と偶関数$\cos n\omega t$の積を1周期で積分するとゼロになるから$A_n = 0$。
+$B_n$の積分は$v = 0$の区間が寄与しないので，$+E$と$-E$の2区間だけが残り，設問の式になる。}
 
-(b) それぞれ積分すると
+(b) \rev{$\int\sin n\omega t\,dt = -\cos(n\omega t)/(n\omega)$で積分すると}
 \begin{eqnarray*}
 B_n &=& \frac{2E}{n\omega T}\Big\{
--\big[\cos n\omega(T/2-\mathit{\Delta}t)-1\big] \\
-&& \qquad +\big[\cos n\omega(T-\mathit{\Delta}t)-\cos n\omega(T/2)\big]\Big\}
+\cos\frac{n\omega\mathit{\Delta}t}{2} - \cos n\omega\Big(\frac{T}{2}-\frac{\mathit{\Delta}t}{2}\Big) \\
+&& \qquad - \cos n\omega\Big(\frac{T}{2}+\frac{\mathit{\Delta}t}{2}\Big) + \cos n\omega\Big(T-\frac{\mathit{\Delta}t}{2}\Big)\Big\}
 \end{eqnarray*}
-$n\omega(T/2-\mathit{\Delta}t) = \pi n - n\omega\mathit{\Delta}t$，
-$n\omega(T-\mathit{\Delta}t) = 2\pi n - n\omega\mathit{\Delta}t$より
-$\cos(\pi n - n\omega\mathit{\Delta}t) = (-1)^n\cos n\omega\mathit{\Delta}t$，
-$\cos(2\pi n - n\omega\mathit{\Delta}t) = \cos n\omega\mathit{\Delta}t$。
-整理すると（奇数次で）
+\rev{$n\omega T = 2\pi n$を使い，$x = n\omega\mathit{\Delta}t/2$とおくと，
+$\cos(\pi n - x) = \cos(\pi n + x) = (-1)^n\cos x$，$\cos(2\pi n - x) = \cos x$だから}
 \begin{equation*}
-B_n = \frac{2E}{\pi n}\left(1 + \cos n\omega\mathit{\Delta}t\right)
-= \frac{4E}{\pi n}\cos^2\!\left(\frac{n\omega\mathit{\Delta}t}{2}\right)
+B_n = \frac{2E}{2\pi n}\left\{2\cos x - 2(-1)^n\cos x\right\}
+= \frac{2E}{\pi n}\left[1-(-1)^n\right]\cos\frac{n\omega\mathit{\Delta}t}{2}
 \end{equation*}
-（$1+\cos\theta = 2\cos^2(\theta/2)$を使用）。$\mathit{\Delta}t = 0$で式\ref{eq9.8}に戻る。
+\rev{となり，奇数次で$B_n = (4E/\pi n)\cos(n\omega\mathit{\Delta}t/2)$，偶数次で$0$である。
+$\mathit{\Delta}t = 0$で式\ref{eq9.8}に戻る。}
 
-(c) $\cos^2(\omega\mathit{\Delta}t/2) = 0.7$より
-$\omega\mathit{\Delta}t/2 = \arccos\sqrt{0.7} = \arccos 0.8367 \approx 0.580$\,rad。
-$\omega = 2\pi/T$を代入して
+(c) \rev{$\cos(\omega\mathit{\Delta}t/2) = 0.7$より$\omega\mathit{\Delta}t/2 = \arccos 0.7 \approx 0.795$\,rad。
+$\omega = 2\pi/T$を代入して}
 \begin{equation*}
-\mathit{\Delta}t = \frac{2 \times 0.580}{2\pi/T} \approx 0.185\,T
+\mathit{\Delta}t = \frac{2 \times 0.795}{2\pi/T} \approx 0.253\,T
 \end{equation*}
-すなわち$\mathit{\Delta}t \approx 0.18\,T$だけずらせばよい。
+\rev{すなわち$\mathit{\Delta}t \approx 0.25\,T$だけずらせばよい。パルス幅は$T/2 - \mathit{\Delta}t \approx T/4$（$90^\circ$）である。}
+
+(d) \rev{原点をパルスの始まりに取ると，$B_n$の積分は式\ref{eq9.5}の上限を$T/2-\mathit{\Delta}t$，$T-\mathit{\Delta}t$に置き換えた形になり，
+$1+\cos\theta = 2\cos^2(\theta/2)$を使って，奇数次で}
+\begin{equation*}
+A_n = \frac{2E}{\pi n}\sin n\omega\mathit{\Delta}t,\qquad
+B_n = \frac{2E}{\pi n}\left(1 + \cos n\omega\mathit{\Delta}t\right) = \frac{4E}{\pi n}\cos^2\frac{n\omega\mathit{\Delta}t}{2}
+\end{equation*}
+\rev{となる。$x = n\omega\mathit{\Delta}t/2$とおいて$\sin 2x = 2\sin x\cos x$を使うと}
+\begin{equation*}
+A_n^2 + B_n^2 = \left(\frac{4E}{\pi n}\right)^{2}\left(\sin^2 x\cos^2 x + \cos^4 x\right)
+= \left(\frac{4E}{\pi n}\right)^{2}\cos^2 x
+\end{equation*}
+\rev{だから振幅は$(4E/\pi n)\cos(n\omega\mathit{\Delta}t/2)$で(b)と一致する。
+原点の取り方は各成分の位相を変えるだけで，振幅は変えない。
+$B_n$だけを振幅と思い込むと$\cos^2$の形になって過小評価になる（$\mathit{\Delta}t = T/4$で$0.5$倍と$0.71$倍の差）ので注意が必要である。}
 
 %%--- 章末問題 9.3 ---
 \item[\ref{ex9.3}]
