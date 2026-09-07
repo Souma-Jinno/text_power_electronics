@@ -4,7 +4,8 @@
 # 波形は配布モデル ltspice/chapter05/buck_chopper.net（V_in=10 V, D=0.5, f=1 kHz,
 # L=30 mH, C=100 uF，ダイオードはほぼ理想）の負荷抵抗 R だけを 3 通りに変えて
 # ngspice で解いた結果そのもの（定常状態に達した 118〜120 ms の 2 周期を切り出し，
-# 切り出しの先頭を t=0 として描く）。
+# 切り出しの先頭を t=0 として描く）。R が大きいほど定常状態に達するのが遅いので，
+# 解析時間はネットリストの .tran（22 ms）より長く取っている（本文の図の注記に対応）。
 #   (a) R = 40 Ω  … I_out = 0.125 A > ΔI_L/2 = 0.042 A → CCM
 #   (b) R = 120 Ω … I_out = ΔI_L/2 → 境界（R_B = 2fL/(1-D) = 120 Ω，章末問題【4】）
 #   (c) R = 300 Ω … I_out < ΔI_L/2 → DCM（出力は 5 V から 6.57 V に浮き上がる）
@@ -146,14 +147,14 @@ ax.plot(t, iL, color=BLUE, lw=1.1, zorder=3)
 # 1周期目の電流が 0 に達した時刻（減少中に 1e-4 A を下回る点）を実データから求める
 per = (t >= DUTY * TSW) & (t < TSW)
 tz = t[per][np.argmax(iL[per] < 1e-4)]
-ya = 0.62 * YM
-ax.annotate("", xy=(TSW, ya), xytext=(tz, ya),
-            arrowprops=dict(arrowstyle="<->", lw=0.7, color=BK,
-                            mutation_scale=6))
-ax.text(0.5 * (tz + TSW), ya + 0.05 * YM, "$i_L=0$", ha="center",
+# i_L = 0 の区間（0.83〜1.0 ms）は短く，両矢印を置くと矢じり同士がくっついて読めない
+# （2026-09-08 のレビュー指摘）。矢印をやめ，その区間を薄い灰色の帯で示して上に注記する。
+ya = 0.55 * YM
+for k in range(2):
+    ax.add_patch(Rectangle((tz + k * TSW, 0), TSW - tz, ya, fc="#e3e3e3",
+                           ec="none", zorder=0.5))
+ax.text(0.5 * (tz + TSW), ya + 0.06 * YM, "$i_L=0$", ha="center",
         va="bottom", fontsize=6.2)
-ax.plot([tz, tz], [0, ya], color="#999", lw=0.5, ls=":")
-ax.plot([TSW, TSW], [0, ya], color="#999", lw=0.5, ls=":")
 
 fig.subplots_adjust(wspace=0.30)
 EPS = os.path.expanduser("~/text_power_electronics/book/figures/fig5.7.eps")

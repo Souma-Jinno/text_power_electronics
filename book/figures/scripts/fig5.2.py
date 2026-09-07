@@ -3,7 +3,8 @@
 # ボルト秒平衡（正負の面積が等しい）とリプル電流の定義を示す。
 # 波形は配布モデル ltspice/chapter05/buck_chopper.net（V_in=10 V, D=0.5,
 # f=1 kHz, L=30 mH, C=100 uF, R=10 Ω，ダイオードはほぼ理想）を ngspice で解いた結果そのもの。
-# 定常状態に達した 19〜21 ms（2周期）を切り出して描く。
+# 定常状態に達した 19〜21 ms（2周期）を切り出し，切り出しの先頭を t=0 として描く
+# （fig5.4・fig5.7 と同じ流儀）。解析時間はネットリストの .tran（22 ms）と同じ。
 import os
 import shutil
 import subprocess
@@ -26,7 +27,8 @@ SHADE = "#eef3fb"
 
 NET = os.path.expanduser(
     "~/text_power_electronics/book/figures/ltspice/chapter05/buck_chopper.net")
-T0, T1 = 19.0, 21.0   # 表示区間 [ms]（定常状態の2周期）
+W0, W1 = 19.0, 21.0   # 切り出し区間 [ms]（定常状態の2周期）
+T0, T1 = 0.0, W1 - W0  # 描画の時間軸 [ms]（切り出しの先頭を 0 とする）
 TSW, DUTY = 1.0, 0.5  # 周期 [ms]，デューティ比（ネットリストと同じ値）
 
 
@@ -67,8 +69,8 @@ wrdata buck.txt vL iL iC v(N003) v(N002)
 
 
 t, vL, iL, iC, vout = run_ngspice()
-m = (t >= T0) & (t <= T1)
-t, vL, iL, iC, vout = t[m], vL[m], iL[m], iC[m], vout[m]
+m = (t >= W0) & (t <= W1)
+t, vL, iL, iC, vout = t[m] - W0, vL[m], iL[m], iC[m], vout[m]
 Iout = iL.mean()
 print(f"Vout={vout.mean():.3f} V  Iout={Iout:.3f} A  "
       f"dIL={iL.max() - iL.min():.4f} A  vL=({vL.min():.2f},{vL.max():.2f}) V")
@@ -118,7 +120,8 @@ ax.fill_between(t[off], 0, vL[off], fc="none", ec=RED, hatch="\\\\\\\\",
                 lw=0, alpha=0.45, zorder=1)
 # ラベルはハッチに重ねない（斜線と文字が干渉して読めない）。
 # 1周期目のオフ区間は波形が負側にいるので，その真上が空いている（2026-09-08）。
-ax.text(T0 + 0.75 * TSW, 2.6, "面積が等しい", fontsize=6.2, fontproperties=JP,
+# 中央を 0.75T に置くと文字の左端が青ハッチの右辺（0.5T）に接するので，少し右へ寄せる。
+ax.text(T0 + 0.80 * TSW, 2.6, "面積が等しい", fontsize=6.2, fontproperties=JP,
         color="#555", ha="center", va="center", zorder=4)
 vp, vn = vL[on].mean(), vL[off].mean()
 ax.plot([T0, T1 + 0.05], [vp] * 2, color="#999", lw=0.5, ls=":", zorder=1)

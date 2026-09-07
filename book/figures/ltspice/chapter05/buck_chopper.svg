@@ -130,7 +130,7 @@
     <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="648.4">.param D=0.5</text>
   </g>
   <g class="text-group">
-    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="688.4">.tran 20u 20m</text>
+    <text fill="black" font-family="Arial" font-size="24.0px" text-anchor="start" x="0" y="688.4">.tran 20u 22m</text>
   </g>
   <g class="ground-flag">
     <g transform="translate(0,96) rotate(0)">

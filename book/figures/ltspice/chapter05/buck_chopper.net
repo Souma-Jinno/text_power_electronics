@@ -11,5 +11,5 @@ V2 ctrl 0 PULSE(0 10 0 10n 10n {Tsw*D} {Tsw})
 .param fsw=1k
 .param Tsw=1/fsw
 .param D=0.5
-.tran 20u 20m
+.tran 20u 22m
 .end
