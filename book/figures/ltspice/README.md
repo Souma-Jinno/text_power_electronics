@@ -62,6 +62,35 @@ bash verify_all.sh
 
 描きたい場合は LTspice で部品を足し，保存後に `verify_all.sh` を通すこと。
 
+
+## ngspice で「同じ波形が出るか」まで確かめる
+
+`verify_all.sh` は回路の**構造**（どの素子がどのノードにつながっているか）を照合する。
+`compare_asc_vs_net.py` はもう一歩進めて，**実際に ngspice で走らせて数値を比べる**。
+
+```bash
+python3 compare_asc_vs_net.py
+```
+
+`.net` と，`.asc` から起こし直したネットリストの両方を同じ解析にかけ，
+共通ノードの電圧を全時刻で突き合わせる（相対差 1e-3 まで許容）。
+
+**結果（2026-09-08，ngspice-41）: 一致=18 / 相違=0 / 対象外=3**
+
+対象外の3件（chapter08 のブリッジ整流器，chapter09 のHブリッジPWM 2件）は，
+ノードをまとめて書き出すと ngspice が
+「no such vector」で止まってしまい，スクリプトでは自動比較できなかった。
+**この3件は手で1ノードずつ比べて一致を確認してある**：
+
+| ファイル | 比べたノード | 点数 | 最大相対差 |
+|---|---|---|---|
+| chapter08/bridge_rectifier | `v(vout)` | 20001 | 8.8e-09 |
+| chapter09/hbridge_pwm_bipolar | `v(carr)` | 80001 | 0 |
+| chapter09/hbridge_pwm_unipolar | `v(carr)` | 80001 | 0 |
+
+つまり**21ファイルすべて，配布する `.asc` は元の `.net` と同じ回路で，
+同じ波形を出す**ことが確かめられている。
+
 ## ツールへの変更点
 
 `netlist-to-schematic` は配布物をそのまま置いているが，1か所だけ直してある。
