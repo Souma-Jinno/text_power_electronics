@@ -1,0 +1,18 @@
+* directive_test: a minimal deck whose SIMULATION depends on its directives
+* ---------------------------------------------------------------------------
+* Exists only for the negative controls corrupt_H_trandel.asc and
+* corrupt_I_icdel.asc.  Two properties matter:
+*   * `.tran` and `.ic` are BOTH present, and deleting either one changes what
+*     the simulation does without changing a single wire;
+*   * B1 has no schematic symbol, so it rides in the .asc as a TEXT directive
+*     and its `i(V1)` reference keeps the corrupt_D machinery exercised here
+*     too.
+* The deck is small on purpose: a control should fail for exactly one reason.
+V1 in 0 PULSE(0 5 0 1u 1u 1m 2m)
+R1 in mid 1k
+R2 mid 0 1k
+B1 out 0 V = i(V1)*2
+R3 out 0 1k
+.ic v(mid)=2
+.tran 1u 1m
+.end

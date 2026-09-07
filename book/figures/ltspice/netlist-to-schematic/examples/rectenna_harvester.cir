@@ -1,0 +1,95 @@
+* Noise harvester with a concentric-coupled rectenna  (EXAMPLE DECK)
+* --------------------------------------------------------------------
+* NOTE ON THIS FILE
+*   Ships with netlist-to-schematic purely as a CONVERSION EXAMPLE.  It is
+*   the one example that exercises (a) magnetic coupling via a K-card and
+*   (b) UNDEFINED PARAMETERS -- see {K_VALUE}/{RL_VALUE}/{TSTOP} below.
+*   Project-specific provenance notes have been removed; the circuit and
+*   the engineering notes below are unchanged.
+*
+* Magnetic coupling: K1 L_conv L_ant {K_VALUE}.  The converter inductor
+* (L_conv) sits COAXIALLY ABOVE the rectenna loop, so the coupling is a
+* physical mutual inductance rather than an assumed planar-loop value.
+*
+* Secondary side: a 3-stage Dickson charge pump fed from the antenna
+* equivalent circuit (Rs / L_ant / Rp / Cp).  There is deliberately NO
+* ideal open-circuit-voltage source: voc is tied to ground and the induced
+* EMF appears intrinsically across L_ant through the K1 mutual-inductance
+* element (ngspice applies Faraday's law natively via the K-card, so a
+* separate ideal source is neither needed nor appropriate).
+*
+* {K_VALUE}, {RL_VALUE} and {TSTOP} are left UNDEFINED on purpose: a
+* runner script substitutes them before ngspice sees the deck.  LTspice
+* has no such step, so net2asc.py emits a warning block plus commented-out
+* .param templates -- this file is the worked example for that path.
+*
+* [self-check] Primary loop node is named "npri", NOT "n1". ngspice node
+* names are case-insensitive, so an earlier draft using "n1" for the
+* primary and "N1" for the Dickson first stage silently SHORTED the two
+* circuits together (huge, unphysical ~50A currents were caught by a
+* pilot-run sanity check and traced to this collision, not to K1
+* coupling or resonance). Kept this note so the bug is not reintroduced.
+* --------------------------------------------------------------------
+
+.OPTIONS RELTOL=1e-3 ABSTOL=1e-12 VNTOL=1e-6 ITL4=100 GMIN=1e-12
+
+.MODEL DRBE01VYM6A D
++ IS=8.8011E-6  N=1.0313  RS=0.1311
++ IKF=1.1129  XTI=2.0  EG=0.56
++ CJO=1.686e-10  M=0.5455  VJ=0.5
++ ISR=2.8111E-6  NR=1.0811  BV=6  TRS1=0.004
+
+* === 1st side: DC-DC converter switching RIPPLE current (2.2 MHz) ===
+* PULSE(-2.5 2.5 0 1n 1n 227.27n 454.54n): 50% duty, 2.2 MHz, 5 Vpp,
+* ZERO DC average -- deliberately bipolar (not 0-5V) to represent only
+* the AC ripple current that couples magnetically (Faraday's law only
+* responds to dI/dt; a 0-5V drive would force an unphysical ~50 A DC
+* bias through R_conv=0.05 Ohm, which was caught in a pilot run and is
+* an artifact of the drive waveform, not the physics of interest here).
+* Fundamental Fourier amplitude (4/pi)*2.5 = 3.18 Vpk drives L_conv
+* (|Z_Lconv @2.2MHz| = 30.4 Ohm) -> I_conv ~ 0.1 App, within the
+* 0.1-1 App target band from the task brief. Verified post-hoc via FFT
+* of i(V_sw) at k=0 (see runner k=0 sanity check).
+V_sw   sw    0    PULSE(-2.5 2.5 0 1n 1n 227.27n 454.54n)
+R_conv sw    npri 0.05
+L_conv npri  0    2.2u
+
+* === Magnetic coupling (concentric / coaxial arrangement) ===
+K1     L_conv L_ant  {K_VALUE}
+
+* === 2nd side: antenna equivalent circuit (VNA-fit) ===
+* voc is grounded (no ideal EMF source) -- the induced voltage appears
+* across L_ant intrinsically through the K1 mutual-inductance coupling.
+Vgnd    voc   0    DC 0
+Rs      voc   n_L  0.35
+L_ant   n_L   vin  6.6908e-06
+Rp      voc   vin  57845.2
+Cp      voc   vin  1.595e-11
+
+* === External resonance-matching capacitor ===
+Cext    vin   0    880p
+
+* === Dickson 3-stage charge pump ===
+C1      vin   N1   1e-07
+D1      0     N1   DRBE01VYM6A
+D2      N1    N2   DRBE01VYM6A
+C2      N2    0    1e-07
+C3      vin   N3   1e-07
+D3      N2    N3   DRBE01VYM6A
+D4      N3    N4   DRBE01VYM6A
+C4      N4    0    1e-07
+C5      vin   N5   1e-07
+D5      N4    N5   DRBE01VYM6A
+D6      N5    Vout DRBE01VYM6A
+C6      Vout  0    1e-07
+
+* === Load ===
+R_L     Vout  0    {RL_VALUE}
+
+.TRAN 10n {TSTOP} 0 10n
+
+.CONTROL
+run
+wrdata {OUTFILE} i(V_sw) v(Vout)
+.ENDC
+.END

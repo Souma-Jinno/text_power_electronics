@@ -1,0 +1,25 @@
+* a2n_dir_test: a deck whose directives asc2ngspice.py REWRITES on the way back
+* ---------------------------------------------------------------------------
+* Exists for section 2c: checking an .asc against a deck that asc2ngspice.py
+* generated FROM that .asc.  Every directive here is written in a form the
+* extractor does not carry through verbatim, so a comparison that ignores
+* those rewrites reports a FAIL on an untouched drawing (2026-09-05 audit,
+* audit_fable4: 30 false messages on three clean PSFB drawings):
+*   * `.param a1=10 b1=1 ...` -- one card, several assignments; emit() writes
+*     one card per assignment (`spare` is referenced by nothing, so section 2c
+*     can delete just that one assignment and get exactly one message);
+*   * the Greek eta in a parameter name -- emit() transliterates it to `eta`;
+*   * `.tran ... startup` -- emit() rewrites LTspice `startup` to ngspice
+*     `uic`, and fills in a non-zero Tstep;
+*   * emit() additionally injects `.param pi=...` and `.options` convergence
+*     aids that no input deck carries.
+* Small on purpose: a control should fail for exactly one reason.
+V1 in 0 PULSE(0 5 0 1u 1u 1m 2m)
+R1 in mid {Rload}
+R2 mid 0 1k
+C1 mid 0 1u
+.param a1=10 b1=1 c1=a1/b1 spare=3
+.param η=0.85
+.param Rload=1k*c1*η
+.tran 0 1m 0 1u startup
+.end

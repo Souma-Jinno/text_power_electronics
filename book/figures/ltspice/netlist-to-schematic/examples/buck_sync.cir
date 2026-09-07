@@ -1,0 +1,255 @@
+* ============================================================================
+* buck_sync.cir -- Non-isolated SYNCHRONOUS BUCK, 48 V -> 12 V / 10 A, 200 kHz
+* ============================================================================
+* Spec (fixed): Vin=48V Vout=12V Iout=10A (120W) fsw=200kHz
+*               dIL target 3.0 A p-p (30% of Iout) ; dVout target <= 120 mV p-p
+* Open loop (fixed duty).  Ideal D = Vout/Vin = 0.25 ; D actually commanded below.
+*
+* DESIGN EQUATIONS (predictions that the simulation must confirm):
+*   D   = Vout/Vin                    = 0.25
+*   L   = (Vin-Vout)*D/(fsw*dIL)      = 36*0.25/(200k*3) = 15.0 uH
+*   dVc = dIL/(8*fsw*C)               = 3/(8*200k*100u)  = 18.75 mV
+*   dVe = dIL*ESR                     = 3*10m            = 30.00 mV   <- DOMINANT
+*         (ESR dominates when ESR > 1/(8*fsw*C) = 6.25 mOhm ; here 10 m > 6.25 m)
+*   IL_rms = sqrt(Io^2+dIL^2/12) = 10.037 A ; IL_pk = 11.5 A ; IL_valley = 8.5 A
+*   Ihs_rms = sqrt(D)*IL_rms = 5.019 A ; Ils_rms = sqrt(1-D)*IL_rms = 8.693 A
+*   Vds(both switches) = Vin = 48 V + ringing -> 80 V device = 1.67x margin
+*
+* DEVICE MODEL -- REUSED from the project library, single-device override:
+*   models/mosfet_real.lib .subckt SR_80 is Infineon BSC030N08NS5 (80V/3mOhm)
+*   with its DEFAULTS scaled for x5 PARALLEL (RDSON=0.84m, CGS=22.9n ...) because
+*   the PSFB deck pushes 150 A.  Here we need ~10 A, so EVERY instance parameter is
+*   divided back to ONE device (x1):
+*     RDSON 0.00084 -> 0.0042 (=4.2 mOhm, 1 pc @125C)   CGS 22.9n -> 4.58n
+*     CGD   75p     -> 15p     CJO 4.5n -> 0.9n          RGATE 0.4 -> 2.0
+*     ISB   5e-9    -> 1e-9    RSB 0.0015 -> 0.0075      NB/TTB/BVB unchanged
+*   VDRV=10 (Rds(on) is datasheet-specified at Vgs=10 V; KP recomputes internally).
+*   80 V BV on a 48 V bus -> OK.  No new switch model was invented.
+*
+* PARASITICS -- ALL ARE ASSUMPTIONS (推定), not datasheet values.  Marked [EST].
+* ----------------------------------------------------------------------------
+* --- DEVICE LIBRARY: NOT SHIPPED WITH THIS PACKAGE ---------------------------
+* The path below is a PLACEHOLDER.  models/mosfet_real.lib defines .subckt SR_80
+* and is part of the author's own device-modelling work; it is deliberately not
+* redistributed here.  Consequences for a recipient:
+*   * net2asc.py converts this deck fine and the round-trip check is unaffected
+*     (SR_80 is a known 3-terminal d/g/s wrapper, so XM1/XM2 are still drawn as
+*     MOSFET symbols) -- this file's job in the package is to be a CONVERSION
+*     example, and it does that job with or without the library;
+*   * ngspice CANNOT SIMULATE this deck as shipped: it will stop at the
+*     .include below.  Supply your own 3-terminal `.subckt SR_80 d g s` (or any
+*     80 V N-MOSFET macro-model with the same instance parameters) at that path.
+.include models/mosfet_real.lib
+
+* ---------------- .param block ----------------
+.param Vin_dc=48
+.param Vout_t=12
+.param Iout_t=10
+.param fsw=200k
+.param Tx='1/fsw'
+* Commanded duty.  Ideal D=Vout/Vin=0.25.  The value below is BELOW 0.25 because
+* RG=10 ohm makes turn-OFF slow enough that the switch-node pulse is wider than
+* the commanded gate pulse; the EFFECTIVE duty avg(vsw)/Vin comes out ABOVE 0.25.
+.param D=0.2475
+.param DT=60n
+.param tr=10n
+.param tf=10n
+.param pw_h='D*Tx-tr'
+.param td_l='D*Tx+DT'
+.param pw_l='Tx-D*Tx-2*DT-tr'
+.param VDRV=10
+.param VGMID=5
+
+* --- power stage ---
+.param L=15u
+.param Cout=100u
+.param Cin=20u
+.param Rload='Vout_t/Iout_t'
+
+* --- device instance params (1 pc BSC030N08NS5, hot) ---
+.param RDS1=0.0042
+.param CGS1=4.58n
+.param CGD1=15p
+.param CJO1=0.9n
+.param ISB1=1e-9
+.param RSB1=0.0075
+.param RGI1=2.0    $ internal gate resistance of the device itself
+* body-diode transit time -> Qrr.  Library default TTB=10n was tuned for the x5
+* (150 A) SR position; at 10 A it yields Qrr~TT*If=100 nC vs the 40 nC datasheet
+* value for one BSC030N08NS5.  TTB1=4n reproduces Qrr=40 nC at If=10 A.
+.param TTB1=4n
+
+* --- parasitics [EST] ---
+* Lloop=3n and RG=10 are NOT free choices: see BUCK_DESIGN.md iteration history.
+* With the first-pass values (Lloop=10n, RG=2) the body-diode reverse-recovery
+* snap-off rang the switch node to 133-144 V on an 80 V device.  Lloop<=3 nH is a
+* LAYOUT REQUIREMENT (input cap adjacent to the half-bridge) and RG=10 ohm slows
+* HS turn-on di/dt.  Both are needed; either alone still avalanches.
+.param DCR=10m
+.param ESRo=10m
+.param ESLo=2n
+.param ESRi=5m
+.param Lsup=1u
+.param Rdmp=0.5
+.param Lloop=3n
+.param Rloop=2m
+.param Lsrc=1n
+.param RG=10
+.param Rsnb=2.5
+.param Csnb=470p
+
+* --- initial conditions: seed near steady state so the LC (tau~240us) settles fast
+.param IL0=10
+.param VC0=12
+
+* ============================ INPUT ==========================================
+Vsrc vsrc 0 DC {Vin_dc}
+Vin_am vsrc vsi 0                 $ ammeter: total DC input current (before Cin)
+* [EST] supply feed inductance + parallel damping R, so the pulsed switch current
+* is supplied by Cin (an ideal source with 0 ohm would make Cin/ESR do nothing)
+Lsup vsi vin {Lsup}
+Rdmp vsi vin {Rdmp}
+Cin1 vin cin_a {Cin} ic={Vin_dc}
+Rcin cin_a 0 {ESRi}               $ [EST] input cap ESR
+* [EST] PCB loop inductance from the decoupling cap to the HS drain
+Lin vin dhr {Lloop}
+Rlin dhr dh {Rloop}
+
+* ============================ HIGH SIDE ======================================
+Vdh dh dhx 0                      $ ammeter: HS device total current
+XM1 dhx gh sw SR_80 RDSON={RDS1} VTH=3.0 VDRV={VDRV} RGATE={RGI1}
++   CGS={CGS1} CGD={CGD1} CJO={CJO1} VJ=0.7 MJ=0.5
++   ISB={ISB1} RSB={RSB1} NB=1 TTB={TTB1} BVB=80
+Rgh ghd gh {RG}                   $ [EST] driver output R + external gate resistor
+* --- HIGH-SIDE GATE DRIVE, BOOTSTRAP-STYLE -----------------------------------
+* The source is FLOATING between ghd and sw, so its output rides on the switch
+* node exactly like a real bootstrap/level-shift driver.  Its PULSE argument list
+* contains ONLY time constants and the 0..10 V rail -- NO node voltage, and in
+* particular NOT the 48 V bus, appears anywhere in the drive definition.
+* This is the "S6" correction applied by construction: the gate-drive expression
+* cannot implicitly sense a high-voltage node because it is not an expression.
+Vgh ghd sw PULSE(0 {VDRV} 0 {tr} {tf} {pw_h} {Tx})
+
+* ============================ LOW SIDE =======================================
+Vdl sw swl 0                      $ ammeter: LS device total current
+XM2 swl gl sgnd SR_80 RDSON={RDS1} VTH=3.0 VDRV={VDRV} RGATE={RGI1}
++   CGS={CGS1} CGD={CGD1} CJO={CJO1} VJ=0.7 MJ=0.5
++   ISB={ISB1} RSB={RSB1} NB=1 TTB={TTB1} BVB=80
+Lsg sgnd 0 {Lsrc}                 $ [EST] source/package inductance to power gnd
+Rgl gld gl {RG}
+* LS driver returns to the DEVICE SOURCE (Kelvin connection), not to node 0.
+Vgl gld sgnd PULSE(0 {VDRV} {td_l} {tr} {tf} {pw_l} {Tx})
+* dead time DT is inserted on BOTH edges: HS off -> DT -> LS on ; LS off -> DT -> HS on
+
+* --------- switch-node RC snubber, damps the Lloop/Coss ring -----------------
+* Csnb=470p ~ 2.5x the charge-equivalent Coss (Qoss/Vin = 9.25nC/48V = 0.19 nF);
+* Rsnb=2.5 ~ sqrt(Lloop/Csnb) = sqrt(3n/470p) = 2.5 ohm (critical damping).
+* Cost: Csnb*Vin^2*fsw = 0.22 W of unavoidable snubber loss.
+Rsn sw sn {Rsnb}
+Csn sn sgnd {Csnb}
+
+* ============================ OUTPUT FILTER ==================================
+L1 sw la {L} ic={IL0}
+Vlsense la lb 0                   $ ammeter: inductor current
+Rdcr lb vout {DCR}                $ [EST] inductor DCR
+Cout1 vout co_a {Cout} ic={VC0}
+Rcesr co_a co_b {ESRo}            $ [EST] output cap ESR
+Lcesl co_b 0 {ESLo}               $ [EST] output cap ESL
+
+* ============================ LOAD ===========================================
+Rload vout nl {Rload}
+Vosense nl 0 0                    $ ammeter: load current
+
+* ==================== instrumentation ========================================
+* NOTE: the comparison operators '>' '<' CANNOT be used inside a .control 'let'
+* expression -- ngspice's shell parses them as I/O redirection and silently drops
+* the comparison (this produced a 10x error in the gated RMS on the first pass).
+* Every gating therefore has to be done in a B-source, where the circuit parser
+* handles '>' correctly.  Pure arithmetic monitors stay in .control.
+* i(vdh) i(vdl) i(vlsense) i(vosense) i(vin_am) are ammeter branch currents.
+*
+* gated CHANNEL current of each switch (= inductor current while its gate is high)
+Bihs nihs 0 V = ((v(ghd)-v(sw))   > {VGMID}) ? i(vlsense) : 0
+Bils nils 0 V = ((v(gld)-v(sgnd)) > {VGMID}) ? i(vlsense) : 0
+* dead-time indicator (both gates low).  tanh-SMOOTHED: the hard-comparison
+* version of this monitor collapsed the timestep at t=2 ms (bpdt#branch).
+Bdt  ndt  0 V = 0.25*(1-tanh((v(ghd)-v(sw)-{VGMID})/0.2))*(1-tanh((v(gld)-v(sgnd)-{VGMID})/0.2))
+
+* ============================ ANALYSIS =======================================
+.options numdgt=7
+.options method=gear cshunt=1e-11 gmin=1e-9 reltol=1e-3 abstol=1e-9 vntol=1e-6
+.options itl1=500 itl4=1000 trtol=100
+.options savecurrents
+.tran 1n 1.96m 0 1n uic
+
+.control
+run
+* --- power vectors -------------------------------------------------------
+let p_in    = v(vsrc)*i(vin_am)
+let p_out   = v(vout)*i(vosense)
+let p_dcr   = (v(lb)-v(vout))*@rdcr[i]
+let p_esro  = (v(co_a)-v(co_b))*@rcesr[i]
+let p_esri  = v(cin_a)*@rcin[i]
+let p_dmp   = (v(vsi)-v(vin))*@rdmp[i]
+let p_snb   = (v(sw)-v(sn))*@rsn[i]
+let p_gh    = -(v(ghd)-v(sw))*i(vgh)
+let p_gl    = -(v(gld)-v(sgnd))*i(vgl)
+let p_gate  = p_gh + p_gl
+let vsw     = v(sw)-v(sgnd)
+let il      = i(vlsense)
+let vgsh    = v(gh)-v(sw)
+let vgsl    = v(gl)-v(sgnd)
+let i_hs    = v(nihs)
+let i_ls    = v(nils)
+let p_hsdev = (v(dhx)-v(sw))*i(vdh)
+let p_lsdev = (v(swl)-v(sgnd))*i(vdl)
+let p_dtw   = v(ndt)*(p_hsdev + p_lsdev)
+
+* --- settled window : 1.900 - 1.950 ms  (10 switching periods) -----------
+meas tran vout_a  avg  v(vout)  from=1.900m to=1.950m
+meas tran vout_mx max  v(vout)  from=1.900m to=1.950m
+meas tran vout_mn min  v(vout)  from=1.900m to=1.950m
+meas tran iout_a  avg  i(vosense) from=1.900m to=1.950m
+meas tran il_a    avg  il   from=1.900m to=1.950m
+meas tran il_mx   max  il   from=1.900m to=1.950m
+meas tran il_mn   min  il   from=1.900m to=1.950m
+meas tran il_rms  rms  il   from=1.900m to=1.950m
+meas tran ihs_rms rms  i_hs  from=1.900m to=1.950m
+meas tran ils_rms rms  i_ls  from=1.900m to=1.950m
+meas tran vsw_a   avg  vsw      from=1.900m to=1.950m
+meas tran vsw_mx  max  vsw      from=1.900m to=1.950m
+meas tran vsw_mn  min  vsw      from=1.900m to=1.950m
+meas tran vgsh_mx max  vgsh from=1.900m to=1.950m
+meas tran vgsh_mn min  vgsh from=1.900m to=1.950m
+meas tran vgsl_mx max  vgsl from=1.900m to=1.950m
+meas tran P_in    avg  p_in     from=1.900m to=1.950m
+meas tran P_out   avg  p_out    from=1.900m to=1.950m
+meas tran P_HS    avg  p_hsdev  from=1.900m to=1.950m
+meas tran P_LS    avg  p_lsdev  from=1.900m to=1.950m
+meas tran P_DCR   avg  p_dcr    from=1.900m to=1.950m
+meas tran P_ESRO  avg  p_esro   from=1.900m to=1.950m
+meas tran P_ESRI  avg  p_esri   from=1.900m to=1.950m
+meas tran P_SNB   avg  p_snb    from=1.900m to=1.950m
+meas tran P_DT    avg  p_dtw  from=1.900m to=1.950m
+meas tran P_DMP   avg  p_dmp    from=1.900m to=1.950m
+meas tran P_GATE  avg  p_gate   from=1.900m to=1.950m
+
+* --- settling evidence : same measurements one window earlier ------------
+meas tran vout_a2 avg  v(vout)  from=1.850m to=1.900m
+meas tran il_pp2  pp   il   from=1.850m to=1.900m
+meas tran vout_a3 avg  v(vout)  from=1.000m to=1.050m
+meas tran vout_a4 avg  v(vout)  from=0.500m to=0.550m
+meas tran vout_a5 avg  v(vout)  from=0.100m to=0.150m
+meas tran il_pp3  pp   il       from=1.000m to=1.050m
+
+* --- p-p helpers ---------------------------------------------------------
+meas tran vout_pp pp   v(vout)  from=1.900m to=1.950m
+meas tran il_pp   pp   il   from=1.900m to=1.950m
+
+* --- effective duty : avg switch-node voltage / Vin ----------------------
+let d_eff = vsw/48
+meas tran D_eff   avg  d_eff    from=1.900m to=1.950m
+
+write buck_wave.raw v(vout) v(sw) il vgsh vgsl
+.endc
+.end

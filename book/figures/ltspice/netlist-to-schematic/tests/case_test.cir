@@ -1,0 +1,7 @@
+* case-sensitivity test: ngspice treats N1 and n1 as the SAME node
+V1 IN 0 5
+R1 IN N1 1k
+R2 n1 OUT 1k
+R3 OUT 0 1k
+.op
+.end
