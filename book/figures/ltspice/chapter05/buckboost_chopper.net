@@ -7,7 +7,7 @@ C1 N003 0 500u
 R1 N003 0 5
 V2 ctrl 0 PULSE(0 10 0 10n 10n {Tsw*D} {Tsw})
 .model SW SW(Ron=1m Roff=1G Vt=0.01)
-.model DMOD D(Is=1e-9 N=1.0 Rs=0.001)
+.model DMOD D(Is=1e-12 N=0.02 Rs=1m)
 .param fsw=20k
 .param Tsw=1/fsw
 .param D=0.2941

@@ -9,3 +9,6 @@ book/figures/scripts/*.aux
 book/figures/scripts/*.dvi
 book/figures/scripts/*.log
 book/figures/scripts/*.build.log
+
+# net2asc.py が照合のたびに書き出す往復ネットリスト（中間生成物）
+book/figures/ltspice/**/*_rt.cir
