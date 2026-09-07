@@ -10,11 +10,6 @@
 
 * ---- models / options / coupling ----
 .model QNPN NPN(BF=50)
-.control
-op
-print v(ncoll) v(nbase) @q1[ic] @q1[ib] @q1[ie] @q1[vbe]
-write chapter02/bjt_base_drive.raw
-.endc
 * ngspice numeric convergence aids (NOT a circuit change): itl4=1000
 *   (per the .asc convergence memo ngspice recipe) and trtol=100 relax
 *   LTE/step-control so the stiff behavioural-switch + body-diode
@@ -24,10 +19,10 @@ write chapter02/bjt_base_drive.raw
 .options itl4=1000 trtol=100
 
 * ---- devices ----
-V1 n1 0 12
-RC n2 ncoll 0.02
-* UNHANDLED SYMBOL I1 (current): nodes=[]
-* UNHANDLED SYMBOL Q1 (npn): nodes=[]
+V1 N001 0 12
+RC N001 ncoll 0.02
+I1 0 nbase 2
+Q1 ncoll nbase 0 QNPN
 
 
 .end

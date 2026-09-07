@@ -390,7 +390,10 @@ def _check_symattr(cur, msgs):
                         'it does; refusing rather than dropping it in silence.'
                         % (cur.get('InstName'), k))
 
-TYPELET={'res':'R','cap':'C','ind':'L','ind2':'L','diode':'D','voltage':'V','sw':'S'}
+TYPELET={'res':'R','cap':'C','ind':'L','ind2':'L','diode':'D','voltage':'V','sw':'S',
+         # 2026-09-08 追加: これが無いと npn/pnp/current のシンボルを読み戻せず，
+         # 往復照合で「素子が消えた」と出る。
+         'npn':'Q','pnp':'Q','current':'I'}
 def ename(sym,inst):
     """ngspice element name: LTspice InstName already starts with the type
     letter (Lm1, Cce1, Rg1, Vg1, S1, D1); only prefix if it doesn't."""
@@ -461,6 +464,18 @@ def emit_devices(syms, node_of, msgs=None):
             else:
                 tail=_card_tail(cur,set(),msgs)
                 lines.append('%s %s %s %s%s'%(nm,nplus,nminus,val,tail))
+        elif sym in ('npn','pnp'):
+            # ltsym/npn.asy, pnp.asy: PIN order C(SpiceOrder 1), B(2), E(3)
+            # ngspice: Q<name> C B E <model>
+            model = val if val else ('NPN' if sym=='npn' else 'PNP')
+            tail=_card_tail(cur,set(),msgs)
+            lines.append('%s %s %s %s %s%s'%(nm,nodes[0],nodes[1],nodes[2],model,tail))
+        elif sym=='current':
+            # ltsym/current.asy: PIN order +(1), -(2).
+            # LTspice の電流源シンボルは「+ から中を通って - へ」流れる向きに描かれ，
+            # ngspice の `I<name> n+ n- value` と同じ並び。
+            tail=_card_tail(cur,set(),msgs)
+            lines.append('%s %s %s %s%s'%(nm,nodes[0],nodes[1],val,tail))
         elif sym=='sw':
             model=val if val else 'SW'
             tail=_card_tail(cur,set(),msgs)

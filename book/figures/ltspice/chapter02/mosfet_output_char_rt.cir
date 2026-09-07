@@ -10,7 +10,6 @@
 
 * ---- models / options / coupling ----
 .model MYNMOS NMOS(LEVEL=1 VTO=3 KP=2)
-M1 vd vg 0 0 MYNMOS
 * ngspice numeric convergence aids (NOT a circuit change): itl4=1000
 *   (per the .asc convergence memo ngspice recipe) and trtol=100 relax
 *   LTE/step-control so the stiff behavioural-switch + body-diode
@@ -20,6 +19,7 @@ M1 vd vg 0 0 MYNMOS
 .options itl4=1000 trtol=100
 
 * ---- devices ----
+M1 vd vg 0 0 MYNMOS
 VDS vd 0 0
 VGS vg 0 2
 

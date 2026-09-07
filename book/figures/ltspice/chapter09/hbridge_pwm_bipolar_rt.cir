@@ -17,50 +17,10 @@
 * ---- models / options / coupling ----
 .model SW SW(Ron=10m Roff=1G Vt=0.5)
 .options reltol=0.01 gmin=1e-9
-.control
-* m=0.5
-alterparam m = 0.5
-reset
-tran 0.5u 40m 20m 2u
-let vab = v(a) - v(b)
-let sinref = sin(2*3.14159265358979*50*time)
-let ib = vab*sinref
-meas tran vmax_m05 max vab from=20m to=39.9m
-meas tran ib_m05 integ ib from=20m to=39.9m
-* m=0.8 (主要ケース, ex9.6(a)(b)(c)の基準)
-alterparam m = 0.8
-reset
-tran 0.5u 40m 20m 2u
-let vab = v(a) - v(b)
-let sinref = sin(2*3.14159265358979*50*time)
-let ib = vab*sinref
-meas tran vmax_m08 max vab from=20m to=39.9m
-meas tran vmin_m08 min vab from=20m to=39.9m
-meas tran irms_m08 rms i(l1) from=20m to=39.9m
-meas tran ipeak_m08 max i(l1) from=20m to=39.9m
-meas tran ib_m08 integ ib from=20m to=39.9m
-linearize vab
-fft vab
-* m=1.0
-alterparam m = 1.0
-reset
-tran 0.5u 40m 20m 2u
-let vab = v(a) - v(b)
-let sinref = sin(2*3.14159265358979*50*time)
-let ib = vab*sinref
-meas tran vmax_m10 max vab from=20m to=39.9m
-meas tran ib_m10 integ ib from=20m to=39.9m
-* m=1.2 (過変調)
-alterparam m = 1.2
-reset
-tran 0.5u 40m 20m 2u
-let vab = v(a) - v(b)
-let sinref = sin(2*3.14159265358979*50*time)
-let ib = vab*sinref
-meas tran vmax_m12 max vab from=20m to=39.9m
-meas tran ib_m12 integ ib from=20m to=39.9m
-write chapter09/hbridge_pwm_bipolar.raw all
-.endc
+Bcarr carr 0 V=(2/pi*asin(sin(2*pi*fc*time)))
+Bref ref 0 V=(m*sin(2*pi*fm*time))
+BctrlA ctrlA 0 V=((V(ref)>V(carr))?1:0)
+BctrlAn ctrlAn 0 V=((V(ref)<V(carr))?1:0)
 * ngspice numeric convergence aids (NOT a circuit change): itl4=1000
 *   (per the .asc convergence memo ngspice recipe) and trtol=100 relax
 *   LTE/step-control so the stiff behavioural-switch + body-diode
@@ -70,17 +30,13 @@ write chapter09/hbridge_pwm_bipolar.raw all
 .options itl4=1000 trtol=100
 
 * ---- devices ----
-V1 n1 0 100
-S1 n2 n3 n4 n5 SW
-S2 n6 0 n7 n8 SW
-S3 n9 b n10 n11 SW
-S4 n12 0 n13 n14 SW
-R1 n15 n16 10
-L1 n17 n18 10m
-VBcarr n19 0 V=(2/pi*asin(sin(2*pi*fc*time)))
-VBref n20 0 V=(m*sin(2*pi*fm*time))
-VBctrlA n21 0 V=((V(ref)>V(carr))?1:0)
-VBctrlAn n22 0 V=((V(ref)<V(carr))?1:0)
+S3 N001 b ctrlAn 0 SW
+L1 N002 b 10m
+R1 a N002 10
+S2 a 0 ctrlAn 0 SW
+S1 N001 a ctrlA 0 SW
+V1 N001 0 100
+S4 b 0 ctrlA 0 SW
 
 
 .end

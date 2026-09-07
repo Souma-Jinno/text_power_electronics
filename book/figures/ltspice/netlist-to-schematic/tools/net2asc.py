@@ -181,7 +181,9 @@ NODE_COUNT = {
     'Q': 3, 'J': 3, 'Z': 3, 'M': 4, 'T': 4, 'O': 4, 'U': 2,
 }
 # element letters we can draw with an ltsym symbol
-DRAWABLE = {'R': 'res', 'C': 'cap', 'L': 'ind', 'D': 'diode', 'V': 'voltage', 'S': 'sw'}
+DRAWABLE = {'R': 'res', 'C': 'cap', 'L': 'ind', 'D': 'diode', 'V': 'voltage', 'S': 'sw',
+            'I': 'current'}   # 'I' added 2026-09-08: 教科書のサイリスタ・BJT駆動の
+                             # ゲート電流源が図に描かれず TEXT 行に落ちていたため
 
 DIRECTIVE_KEEP = ('.param', '.model', '.options', '.option', '.tran', '.ac', '.dc',
                   '.op', '.four', '.ic', '.nodeset', '.func', '.include', '.inc',
@@ -383,18 +385,48 @@ def find_mosfet_subckts(cirpath, deck):
     return names
 
 
-def mosfet_map(deck, mosnames):
-    """element name (upper) -> 'nmos' for every drawable X subcircuit call."""
+def bjt_model_types(deck):
+    """model name (lower) -> 'npn'/'pnp'/'nmos'/'pmos', from the .model cards."""
     out = {}
+    for d in deck.directives:
+        m = re.match(r'\.model\s+(\S+)\s+(NPN|PNP|NMOS|PMOS)\b', d.strip(), re.I)
+        if m:
+            out[m.group(1).lower()] = m.group(2).lower()
+    return out
+
+
+def mosfet_map(deck, mosnames):
+    """element name (upper) -> ltsym symbol, for elements whose symbol cannot be
+    decided from the element letter alone.
+
+    X ... a 3-terminal subcircuit call that names a known MOSFET wrapper.
+    Q ... a bipolar transistor; npn or pnp is decided by its .model card
+          (added 2026-09-08: without this the transistors were not drawn at all
+          and only appeared as '!Q1 ...' SPICE text in the .asc).
+    """
+    out = {}
+    bjt = bjt_model_types(deck)
     for e in deck.elements:
         if e.letter == 'X' and len(e.nodes) == 3 and e.value.upper() in mosnames:
             out[e.name.upper()] = 'nmos'
+        elif e.letter == 'Q' and len(e.nodes) == 3:
+            sym = bjt.get(e.value.split()[0].lower() if e.value else '')
+            if sym in ('npn', 'pnp'):
+                out[e.name.upper()] = sym
+        elif e.letter == 'M' and len(e.nodes) == 4 and e.nodes[3] == e.nodes[2]:
+            # ngspice の M カードは D G S B の4端子だが，LTspice の nmos/pmos
+            # シンボルは3ピン（D G S）でバルクはソースに落ちている前提。
+            # バルクとソースが同じノードのときだけ描ける（2026-09-08 追加。
+            # それまで MOSFET が図に描かれず '!M1 ...' の文字になっていた）。
+            sym = bjt.get(e.value.split()[0].lower() if e.value else '')
+            if sym in ('nmos', 'pmos'):
+                out[e.name.upper()] = sym
     return out
 
 
 def symbol_for(e, pins, mosmap, coupled):
     """ltsym symbol name for an element, or None -> TEXT-directive fallback."""
-    if e.letter == 'X':
+    if e.letter in ('X', 'Q', 'M'):
         return mosmap.get(e.name.upper())
     sym = DRAWABLE.get(e.letter)
     if sym is None:

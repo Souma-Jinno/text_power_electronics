@@ -11,15 +11,6 @@
 * ---- models / options / coupling ----
 .model QNPN3 NPN(BF=100)
 .model DZ4V7 D(Is=1e-9 N=1.0 Rs=1 BV=4.7 IBV=0.005)
-.control
-alter R1 = 10
-tran 10u 1m
-alter R1 = 50
-tran 10u 1m
-alter R1 = 100
-tran 10u 1m
-write chapter07/linear_reg_zener.raw all
-.endc
 * ngspice numeric convergence aids (NOT a circuit change): itl4=1000
 *   (per the .asc convergence memo ngspice recipe) and trtol=100 relax
 *   LTE/step-control so the stiff behavioural-switch + body-diode
@@ -29,11 +20,11 @@ write chapter07/linear_reg_zener.raw all
 .options itl4=1000 trtol=100
 
 * ---- devices ----
-V1 n1 0 10
-R2 n2 vref 400
-* UNHANDLED SYMBOL D1 (zener): nodes=[]
-* UNHANDLED SYMBOL Q1 (npn): nodes=[]
-R1 n3 n4 10
+V1 N001 0 10
+R2 N001 vref 400
+D1 0 vref DZ4V7
+Q1 N001 vref vout QNPN3
+R1 vout 0 10
 
 
 .end

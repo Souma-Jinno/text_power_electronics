@@ -10,15 +10,7 @@
 
 * ---- models / options / coupling ----
 .model QNPN3 NPN(BF=100)
-.control
-alter R2 = 10
-tran 2u 5m
-alter R2 = 50
-tran 2u 5m
-alter R2 = 100
-tran 2u 5m
-write chapter07/linear_reg_opamp.raw all
-.endc
+E1 N002 0 vref vfb 1e5
 * ngspice numeric convergence aids (NOT a circuit change): itl4=1000
 *   (per the .asc convergence memo ngspice recipe) and trtol=100 relax
 *   LTE/step-control so the stiff behavioural-switch + body-diode
@@ -28,13 +20,12 @@ write chapter07/linear_reg_opamp.raw all
 .options itl4=1000 trtol=100
 
 * ---- devices ----
-V4 n1 0 10
-* UNHANDLED SYMBOL Q1 (npn): nodes=[]
-R3 n2 n3 6k
-R4 n4 n5 12k
-R2 n6 n7 10
-V3 n8 0 PULSE(0 5 0.2m 10n 10n 10m)
-* UNHANDLED SYMBOL E1 (opamp): nodes=[]
+V4 N001 0 10
+Q1 N001 N002 vout QNPN3
+R3 vout vfb 6k
+R4 vfb 0 12k
+R2 vout 0 10
+V3 vref 0 PULSE(0 5 0.2m 10n 10n 10m)
 
 
 .end
