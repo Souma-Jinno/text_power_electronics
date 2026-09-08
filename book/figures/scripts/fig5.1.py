@@ -39,12 +39,16 @@ def draw_wave(ax, D, panel):
     for k in range(NP):
         ax.add_patch(Rectangle((k * T, 0), ton, 1.0, fc=SHADE, ec="none", zorder=0))
     # 矩形波
+    # 波形は「オンで始まり，オフで終わる」ちょうど NP 周期ぶんを描く。
+    # 末尾にオンの切れ端を足すと，オンの途中で波形が断ち切られたように見える
+    # （2026-09-08 著者指摘「波形はオン時は途中で切らないで」）。
     xs, ys = [0.0], [1.0]
     for k in range(NP):
-        xs += [k * T + ton, k * T + ton, (k + 1) * T, (k + 1) * T]
-        ys += [1.0, 0.0, 0.0, 1.0]
-    xs.append(NP * T + 0.22)
-    ys.append(1.0)
+        xs += [k * T + ton, k * T + ton, (k + 1) * T]
+        ys += [1.0, 0.0, 0.0]
+        if k < NP - 1:                      # 次の周期の立ち上がり
+            xs.append((k + 1) * T)
+            ys.append(1.0)
     ax.plot(xs, ys, color=BLUE, lw=1.3, solid_joinstyle="miter", zorder=3)
     # 時間軸
     ax.annotate("", xy=(XR - 0.08, 0), xytext=(XL + 0.22, 0),
