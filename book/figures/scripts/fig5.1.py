@@ -23,14 +23,18 @@ NP = 4           # 描く周期の数（2026-09-08 著者指示「4つぐらい�
 XL, XR = -0.32, NP * T + 0.55  # 描画範囲（左に「オン」「オフ」，右に t の余白）
 
 
-def dim(ax, x1, x2, y, label, c=BK, fs=7.5):
+def dim(ax, x1, x2, y, label, c=BK, fs=7.5, below=False):
     # 寸法線（両矢印）と，その上のラベル
     ax.annotate("", xy=(x2, y), xytext=(x1, y),
                 arrowprops=dict(arrowstyle="<->", lw=0.8, color=c,
                                 mutation_scale=7, shrinkA=0, shrinkB=0),
                 zorder=4)
-    ax.text(0.5 * (x1 + x2), y + 0.06, label, ha="center", va="bottom",
-            fontsize=fs, color=c)
+    if below:
+        ax.text(0.5 * (x1 + x2), y - 0.06, label, ha="center", va="top",
+                fontsize=fs, color=c)
+    else:
+        ax.text(0.5 * (x1 + x2), y + 0.06, label, ha="center", va="bottom",
+                fontsize=fs, color=c)
 
 
 def draw_wave(ax, D, panel):
@@ -64,22 +68,25 @@ def draw_wave(ax, D, panel):
             fontproperties=JP, color=BK)
     ax.text(XL + 0.14, 0.0, "オフ", ha="right", va="center", fontsize=7.5,
             fontproperties=JP, color=BK)
-    # 寸法線：T（1周期）は1周期目の上に，T_on（オンの時間）は2つ目のパルスの上に，
-    # 同じ高さで横に並べて置く。1周期目に上下に重ねて置くと，D が大きいとき
-    # T と T_on の矢印がほぼ同じ長さで重なり見分けがつかない
-    # （2026-09-08 著者指摘「TとTonが重なっている。2つ目の波形に矢印をして」）。
-    # 補助の縦線は細い点線で，矢印の高さまでにとどめる（ラベルと交差させない）。
-    yd = 1.22
-    for x in (0, T, T + ton):
-        ax.plot([x, x], [1.0, yd + 0.05], color="#888888", lw=0.5,
+    # 寸法線：T（1周期）と T_on（オンの時間）を，どちらも1周期目に書く
+    # （2026-09-08 著者指示「TとTonは同じ一周期に書いて」）。
+    # 上下2段に分け，T_on を下段，T を上段に置く。ラベルはどちらも矢印の上に
+    # 付け，段の間隔を広くとって当たらないようにする（下に付けると波形に重なる）。
+    # 補助の縦線はそれぞれの段の高さまでで止める。
+    # こうしないと，D が大きいとき2本の矢印がほぼ同じ長さで重なって読めない。
+    yd_on, yd_T = 1.18, 1.62
+    for x in (0, ton):
+        ax.plot([x, x], [1.0, yd_on + 0.04], color="#888888", lw=0.5,
                 ls=(0, (1.5, 1.5)), zorder=1)
-    dim(ax, 0, T, yd, r"$T$", c=BK)
-    dim(ax, T, T + ton, yd, r"$T_{\mathrm{on}}$", c=RED)
+    ax.plot([T, T], [1.0, yd_T + 0.04], color="#888888", lw=0.5,
+            ls=(0, (1.5, 1.5)), zorder=1)
+    dim(ax, 0, ton, yd_on, r"$T_{\mathrm{on}}$", c=RED)
+    dim(ax, 0, T, yd_T, r"$T$", c=BK)
     # 右端に D の値
-    ax.text(XR - 0.05, 1.38, r"$D = \dfrac{T_{\mathrm{on}}}{T} = %.2f$" % D,
+    ax.text(XR - 0.05, 1.62, r"$D = \dfrac{T_{\mathrm{on}}}{T} = %.2f$" % D,
             ha="right", va="center", fontsize=7.5, color=BK)
     ax.set_xlim(XL, XR)
-    ax.set_ylim(-0.42, 1.72)
+    ax.set_ylim(-0.42, 2.10)
     ax.axis("off")
     ax.text(0.5 * (XL + XR), -0.40, panel, ha="center", va="top", fontsize=7.2,
             fontproperties=JP, color="#555")
