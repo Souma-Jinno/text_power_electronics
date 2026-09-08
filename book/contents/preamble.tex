@@ -1,0 +1,76 @@
+%% 共通プリアンブル。main.tex（本体）と solutions.tex（別冊解答）の両方が読む。
+%% corona-a5-1.1.cls は改変禁止なので，上書きはすべてここに置く。
+
+\usepackage[dvips]{graphicx}
+\usepackage[fleqn]{amsmath}
+\usepackage{amssymb}
+\usepackage{type1cm}
+\usepackage{multicol}
+\usepackage{makeidx}
+
+\usepackage{alltt}
+\usepackage{ascmac}
+
+\usepackage{a5update}
+\usepackage{a5update-fix01}
+\usepackage{linequote}
+
+\usepackage{fix_for_tl2021}
+
+\usepackage{lawenv}     %% 「法則」環境（公理＝出発点の基本法則用）
+\usepackage{etoolbox}   %% \patchcmd 用（下記の \@startsection 修正）
+
+%%====================================================================
+%% 組版の修正（2026-09-02 Fableレビュー C群対応）
+%% corona-a5-1.1.cls は改変禁止のため，必要な上書きはここで行う。
+%%====================================================================
+\makeatletter
+
+%% [C-1] 問環境の直後の \section で必ず改頁されるのを直す
+%%   a5update.sty の 問 環境は末尾で \nointerlineskip\addvspace{20H} を行う
+%%   （\prevdepth=-1000pt のまま終わる）。一方 cls の \@startsection は
+%%   レベル1見出しで \vskip-\prevdepth を入れるため 1000pt の空白が生じ，
+%%   強制改頁になっていた。\prevdepth が -1000pt のときは代わりに直前の
+%%   後アキ（\addvspace 分）を打ち消し，通常の見出し前アキだけを残す。
+\patchcmd{\@startsection}%
+  {\vskip-\prevdepth \prevdepth\z@}%
+  {\ifdim\prevdepth>-\@m\p@ \vskip-\prevdepth \else \vskip-\lastskip \fi
+   \prevdepth\z@}%
+  {}{\ClassError{main}{\string\@startsection\space の修正に失敗}{}}
+
+%% [C-4] COLUMN 環境に題名のオプション引数を追加
+%%   cls の COLUMN は引数を取らず，題名は本文先頭に \FIVEjidori{{\bfseries 題名}}
+%%   を書く様式（電磁気本と同じ）。\begin{COLUMN}[題名] でも同じ出力になるよう
+%%   上書きする。オプションを省略すれば従来どおり。
+\let\pe@COLUMN\COLUMN
+\let\pe@endCOLUMN\endCOLUMN
+\renewenvironment{COLUMN}[1][]{%
+  \pe@COLUMN
+  \if\relax\detokenize{#1}\relax\else\FIVEjidori{{\bfseries #1}}\par\fi}%
+  {\pe@endCOLUMN}
+
+%% [C-5] 序章（\chapter*，章番号0）の図表番号を「図0.1」「表0.1」にする
+%%   cls の \thefigure は章番号0のとき「図1」と出すため，序章の前後で差し替える。
+\newcommand{\PEprologuenumbering}{%
+  \let\pe@thefigure\thefigure
+  \let\pe@thetable\thetable
+  \renewcommand{\thefigure}{図0.\@arabic\c@figure}%
+  \renewcommand{\thetable}{表0.\@arabic\c@table}%
+  \setcounter{figure}{0}\setcounter{table}{0}}
+\newcommand{\PErestorenumbering}{%
+  \let\thefigure\pe@thefigure
+  \let\thetable\pe@thetable}
+
+\makeatother
+
+%% 校正用：修正箇所を赤字で示す（2026-09-02 Fableレビュー対応）
+%% 最終版では \revcolorfalse に切り替えれば全て黒に戻る（原稿はそのまま）。
+%% color は corona-a5-1.1.cls が [usenames] 付きで読込済み（重複読込するとoption clash）
+\newif\ifrevcolor
+\revcolortrue
+\newcommand{\rev}[1]{\ifrevcolor\textcolor{red}{#1}\else#1\fi}
+
+%% a5update.sty が amsmath の \tagform@ を再定義し \eqref が壊れるため上書き
+%% （この環境では \ref が式番号を括弧付きで返す）
+\renewcommand*{\eqref}[1]{\ref{#1}}
+

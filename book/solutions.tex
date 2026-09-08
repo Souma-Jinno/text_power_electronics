@@ -1,0 +1,36 @@
+%% 別冊解答（Webサポートページで配布する）。
+%% 本文（main.pdf）から章末問題の解答と問の解答を切り出したもの。
+%% 中身は本体と同じ contents/answer.tex・contents/toianswer.tex を読むので，
+%% 原稿はひとつのまま。式・図・節の番号は xr で main.aux から引く。
+%% ビルド: ./build_solutions.sh（先に ./build.sh で main.aux を作っておくこと）
+\documentclass[nosetpagesize]{corona-a5-1.1}
+\input{contents/preamble}
+
+\usepackage{xr}
+\externaldocument{main}
+
+\title{パワーエレクトロニクス ― エネルギーの蓄えと放出で読み解く電力変換}
+\author{神野崇馬}
+
+\begin{document}
+
+\thispagestyle{empty}
+\mbox{}\vskip 3\baselineskip
+\begin{center}
+{\LARGE\bfseries 解\hskip1zw 答}\\[2\baselineskip]
+{\large パワーエレクトロニクス}\\[0.5\baselineskip]
+{\large ― エネルギーの蓄えと放出で読み解く電力変換 ―}\\[2\baselineskip]
+神野崇馬
+\end{center}
+\vskip 3\baselineskip
+\begin{quote}
+\noindent
+本書の章末問題と本文中の問の解答をまとめたものである。
+式番号・図番号・節番号は本文のものを指す。
+\end{quote}
+\clearpage
+
+\input{contents/toianswer}
+\input{contents/answer}
+
+\end{document}
