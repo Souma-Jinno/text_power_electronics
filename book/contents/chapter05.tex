@@ -37,7 +37,7 @@
 
 \begin{定義}[デューティ比]
 \label{def5.1}
-スイッチを周期$T$（\index{すいっちんぐしゅうき@スイッチング周期}スイッチング周期）でオン・オフし，そのうちオンの時間を$T_{\mathrm{on}}$とするとき，
+スイッチを周期$T$（\index{すいっちんぐしゅうき@スイッチング周期}スイッチング周期）でオン・オフし，そのうちオンの時間を$T_{\mathrm{on}}$とするとき\rev{（\FIGref{fig5.1}）}，
 \begin{equation}
 D = \frac{T_{\mathrm{on}}}{T}
 \label{eq5.1}
@@ -45,6 +45,14 @@ D = \frac{T_{\mathrm{on}}}{T}
 を\index{でゅーてぃひ@デューティ比}\textbf{デューティ比}という（$0 < D < 1$）。
 $f = 1/T$を\index{すいっちんぐしゅうはすう@スイッチング周波数}\textbf{スイッチング周波数}という。
 \end{定義}
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[clip]{figures/fig5.1.eps}
+\end{center}
+\caption{デューティ比。スイッチのオン・オフを周期$T$で繰り返し，そのうちオンの時間が$T_{\mathrm{on}}$である。$D = T_{\mathrm{on}}/T$は1周期のうちオンの時間が占める割合を表す。(a)$D$が小さいとき，(b)$D$が大きいとき}
+\label{fig5.1}
+\end{figure}
 
 本章の主役はこの$D$である。後で示すように，3つのチョッパ回路の出力電圧はいずれも$D$だけで決まり，$D$を変えることで出力を連続的に制御できる。
 
@@ -109,7 +117,7 @@ V_{\mathrm{on}} \cdot DT + V_{\mathrm{off}} \cdot (1-D)T = 0
 \subsection{回路構成}
 
 \index{こうあつちょっぱ@降圧チョッパ}\textbf{降圧チョッパ}（\index{ばっくこんばーた@バックコンバータ}バックコンバータ，buck converter）は，
-入力電圧$V_{\mathrm{in}}$より低い出力電圧$V_{\mathrm{out}}$を作る回路である（\FIGref{fig5.1}(a)）。登場する素子は4つで，役割がはっきり分かれている。
+入力電圧$V_{\mathrm{in}}$より低い出力電圧$V_{\mathrm{out}}$を作る回路である（\FIGref{fig5.2}(a)）。登場する素子は4つで，役割がはっきり分かれている。
 
 \begin{箇条書}
 \item スイッチS：入力電圧を刻む（MOSFETなど。2章）
@@ -121,10 +129,10 @@ V_{\mathrm{on}} \cdot DT + V_{\mathrm{off}} \cdot (1-D)T = 0
 
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[clip]{figures/fig5.1.eps}
+\includegraphics[clip]{figures/fig5.2.eps}
 \end{center}
 \caption{降圧チョッパ。(a)回路構成，(b)オン期間，(c)オフ期間の等価回路。灰色は電流が流れない部分，\rev{太い矢印は電流の経路を表す}}
-\label{fig5.1}
+\label{fig5.2}
 \end{figure}
 
 解析に入る前に，置いている仮定をはっきりさせておく。
@@ -138,7 +146,7 @@ V_{\mathrm{on}} \cdot DT + V_{\mathrm{off}} \cdot (1-D)T = 0
 
 \subsection{オン期間とオフ期間の等価回路}
 
-\textbf{オン期間}（$0 \le t < DT$）は，Sが導通し，電流は電源→S→$L$→負荷の経路を流れる（\ref{fig5.1}(b)）。
+\textbf{オン期間}（$0 \le t < DT$）は，Sが導通し，電流は電源→S→$L$→負荷の経路を流れる（\ref{fig5.2}(b)）。
 このときダイオードには$V_{\mathrm{in}}$が逆向きにかかるので導通しない（切り離されたのと同じ）。
 経路に沿ってキルヒホッフの電圧則を立てると$V_{\mathrm{in}} = v_L + V_{\mathrm{out}}$，すなわち
 \begin{equation}
@@ -149,7 +157,7 @@ v_L = V_{\mathrm{in}} - V_{\mathrm{out}}
 式\ref{eq5.2}より電流$i_L$は一定の傾き$(V_{\mathrm{in}}-V_{\mathrm{out}})/L$で増える。インダクタは磁場にエネルギーを蓄えていく。
 
 \textbf{オフ期間}（$DT \le t < T$）は，Sが切れる。しかし4章で見たとおり，インダクタは電流を続けようとする。
-行き場を失った電流はダイオードを押し開け，$\mathrm{D}$→$L$→負荷の経路で流れ続ける（\ref{fig5.1}(c)）。
+行き場を失った電流はダイオードを押し開け，$\mathrm{D}$→$L$→負荷の経路で流れ続ける（\ref{fig5.2}(c)）。
 ダイオードの電圧降下をゼロとすると，$L$と負荷のループについて$0 = v_L + V_{\mathrm{out}}$，すなわち
 \begin{equation}
 v_L = -V_{\mathrm{out}}
@@ -179,14 +187,14 @@ $0 < D < 1$だから，出力は必ず入力より低い。そして$D$を変え
 
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[clip]{figures/fig5.2.eps}
+\includegraphics[clip]{figures/fig5.3.eps}
 \end{center}
 \caption{降圧チョッパの定常状態波形。$v_L$の正負の面積が等しく（ボルト秒平衡），
 $i_L$は三角波状に増減する。$i_L$の変動分はキャパシタ電流$i_C$となり，平均値$I_{\mathrm{out}}$だけが負荷へ流れる}
-\label{fig5.2}
+\label{fig5.3}
 \end{figure}
 
-定常状態の波形を\FIGref{fig5.2}に示す。$v_L$は$V_{\mathrm{in}}-V_{\mathrm{out}}$と$-V_{\mathrm{out}}$の2値の矩形波，
+定常状態の波形を\FIGref{fig5.3}に示す。$v_L$は$V_{\mathrm{in}}-V_{\mathrm{out}}$と$-V_{\mathrm{out}}$の2値の矩形波，
 $i_L$は平均値$I_{\mathrm{out}}$のまわりを直線的に増減する三角波である。この三角波の振れ幅（\ref{sec5.5}節のリプル電流）と，
 それをキャパシタが受け持つことで生じる出力電圧の振れ（\ref{sec5.6}節）が，そのまま$L$と$C$の設計につながる。
 
@@ -222,21 +230,21 @@ D = \frac{V_{\mathrm{out}}}{V_{\mathrm{in}}} = \frac{5}{12} \approx 0.417
 
 抵抗で分圧しても，スイッチで刻んで平均しても，入力より高い電圧は作れない。入力より高い電圧を作るには，
 \textbf{いったんエネルギーを蓄え，電源に上乗せして送り出す}しかない。これを実現するのが\index{しょうあつちょっぱ@昇圧チョッパ}\textbf{昇圧チョッパ}
-（\index{ぶーすとこんばーた@ブーストコンバータ}ブーストコンバータ，boost converter）である（\FIGref{fig5.3}(a)）。素子は降圧チョッパと同じ4つだが，配置が違う。
+（\index{ぶーすとこんばーた@ブーストコンバータ}ブーストコンバータ，boost converter）である（\FIGref{fig5.4}(a)）。素子は降圧チョッパと同じ4つだが，配置が違う。
 インダクタが入力側に移り，スイッチSはインダクタの後で線路を接地側へ短絡する位置に，ダイオードは出力への一方通行弁の位置に置かれる。
 仮定は\ref{sec5.2}節の注意と同じである（理想素子・定常状態・電流連続・リプル小）。
 
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[clip]{figures/fig5.3.eps}
+\includegraphics[clip]{figures/fig5.4.eps}
 \end{center}
 \caption{昇圧チョッパ。(a)回路構成，(b)オン期間，(c)オフ期間の等価回路。オン期間は出力がダイオードで切り離され，$C$が負荷への供給を受け持つ}
-\label{fig5.3}
+\label{fig5.4}
 \end{figure}
 
 \subsection{オン期間とオフ期間の等価回路}
 
-\textbf{オン期間}（$0 \le t < DT$）は，Sが導通して電源→$L$→Sのループができる（\ref{fig5.3}(b)）。このループのキルヒホッフの電圧則は$V_{\mathrm{in}} = v_L$，すなわち
+\textbf{オン期間}（$0 \le t < DT$）は，Sが導通して電源→$L$→Sのループができる（\ref{fig5.4}(b)）。このループのキルヒホッフの電圧則は$V_{\mathrm{in}} = v_L$，すなわち
 \begin{equation}
 v_L = V_{\mathrm{in}}
 \label{eq5.10}
@@ -246,7 +254,7 @@ v_L = V_{\mathrm{in}}
 負荷への供給は平滑キャパシタ$C$の放電だけが受け持つ。
 
 \textbf{オフ期間}（$DT \le t < T$）は，Sが切れる。電流を続けようとするインダクタが$\mathrm{D}$を押し開け，
-電源→$L$→$\mathrm{D}$→負荷の経路ができる（\ref{fig5.3}(c)）。キルヒホッフの電圧則は$V_{\mathrm{in}} = v_L + V_{\mathrm{out}}$，すなわち
+電源→$L$→$\mathrm{D}$→負荷の経路ができる（\ref{fig5.4}(c)）。キルヒホッフの電圧則は$V_{\mathrm{in}} = v_L + V_{\mathrm{out}}$，すなわち
 \begin{equation}
 v_L = V_{\mathrm{in}} - V_{\mathrm{out}}
 \label{eq5.11}
@@ -276,14 +284,14 @@ $0 < D < 1$だから$1-D < 1$，出力は必ず入力より高い。たとえば
 
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[clip]{figures/fig5.4.eps}
+\includegraphics[clip]{figures/fig5.5.eps}
 \end{center}
 \caption{昇圧チョッパの定常状態波形。インダクタ電流$i_L$の平均は入力電流
 $I_{\mathrm{in}}$であり，オフ期間だけダイオード電流$i_{\mathrm{D}}$として出力へ流れる。その平均が負荷電流$I_{\mathrm{out}}$になる}
-\label{fig5.4}
+\label{fig5.5}
 \end{figure}
 
-定常状態の波形を\FIGref{fig5.4}に示す。降圧チョッパと違い，$i_L$の平均は\textbf{入力電流}$I_{\mathrm{in}}$である。
+定常状態の波形を\FIGref{fig5.5}に示す。降圧チョッパと違い，$i_L$の平均は\textbf{入力電流}$I_{\mathrm{in}}$である。
 出力へは，オフ期間だけダイオードを通して電流が届く。損失がなければ入力と出力の電力は等しいから
 $V_{\mathrm{in}} I_{\mathrm{in}} = V_{\mathrm{out}} I_{\mathrm{out}}$であり，式\ref{eq5.13}を使うと
 \begin{equation}
@@ -332,27 +340,27 @@ I_{\mathrm{in}} = \frac{I_{\mathrm{out}}}{1-D}= \frac{0.42}{5/12} \approx 1.0\,\
 \subsection{回路構成と動作}
 
 入力より高い電圧も低い電圧も1つの回路で作れるのが\index{しょうこうあつちょっぱ@昇降圧チョッパ}\textbf{昇降圧チョッパ}
-（\index{ばっくぶーすとこんばーた@バックブーストコンバータ}バックブーストコンバータ，buck-boost converter）である（\FIGref{fig5.5}(a)）。素子はやはり同じ4つで，
+（\index{ばっくぶーすとこんばーた@バックブーストコンバータ}バックブーストコンバータ，buck-boost converter）である（\FIGref{fig5.6}(a)）。素子はやはり同じ4つで，
 スイッチSが入力側，インダクタ$L$が中央で接地へ落ち，ダイオード$\mathrm{D}$が出力側を向く。仮定はこれまでと同じである。
 
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[clip]{figures/fig5.5.eps}
+\includegraphics[clip]{figures/fig5.6.eps}
 \end{center}
 \caption{昇降圧チョッパ。(a)回路構成，(b)オン期間，(c)オフ期間の等価回路。
 エネルギーはいったんすべて$L$に蓄えられてから負荷へ渡り，出力の極性が反転する（上の端子が負になる）}
-\label{fig5.5}
+\label{fig5.6}
 \end{figure}
 
-\textbf{オン期間}（$0 \le t < DT$）は，Sが導通して電源→S→$L$のループができ（\ref{fig5.5}(b)），
+\textbf{オン期間}（$0 \le t < DT$）は，Sが導通して電源→S→$L$のループができ（\ref{fig5.6}(b)），
 \begin{equation}
 v_L = V_{\mathrm{in}}
 \label{eq5.15}
 \end{equation}
 となる。昇圧チョッパのオン期間と同じく，入力のエネルギーはすべて$L$の磁場に蓄えられ，負荷は$C$が支える。このときダイオードは逆バイアスされて遮断されている。
 
-\textbf{オフ期間}（$DT \le t < T$）は，Sが切れ，電流を続けようとする$L$が$\mathrm{D}$を押し開けて，$L$→負荷→$\mathrm{D}$のループができる（\ref{fig5.5}(c)）。
-\rev{出力電圧$V_{\mathrm{out}}$を，これまでの回路と同じ向き（\ref{fig5.5}(a)の極性表示どおり，上の端子を正）で測ると，理想ダイオードを介して$L$と負荷が並列につながるから}
+\textbf{オフ期間}（$DT \le t < T$）は，Sが切れ，電流を続けようとする$L$が$\mathrm{D}$を押し開けて，$L$→負荷→$\mathrm{D}$のループができる（\ref{fig5.6}(c)）。
+\rev{出力電圧$V_{\mathrm{out}}$を，これまでの回路と同じ向き（\ref{fig5.6}(a)の極性表示どおり，上の端子を正）で測ると，理想ダイオードを介して$L$と負荷が並列につながるから}
 \begin{equation}
 v_L = V_{\mathrm{out}}
 \label{eq5.16}
@@ -374,7 +382,7 @@ V_{\mathrm{out}} = -\frac{D}{1-D}\, V_{\mathrm{in}}
 となる。大きさ$|V_{\mathrm{out}}|$は，$D < 0.5$で入力より低く（降圧），$D = 0.5$で等しく，$D > 0.5$で高くなる（昇圧）。1つの回路で両方向をカバーできる。
 
 \begin{注意}
-\rev{式\ref{eq5.18}の負号は，\ref{fig5.5}(a)の極性表示どおり上の端子を正として測った$V_{\mathrm{out}}$が負の値になる，
+\rev{式\ref{eq5.18}の負号は，\ref{fig5.6}(a)の極性表示どおり上の端子を正として測った$V_{\mathrm{out}}$が負の値になる，
 すなわち出力の\index{きょくせいはんてん@極性反転}\textbf{極性が反転}し，\textbf{実際には上の端子が負，下の端子が正になる}ことを表す。
 オン期間に$L$には上から下へ電流が流れ込み，オフ期間もインダクタはこの向きの電流を続けようとする。
 その電流は負荷を\textbf{下から上へ}貫くから，出力の上の端子が負になるのである。}
@@ -417,7 +425,7 @@ V_{\mathrm{out}} = -\frac{D}{1-D}\, V_{\mathrm{in}}
 
 \subsection{リプル電流はオン期間の電流の増え幅}
 
-ここからは設計の話に入る。\ref{fig5.2}で見たとおり，インダクタ電流は平均値のまわりを三角波状に増減する。
+ここからは設計の話に入る。\ref{fig5.3}で見たとおり，インダクタ電流は平均値のまわりを三角波状に増減する。
 この振れの全幅（山から谷まで）を\index{りぷるでんりゅう@リプル電流}\textbf{リプル電流}$\mathit{\Delta}I_L$という。
 
 $\mathit{\Delta}I_L$は波形を描くまでもなく計算できる。降圧チョッパのオン期間，電流は一定の傾き
@@ -498,21 +506,21 @@ I_{\mathrm{out}} + \frac{\mathit{\Delta}I_L}{2} = 2 + 0.2 = 2.2\,\mathrm{A}
 i_C = i_L - I_{\mathrm{out}}
 \label{eq5.22}
 \end{equation}
-すなわち，$i_L$から平均値を除いた三角波の変動分がそっくり$C$に流れ込む（\ref{fig5.2}の3段目）。
+すなわち，$i_L$から平均値を除いた三角波の変動分がそっくり$C$に流れ込む（\ref{fig5.3}の3段目）。
 キャパシタは充放電のたびに電圧がわずかに揺れる。この揺れが出力の\index{りぷるでんあつ@リプル電圧}\textbf{リプル電圧}$\mathit{\Delta}V_{\mathrm{out}}$である。
 
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[clip]{figures/fig5.6.eps}
+\includegraphics[clip]{figures/fig5.7.eps}
 \end{center}
 \caption{リプル電圧の発生。$i_C$が正の間（$T/2$の間），
 斜線部の電荷$\mathit{\Delta}Q$がキャパシタに蓄えられ，電圧を$\mathit{\Delta}V_{\mathrm{out}}$だけ押し上げる。電圧の山と谷は$i_C$のゼロ交差の時刻に現れる}
-\label{fig5.6}
+\label{fig5.7}
 \end{figure}
 
 \subsection{リプル電圧を求める}
 
-\FIGref{fig5.6}を見ながら，1周期の間の電圧の揺れ幅を求めよう。キャパシタの電圧は$i_C > 0$の間だけ上がり続ける。
+\FIGref{fig5.7}を見ながら，1周期の間の電圧の揺れ幅を求めよう。キャパシタの電圧は$i_C > 0$の間だけ上がり続ける。
 $i_C$は平均ゼロの三角波だから，正である時間はちょうど半周期$T/2$である。
 その間に流れ込む電荷$\mathit{\Delta}Q$は図の斜線部（三角形）の面積であり，底辺$T/2$，高さ$\mathit{\Delta}I_L/2$だから
 \begin{equation}
@@ -565,7 +573,7 @@ C &=& \frac{\mathit{\Delta}I_L}{8 f\, \mathit{\Delta}V_{\mathrm{out}}}
 \subsection{昇圧・昇降圧チョッパの出力キャパシタ}
 
 \rev{式\ref{eq5.24}は，$C$に三角波の電流が流れ込む降圧チョッパにだけ使える式である。
-昇圧チョッパと昇降圧チョッパでは事情が違う。\ref{fig5.3}(b)・\ref{fig5.5}(b)で見たとおり，
+昇圧チョッパと昇降圧チョッパでは事情が違う。\ref{fig5.4}(b)・\ref{fig5.6}(b)で見たとおり，
 オン期間はダイオードが遮断されて出力側が電源から切り離され，負荷電流$I_{\mathrm{out}}$をキャパシタの放電だけが受け持つ。
 つまり$C$には三角波ではなく，オン期間に$-I_{\mathrm{out}}$，オフ期間にダイオード電流から$I_{\mathrm{out}}$を引いた値，というパルス状の電流が流れる。
 オン期間$DT$の間に$C$から失われる電荷は$\mathit{\Delta}Q = I_{\mathrm{out}}\,DT$だから，リプル電圧は}
@@ -605,22 +613,22 @@ $L = 30$\,mH，$C = 100\,\mathrm{\mu F}$のとき，リプル電流$\mathit{\Del
 
 \subsection{軽負荷で仮定が崩れる}
 
-ここまで「インダクタ電流は常に正」と仮定してきた。この仮定が崩れるのはどんなときか。\ref{fig5.2}の$i_L$の谷の値は
+ここまで「インダクタ電流は常に正」と仮定してきた。この仮定が崩れるのはどんなときか。\ref{fig5.3}の$i_L$の谷の値は
 \begin{equation}
 i_{L,\min} = I_{\mathrm{out}} - \frac{\mathit{\Delta}I_L}{2}
 \label{eq5.26}
 \end{equation}
 である。リプル電流$\mathit{\Delta}I_L$は式\ref{eq5.19}のとおり
 負荷によらず一定だから，負荷電流$I_{\mathrm{out}}$が減っていくと（\index{けいふか@軽負荷}\textbf{軽負荷}），
-やがて谷が0に触れ，さらに負荷が軽くなると電流が0に張り付く期間が現れる（\FIGref{fig5.7}）。
+やがて谷が0に触れ，さらに負荷が軽くなると電流が0に張り付く期間が現れる（\FIGref{fig5.8}）。
 ダイオードは逆向きに電流を流せないので，電流が0に達した瞬間に勝手にオフしてしまうからである。
 
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[clip]{figures/fig5.7.eps}
+\includegraphics[clip]{figures/fig5.8.eps}
 \end{center}
 \caption{インダクタ電流のモード。負荷電流が$\mathit{\Delta}I_L/2$を下回ると，電流が0に張り付く第3の期間が現れる（DCM）}
-\label{fig5.7}
+\label{fig5.8}
 \end{figure}
 
 \begin{定義}[電流連続モードと電流不連続モード]
@@ -638,7 +646,7 @@ I_{\mathrm{out}} = \frac{\mathit{\Delta}I_L}{2}= \frac{(V_{\mathrm{in}} - V_{\ma
 \subsection{DCMでは電圧比が$D$だけで決まらない}
 
 DCMに入ると何が変わるか。1周期が「オン」「オフ（電流あり）」に加えて，
-\textbf{Sも$\mathrm{D}$も導通せず$i_L = 0$のまま止まっている第3の期間}をもつようになる（\ref{fig5.7}(c)）。この期間は$v_L = 0$だから，ボルト秒平衡の式\ref{eq5.5}は
+\textbf{Sも$\mathrm{D}$も導通せず$i_L = 0$のまま止まっている第3の期間}をもつようになる（\ref{fig5.8}(c)）。この期間は$v_L = 0$だから，ボルト秒平衡の式\ref{eq5.5}は
 \begin{equation*}
 V_{\mathrm{on}} \cdot DT + V_{\mathrm{off}} \cdot D_2 T = 0
 \end{equation*}
@@ -670,16 +678,16 @@ $L = 73\,\mathrm{\mu H}$，$\mathit{\Delta}I_L = 0.4$\,A）で，負荷電流が
 
 本章の設計式をあらためて眺めると，重要なことに気づく。
 必要なインダクタンス（式\ref{eq5.21}）もキャパシタンス（式\ref{eq5.25}）も，分母にスイッチング周波数$f$をもつ ―
-つまり\textbf{同じリプルを許すなら，$f$を10倍にすれば$L$も$C$も10分の1で済む}（\FIGref{fig5.8}）。インダクタとキャパシタは電源の体積の大半を占める部品だから，
+つまり\textbf{同じリプルを許すなら，$f$を10倍にすれば$L$も$C$も10分の1で済む}（\FIGref{fig5.9}）。インダクタとキャパシタは電源の体積の大半を占める部品だから，
 \index{こうしゅうはか@高周波化}\textbf{高周波化}はそのまま電源の小型化・軽量化につながる。単位体積あたりに変換できる電力
 （\index{ぱわーみつど@パワー密度}\textbf{パワー密度}）を高める最も効く手段である。
 
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[clip]{figures/fig5.8.eps}
+\includegraphics[clip]{figures/fig5.9.eps}
 \end{center}
 \caption{スイッチング周波数と必要な$L$・$C$（例題\ref{rei5.3}・例題\ref{rei5.4}の設計仕様の場合）。リプルを一定に保つなら，どちらも$1/f$で小さくできる}
-\label{fig5.8}
+\label{fig5.9}
 \end{figure}
 
 ただし高周波化はただでは手に入らない。スイッチの切替え1回ごとに失われるエネルギーはほぼ決まっているから，

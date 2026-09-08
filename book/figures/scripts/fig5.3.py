@@ -1,190 +1,165 @@
 #!/usr/bin/env python3
-# fig5.3（第5章）: 昇圧チョッパの回路構成と，オン期間・オフ期間の等価回路。
-# 灰色は電流が流れない（切り離された）部分，太い矢印は電流の経路を表す。
+# fig5.3（第5章）: 降圧チョッパの定常状態波形（v_L, i_L, i_C）。
+# ボルト秒平衡（正負の面積が等しい）とリプル電流の定義を示す。
+# 波形は配布モデル ltspice/chapter05/buck_chopper.net（V_in=10 V, D=0.5,
+# f=1 kHz, L=30 mH, C=100 uF, R=10 Ω，ダイオードはほぼ理想）を ngspice で解いた結果そのもの。
+# 定常状態に達した 19〜21 ms（2周期）を切り出し，切り出しの先頭を t=0 として描く
+# （fig5.5・fig5.8 と同じ流儀）。解析時間はネットリストの .tran（22 ms）と同じ。
 import os
+import shutil
+import subprocess
+import sys
+import tempfile
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib.patches import Rectangle, Circle, Polygon
+from matplotlib.patches import Rectangle
 from matplotlib import font_manager as fm
 
 JP = fm.FontProperties(fname="/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc")
 plt.rcParams["axes.unicode_minus"] = False
 
 BK = "#222222"
-GY = "#b8b8b8"
 BLUE = "#2a5db0"
 RED = "#c0392b"
+SHADE = "#eef3fb"
+
+NET = os.path.expanduser(
+    "~/text_power_electronics/book/figures/ltspice/chapter05/buck_chopper.net")
+W0, W1 = 19.0, 21.0   # 切り出し区間 [ms]（定常状態の2周期）
+T0, T1 = 0.0, W1 - W0  # 描画の時間軸 [ms]（切り出しの先頭を 0 とする）
+TSW, DUTY = 1.0, 0.5  # 周期 [ms]，デューティ比（ネットリストと同じ値）
 
 
-def wire(ax, pts, c=BK):
-    xs = [p[0] for p in pts]
-    ys = [p[1] for p in pts]
-    ax.plot(xs, ys, color=c, lw=1.0, solid_capstyle="round", zorder=1)
+def run_ngspice():
+    """buck_chopper.net を ngspice で過渡解析し，(t[ms], vL, iL, iC, vout) を返す。"""
+    exe = shutil.which("ngspice") or os.path.expanduser("~/miniforge3/bin/ngspice")
+    if not os.path.isfile(exe):
+        sys.exit("error: ngspice が見つかりません（PATH か ~/miniforge3/bin に置いてください）")
+    if not os.path.isfile(NET):
+        sys.exit(f"error: ネットリストがありません: {NET}")
+    with open(NET) as f:
+        cards = [ln for ln in f
+                 if not ln.lower().startswith((".tran", ".end"))]
+    deck = "".join(cards) + """
+.control
+set filetype=ascii
+save all @l1[i] @c1[i]
+tran 200n 22m
+let iL = @l1[i]
+let iC = @c1[i]
+let vL = v(N002)-v(N003)
+linearize iL iC vL v(N003) v(N002)
+wrdata buck.txt vL iL iC v(N003) v(N002)
+.endc
+.end
+"""
+    with tempfile.TemporaryDirectory() as d:
+        with open(os.path.join(d, "buck.cir"), "w") as f:
+            f.write(deck)
+        r = subprocess.run([exe, "-b", "buck.cir"], cwd=d,
+                           capture_output=True, text=True)
+        out = os.path.join(d, "buck.txt")
+        if r.returncode != 0 or not os.path.isfile(out):
+            sys.exit("error: ngspice の実行に失敗しました\n" + r.stdout + r.stderr)
+        data = np.loadtxt(out)  # wrdata: (時刻, 値) の対が列に並ぶ
+    t = data[:, 0] * 1e3
+    return t, data[:, 1], data[:, 3], data[:, 5], data[:, 7]
 
 
-def dot(ax, x, y, c=BK):
-    ax.plot([x], [y], "o", ms=2.4, color=c, zorder=3)
+t, vL, iL, iC, vout = run_ngspice()
+m = (t >= W0) & (t <= W1)
+t, vL, iL, iC, vout = t[m] - W0, vL[m], iL[m], iC[m], vout[m]
+Iout = iL.mean()
+print(f"Vout={vout.mean():.3f} V  Iout={Iout:.3f} A  "
+      f"dIL={iL.max() - iL.min():.4f} A  vL=({vL.min():.2f},{vL.max():.2f}) V")
+
+XL, XR = T0 - 0.55, T1 + 0.60  # 描画範囲 [ms]（左右に注記の余白）
+TON = [(T0 + k * TSW, DUTY * TSW) for k in range(2)]  # オン期間
 
 
-def source(ax, x, ybot, ytop, c=BK):
-    r = 0.34
-    yc = 0.5 * (ybot + ytop)
-    wire(ax, [(x, ybot), (x, yc - r)], c)
-    wire(ax, [(x, yc + r), (x, ytop)], c)
-    ax.add_patch(Circle((x, yc), r, fc="white", ec=c, lw=1.0, zorder=2))
-    ax.text(x, yc + 0.14, "$+$", ha="center", va="center", fontsize=6, color=c)
-    ax.text(x, yc - 0.15, "$-$", ha="center", va="center", fontsize=6, color=c)
-
-
-def sw_v(ax, x, y1, y2, c=BK, fs=8):
-    yc = 0.5 * (y1 + y2)
-    w, h = 0.5, 0.6
-    wire(ax, [(x, y1), (x, yc - h / 2)], c)
-    wire(ax, [(x, yc + h / 2), (x, y2)], c)
-    ax.add_patch(Rectangle((x - w / 2, yc - h / 2), w, h,
-                           fc="white", ec=c, lw=1.0, zorder=2))
-    ax.text(x, yc, "S", ha="center", va="center", fontsize=fs, color=c)
-
-
-def ind_h(ax, x1, x2, y, c=BK, n=4):
-    dx = (x2 - x1) / n
-    r = dx / 2
-    t = np.linspace(0, np.pi, 30)
-    for k in range(n):
-        xc = x1 + dx * (k + 0.5)
-        ax.plot(xc - r * np.cos(t), y + 0.85 * r * np.sin(t),
-                color=c, lw=1.0, zorder=2)
-
-
-def cap_v(ax, x, y1, y2, c=BK):
-    yc = 0.5 * (y1 + y2)
-    g, w = 0.09, 0.30
-    wire(ax, [(x, y1), (x, yc + g)], c)
-    wire(ax, [(x, yc - g), (x, y2)], c)
-    ax.plot([x - w, x + w], [yc + g, yc + g], color=c, lw=1.2, zorder=2)
-    ax.plot([x - w, x + w], [yc - g, yc - g], color=c, lw=1.2, zorder=2)
-
-
-def res_v(ax, x, y1, y2, c=BK):
-    yc = 0.5 * (y1 + y2)
-    w, h = 0.36, 0.85
-    wire(ax, [(x, y1), (x, yc + h / 2)], c)
-    wire(ax, [(x, yc - h / 2), (x, y2)], c)
-    ax.add_patch(Rectangle((x - w / 2, yc - h / 2), w, h,
-                           fc="white", ec=c, lw=1.0, zorder=2))
-
-
-def dio_h(ax, x1, x2, y, c=BK):
-    # 左から右へ導通（アノードが左）
-    xc = 0.5 * (x1 + x2)
-    s = 0.28
-    a = 0.7 * s
-    wire(ax, [(x1, y), (xc - a, y)], c)
-    wire(ax, [(xc + a, y), (x2, y)], c)
-    ax.add_patch(Polygon([(xc - a, y - s), (xc - a, y + s), (xc + a, y)],
-                         closed=True, fc="white", ec=c, lw=1.0, zorder=2))
-    ax.plot([xc + a, xc + a], [y - s, y + s], color=c, lw=1.2, zorder=2)
-
-
-def iarr(ax, x, y, dx, dy, c=None):
-    # c=None のとき「電流の経路」を示す太い矢印（色に依らず太さで区別する）。
-    # 色を指定したときは細い矢印（i_L の向きなど）。
-    if c is None:
-        ax.annotate("", xy=(x + dx, y + dy), xytext=(x, y),
-                    arrowprops=dict(arrowstyle="-|>", lw=1.9, color=BK,
-                                    mutation_scale=10), zorder=4)
-    else:
-        ax.annotate("", xy=(x + dx, y + dy), xytext=(x, y),
-                    arrowprops=dict(arrowstyle="-|>", lw=1.1, color=c,
-                                    mutation_scale=8), zorder=4)
-
-
-def draw_boost(ax, mode, small=False):
-    yT, yB = 2.9, 0.6
-    xV = 0.7
-    xL0, xL1 = 1.5, 3.1
-    xA = 3.9
-    xD0, xD1 = 4.4, 5.6
-    xB = 6.6
-    xR = 8.2
-    fs = 6.6 if small else 8
-    fsd = 6.2 if small else 7.4
-    sw_c = GY if mode == "off" else BK
-    dio_c = GY if mode == "on" else BK
-    # 上側
-    wire(ax, [(xV, yT), (xL0, yT)])
-    ind_h(ax, xL0, xL1, yT)
-    wire(ax, [(xL1, yT), (xA, yT)])
-    dot(ax, xA, yT)
-    wire(ax, [(xA, yT), (xD0, yT)], dio_c)
-    dio_h(ax, xD0, xD1, yT, c=dio_c)
-    wire(ax, [(xD1, yT), (xB, yT)], dio_c if mode == "on" else BK)
-    wire(ax, [(xB, yT), (xR, yT)])
-    dot(ax, xB, yT)
-    # 下側
-    wire(ax, [(xV, yB), (xR, yB)])
-    dot(ax, xA, yB)
-    dot(ax, xB, yB)
-    # 素子
-    source(ax, xV, yB, yT)
-    ax.text(xV - 0.5, 0.5 * (yB + yT), r"$V_{\mathrm{in}}$",
-            ha="right", va="center", fontsize=fs)
-    sw_v(ax, xA, yB, yT, c=sw_c, fs=fs)
-    dio_c_lab = dio_c
-    ax.text(0.5 * (xD0 + xD1), yT + 0.42, r"$\mathrm{D}$",
-            ha="center", fontsize=fs, color=dio_c_lab)
-    cap_v(ax, xB, yT, yB)
-    ax.text(xB + 0.4, 0.5 * (yB + yT), "$C$", ha="left", va="center", fontsize=fs)
-    res_v(ax, xR, yT, yB)
-    ax.text(xR + 0.32, 0.5 * (yB + yT), "$R$", ha="left", va="center", fontsize=fs)
-    # ラベル
-    ax.text(0.5 * (xL0 + xL1), yT + 0.42, "$L$", ha="center", fontsize=fs)
-    ax.text(xL0 + 0.05, yT - 0.42, "$+$", ha="center", fontsize=fsd)
-    ax.text(0.5 * (xL0 + xL1), yT - 0.46, "$v_L$", ha="center", fontsize=fsd)
-    ax.text(xL1 - 0.05, yT - 0.42, "$-$", ha="center", fontsize=fsd)
-    if not small:
-        iarr(ax, 3.2, yT + 0.25, 0.45, 0, c=BLUE)
-        ax.text(3.4, yT + 0.42, "$i_L$", ha="center", fontsize=fsd, color=BLUE)
-        ax.text(xR + 1.05, yT - 0.45, "$+$", ha="center", fontsize=fsd)
-        ax.text(xR + 1.05, 0.5 * (yB + yT), r"$V_{\mathrm{out}}$",
-                ha="center", va="center", fontsize=fs)
-        ax.text(xR + 1.05, yB + 0.45, "$-$", ha="center", fontsize=fsd)
-    # 電流経路の矢印
-    if mode == "on":
-        iarr(ax, 0.95, yT, 0.3, 0)
-        iarr(ax, xA + 0.55, 2.0, 0, -0.6)
-        iarr(ax, 2.7, yB, -0.6, 0)
-        iarr(ax, 7.1, yT, 0.4, 0)  # CからRへ
-    elif mode == "off":
-        iarr(ax, 0.95, yT, 0.3, 0)
-        iarr(ax, 5.85, yT, 0.4, 0)
-        iarr(ax, 5.0, yB, -0.6, 0)
-    ax.set_xlim(-1.3, 9.7)
-    ax.set_ylim(-0.75, 3.75)
-    ax.set_aspect("equal")
+def setup(ax, ymin, ymax, yticks, label, xaxis_at_zero=True):
+    """矢印付きの手描き軸。x軸は 0（または ymin）の高さに置く。"""
+    dy = ymax - ymin
+    y0 = 0.0 if xaxis_at_zero else ymin
+    for x, w in TON:
+        ax.add_patch(Rectangle((x, ymin), w, dy, fc=SHADE, ec="none", zorder=0))
+    ax.annotate("", xy=(T1 + 0.22, y0), xytext=(T0 - 0.02, y0),
+                arrowprops=dict(arrowstyle="-|>", lw=0.8, color=BK,
+                                mutation_scale=8))
+    ax.plot([T0, T0], [ymin, ymax], color=BK, lw=0.8)
+    for x in np.arange(T0, T1 + 1e-9, 0.5):
+        ax.plot([x, x], [y0 - 0.02 * dy, y0 + 0.02 * dy], color=BK, lw=0.7)
+        ax.text(x, ymin - 0.11 * dy, f"{x:g}", ha="center", va="top",
+                fontsize=6.2)
+    ax.text(T1 + 0.24, y0 - 0.06 * dy, "$t$ [ms]", ha="left", va="top",
+            fontsize=6.6)
+    for y in yticks:
+        ax.plot([T0 - 0.02, T0 + 0.02], [y, y], color=BK, lw=0.7)
+        ax.text(T0 - 0.05, y, f"{y:g}", ha="right", va="center", fontsize=6.2)
+    ax.text(T0 - 0.03, ymax + 0.21 * dy, label, ha="right", va="center",
+            fontsize=7.4, color=BLUE)
+    ax.set_xlim(XL, XR)
+    ax.set_ylim(ymin - 0.36 * dy, ymax + 0.18 * dy)
     ax.axis("off")
 
 
-fig = plt.figure(figsize=(4.25, 3.0))
-gs = fig.add_gridspec(2, 2, height_ratios=[1.35, 1.0], hspace=0.02, wspace=0.02)
+fig, axes = plt.subplots(3, 1, figsize=(4.25, 3.3))
 
-ax = fig.add_subplot(gs[0, :])
-draw_boost(ax, "full")
-ax.text(4.2, -0.55, "(a) 回路構成", ha="center", fontsize=7.2,
-        fontproperties=JP, color="#555")
+# --- (1) v_L：正負の面積が等しい（ボルト秒平衡）
+ax = axes[0]
+setup(ax, -6.5, 6.5, [-5, 0, 5], "$v_L$ [V]")
+ax.plot(t, vL, color=BLUE, lw=1.1, zorder=3)
+# 1周期目のオン区間（正）とオフ区間（負）にハッチ
+on = (t >= T0) & (t <= T0 + DUTY * TSW)
+off = (t >= T0 + DUTY * TSW) & (t <= T0 + TSW)
+ax.fill_between(t[on], 0, vL[on], fc="none", ec=BLUE, hatch="////",
+                lw=0, alpha=0.45, zorder=1)
+ax.fill_between(t[off], 0, vL[off], fc="none", ec=RED, hatch="\\\\\\\\",
+                lw=0, alpha=0.45, zorder=1)
+# ラベルはハッチに重ねない（斜線と文字が干渉して読めない）。
+# 1周期目のオフ区間は波形が負側にいるので，その真上が空いている（2026-09-08）。
+# 中央を 0.75T に置くと文字の左端が青ハッチの右辺（0.5T）に接するので，少し右へ寄せる。
+ax.text(T0 + 0.80 * TSW, 2.6, "面積が等しい", fontsize=6.2, fontproperties=JP,
+        color="#555", ha="center", va="center", zorder=4)
+vp, vn = vL[on].mean(), vL[off].mean()
+ax.plot([T0, T1 + 0.05], [vp] * 2, color="#999", lw=0.5, ls=":", zorder=1)
+ax.plot([T0, T1 + 0.05], [vn] * 2, color="#999", lw=0.5, ls=":", zorder=1)
+ax.text(T1 + 0.08, vp, r"$V_{\mathrm{in}}-V_{\mathrm{out}}$", ha="left",
+        va="center", fontsize=6.4)
+ax.text(T1 + 0.08, vn, r"$-V_{\mathrm{out}}$", ha="left",
+        va="center", fontsize=6.4)
+for k, s in [(0, "オン"), (1, "オフ")]:
+    ax.text(T0 + (k + 0.5) * DUTY * TSW, 8.2, s, ha="center", fontsize=6.2,
+            fontproperties=JP, color="#555")
 
-ax = fig.add_subplot(gs[1, 0])
-draw_boost(ax, "on", small=True)
-ax.text(4.2, -0.62, "(b) オン期間（Lに蓄える）", ha="center", fontsize=6.8,
-        fontproperties=JP, color="#555")
+# --- (2) i_L：平均値 I_out のまわりの三角波，リプル ΔI_L
+ax = axes[1]
+setup(ax, 0.45, 0.55, [0.45, 0.50, 0.55], "$i_L$ [A]",
+      xaxis_at_zero=False)
+ax.plot(t, iL, color=BLUE, lw=1.1, zorder=3)
+ax.plot([T0, T1], [Iout] * 2, color=RED, lw=0.8, ls="--", zorder=2)
+ax.text(T0 + TSW, Iout + 0.006, r"$I_{\mathrm{out}}$", ha="center",
+        va="bottom", fontsize=6.6, color=RED)
+imax, imin = iL.max(), iL.min()
+xd = T1 + 0.12
+ax.annotate("", xy=(xd, imax), xytext=(xd, imin),
+            arrowprops=dict(arrowstyle="<->", lw=0.9, color=BK,
+                            mutation_scale=7))
+ax.plot([T1 - DUTY * TSW, xd + 0.04], [imax] * 2, color="#999", lw=0.5, ls=":")
+ax.plot([T1 - 0.02, xd + 0.04], [imin] * 2, color="#999", lw=0.5, ls=":")
+ax.text(xd + 0.05, 0.5 * (imax + imin), r"$\Delta I_L$", ha="left",
+        va="center", fontsize=7.0)
 
-ax = fig.add_subplot(gs[1, 1])
-draw_boost(ax, "off", small=True)
-ax.text(4.2, -0.62, "(c) オフ期間（Lが放出）", ha="center", fontsize=6.8,
-        fontproperties=JP, color="#555")
+# --- (3) i_C：i_L から平均を除いた成分（平均 0）
+ax = axes[2]
+setup(ax, -0.06, 0.06, [-0.05, 0, 0.05], "$i_C$ [A]")
+ax.plot(t, iC, color=BLUE, lw=1.1, zorder=3)
+ax.text(T0 + 0.05, -0.098, r"$i_C=i_L-I_{\mathrm{out}}$（平均は0）",
+        ha="left", va="top", fontsize=6.2, fontproperties=JP, color="#555")
 
+fig.subplots_adjust(hspace=0.62)
 EPS = os.path.expanduser("~/text_power_electronics/book/figures/fig5.3.eps")
 fig.savefig(EPS, format="eps", bbox_inches="tight")
 print("wrote", EPS)

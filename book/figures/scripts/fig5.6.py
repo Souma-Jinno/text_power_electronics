@@ -1,163 +1,202 @@
 #!/usr/bin/env python3
-# fig5.6（第5章）: リプル電圧の発生。キャパシタ電流 i_C の正の面積が
-# 電荷 ΔQ となり，出力電圧を ΔV だけ持ち上げる。
-# 波形は配布モデル ltspice/chapter05/buck_chopper.net（V_in=10 V, D=0.5,
-# f=1 kHz, L=30 mH, C=100 uF, R=10 Ω，ダイオードはほぼ理想）を ngspice で解いた結果そのもの。
-# 定常状態に達した 19〜21 ms（2周期）を切り出し，切り出しの先頭を t=0 として描く
-# （fig5.2・fig5.4・fig5.7 と同じ流儀）。解析時間はネットリストの .tran（22 ms）と同じ。
+# fig5.6（第5章）: 昇降圧チョッパの回路構成と，オン期間・オフ期間の等価回路。
+# エネルギーがいったんすべて L に蓄えられてから負荷へ渡ること，
+# 出力の極性が反転することを示す。
 import os
-import shutil
-import subprocess
-import sys
-import tempfile
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib.patches import Rectangle
+from matplotlib.patches import Rectangle, Circle, Polygon
 from matplotlib import font_manager as fm
 
 JP = fm.FontProperties(fname="/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc")
 plt.rcParams["axes.unicode_minus"] = False
 
 BK = "#222222"
+GY = "#b8b8b8"
 BLUE = "#2a5db0"
 RED = "#c0392b"
-SHADE = "#eef3fb"
-
-NET = os.path.expanduser(
-    "~/text_power_electronics/book/figures/ltspice/chapter05/buck_chopper.net")
-W0, W1 = 19.0, 21.0   # 切り出し区間 [ms]（定常状態の2周期）
-T0, T1 = 0.0, W1 - W0  # 描画の時間軸 [ms]（切り出しの先頭を 0 とする）
-TSW, DUTY = 1.0, 0.5  # 周期 [ms]，デューティ比（ネットリストと同じ値）
 
 
-def run_ngspice():
-    """buck_chopper.net を ngspice で過渡解析し，(t[ms], vL, iL, iC, vout) を返す。"""
-    exe = shutil.which("ngspice") or os.path.expanduser("~/miniforge3/bin/ngspice")
-    if not os.path.isfile(exe):
-        sys.exit("error: ngspice が見つかりません（PATH か ~/miniforge3/bin に置いてください）")
-    if not os.path.isfile(NET):
-        sys.exit(f"error: ネットリストがありません: {NET}")
-    with open(NET) as f:
-        cards = [ln for ln in f
-                 if not ln.lower().startswith((".tran", ".end"))]
-    deck = "".join(cards) + """
-.control
-set filetype=ascii
-save all @l1[i] @c1[i]
-tran 200n 22m
-let iL = @l1[i]
-let iC = @c1[i]
-let vL = v(N002)-v(N003)
-linearize iL iC vL v(N003) v(N002)
-wrdata buck.txt vL iL iC v(N003) v(N002)
-.endc
-.end
-"""
-    with tempfile.TemporaryDirectory() as d:
-        with open(os.path.join(d, "buck.cir"), "w") as f:
-            f.write(deck)
-        r = subprocess.run([exe, "-b", "buck.cir"], cwd=d,
-                           capture_output=True, text=True)
-        out = os.path.join(d, "buck.txt")
-        if r.returncode != 0 or not os.path.isfile(out):
-            sys.exit("error: ngspice の実行に失敗しました\n" + r.stdout + r.stderr)
-        data = np.loadtxt(out)  # wrdata: (時刻, 値) の対が列に並ぶ
-    t = data[:, 0] * 1e3
-    return t, data[:, 1], data[:, 3], data[:, 5], data[:, 7]
+def wire(ax, pts, c=BK):
+    xs = [p[0] for p in pts]
+    ys = [p[1] for p in pts]
+    ax.plot(xs, ys, color=c, lw=1.0, solid_capstyle="round", zorder=1)
 
 
-t, vL, iL, iC, vout = run_ngspice()
-m = (t >= W0) & (t <= W1)
-t, iC, vout = t[m] - W0, iC[m], vout[m]
-Vout = vout.mean()
-dV = vout.max() - vout.min()
-print(f"Vout={Vout:.3f} V  dVout={dV * 1e3:.1f} mV  "
-      f"iC=({iC.min():.4f},{iC.max():.4f}) A")
-
-XL, XR = T0 - 0.55, T1 + 0.72  # 描画範囲 [ms]（左右に注記の余白）
-TON = [(T0 + k * TSW, DUTY * TSW) for k in range(2)]  # オン期間
+def dot(ax, x, y, c=BK):
+    ax.plot([x], [y], "o", ms=2.4, color=c, zorder=3)
 
 
-def setup(ax, ymin, ymax, yticks, label, xaxis_at_zero=True):
-    """矢印付きの手描き軸。x軸は 0（または ymin）の高さに置く。"""
-    dy = ymax - ymin
-    y0 = 0.0 if xaxis_at_zero else ymin
-    for x, w in TON:
-        ax.add_patch(Rectangle((x, ymin), w, dy, fc=SHADE, ec="none", zorder=0))
-    ax.annotate("", xy=(T1 + 0.22, y0), xytext=(T0 - 0.02, y0),
-                arrowprops=dict(arrowstyle="-|>", lw=0.8, color=BK,
-                                mutation_scale=8))
-    ax.plot([T0, T0], [ymin, ymax], color=BK, lw=0.8)
-    for x in np.arange(T0, T1 + 1e-9, 0.5):
-        ax.plot([x, x], [y0 - 0.02 * dy, y0 + 0.02 * dy], color=BK, lw=0.7)
-        ax.text(x, ymin - 0.11 * dy, f"{x:g}", ha="center", va="top",
-                fontsize=6.2)
-    ax.text(T1 + 0.24, y0 - 0.06 * dy, "$t$ [ms]", ha="left", va="top",
-            fontsize=6.6)
-    for y in yticks:
-        ax.plot([T0 - 0.02, T0 + 0.02], [y, y], color=BK, lw=0.7)
-        ax.text(T0 - 0.05, y, f"{y:g}", ha="right", va="center", fontsize=6.2)
-    ax.text(T0 - 0.03, ymax + 0.21 * dy, label, ha="right", va="center",
-            fontsize=7.4, color=BLUE)
-    ax.set_xlim(XL, XR)
-    ax.set_ylim(ymin - 0.36 * dy, ymax + 0.20 * dy)
+def source(ax, x, ybot, ytop, c=BK):
+    r = 0.34
+    yc = 0.5 * (ybot + ytop)
+    wire(ax, [(x, ybot), (x, yc - r)], c)
+    wire(ax, [(x, yc + r), (x, ytop)], c)
+    ax.add_patch(Circle((x, yc), r, fc="white", ec=c, lw=1.0, zorder=2))
+    ax.text(x, yc + 0.14, "$+$", ha="center", va="center", fontsize=6, color=c)
+    ax.text(x, yc - 0.15, "$-$", ha="center", va="center", fontsize=6, color=c)
+
+
+def sw_h(ax, x1, x2, y, c=BK, fs=8, state="open", r=0.075):
+    # 開閉の分かるスイッチ記号：端子2つ（小さい丸）と，左端子を支点にした可動接片。
+    # state="open" は接片が持ち上がった状態，"closed" は接片が右端子に接した状態。
+    xc = 0.5 * (x1 + x2)
+    g = 0.40
+    xa, xb = xc - g, xc + g
+    wire(ax, [(x1, y), (xa - r, y)], c)
+    wire(ax, [(xb + r, y), (x2, y)], c)
+    ax.add_patch(Circle((xa, y), r, fc="white", ec=c, lw=0.9, zorder=3))
+    ax.add_patch(Circle((xb, y), r, fc="white", ec=c, lw=0.9, zorder=3))
+    if state == "closed":
+        ax.plot([xa + r, xb - r], [y, y], color=c, lw=1.0, zorder=2)
+        ax.text(xc, y + 0.28, "S", ha="center", va="bottom", fontsize=fs, color=c)
+    else:
+        th = np.deg2rad(30)
+        ln = 2 * g
+        ax.plot([xa + r * np.cos(th), xa + ln * np.cos(th)],
+                [y + r * np.sin(th), y + ln * np.sin(th)],
+                color=c, lw=1.0, solid_capstyle="round", zorder=2)
+        ax.text(xc, y + 0.50, "S", ha="center", va="bottom", fontsize=fs, color=c)
+
+
+def ind_v(ax, x, y1, y2, c=BK, n=4):
+    # y1: 上端，y2: 下端。右へ膨らむ
+    dy = (y1 - y2) / n
+    r = dy / 2
+    t = np.linspace(-np.pi / 2, np.pi / 2, 30)
+    for k in range(n):
+        yc = y1 - dy * (k + 0.5)
+        ax.plot(x + 0.85 * r * np.cos(t), yc + r * np.sin(t),
+                color=c, lw=1.0, zorder=2)
+
+
+def cap_v(ax, x, y1, y2, c=BK):
+    yc = 0.5 * (y1 + y2)
+    g, w = 0.09, 0.30
+    wire(ax, [(x, y1), (x, yc + g)], c)
+    wire(ax, [(x, yc - g), (x, y2)], c)
+    ax.plot([x - w, x + w], [yc + g, yc + g], color=c, lw=1.2, zorder=2)
+    ax.plot([x - w, x + w], [yc - g, yc - g], color=c, lw=1.2, zorder=2)
+
+
+def res_v(ax, x, y1, y2, c=BK):
+    yc = 0.5 * (y1 + y2)
+    w, h = 0.36, 0.85
+    wire(ax, [(x, y1), (x, yc + h / 2)], c)
+    wire(ax, [(x, yc - h / 2), (x, y2)], c)
+    ax.add_patch(Rectangle((x - w / 2, yc - h / 2), w, h,
+                           fc="white", ec=c, lw=1.0, zorder=2))
+
+
+def dio_h_left(ax, x1, x2, y, c=BK):
+    # 右から左へ導通（アノードが右）
+    xc = 0.5 * (x1 + x2)
+    s = 0.28
+    a = 0.7 * s
+    wire(ax, [(x1, y), (xc - a, y)], c)
+    wire(ax, [(xc + a, y), (x2, y)], c)
+    ax.add_patch(Polygon([(xc + a, y - s), (xc + a, y + s), (xc - a, y)],
+                         closed=True, fc="white", ec=c, lw=1.0, zorder=2))
+    ax.plot([xc - a, xc - a], [y - s, y + s], color=c, lw=1.2, zorder=2)
+
+
+def iarr(ax, x, y, dx, dy, c=None):
+    # c=None のとき「電流の経路」を示す太い矢印（色に依らず太さで区別する）。
+    # 色を指定したときは細い矢印（i_L の向きなど）。
+    if c is None:
+        ax.annotate("", xy=(x + dx, y + dy), xytext=(x, y),
+                    arrowprops=dict(arrowstyle="-|>", lw=1.9, color=BK,
+                                    mutation_scale=10), zorder=4)
+    else:
+        ax.annotate("", xy=(x + dx, y + dy), xytext=(x, y),
+                    arrowprops=dict(arrowstyle="-|>", lw=1.1, color=c,
+                                    mutation_scale=8), zorder=4)
+
+
+def draw_bb(ax, mode, small=False):
+    yT, yB = 2.9, 0.6
+    xV = 0.7
+    xS0, xS1 = 1.4, 3.2
+    xA = 3.9
+    xD0, xD1 = 4.5, 5.7
+    xB = 6.6
+    xR = 8.2
+    fs = 6.6 if small else 8
+    fsd = 6.2 if small else 7.4
+    left_c = GY if mode == "off" else BK
+    dio_c = GY if mode == "on" else BK
+    # 上側
+    wire(ax, [(xV, yT), (xS0, yT)], left_c)
+    sw_h(ax, xS0, xS1, yT, c=left_c, fs=fs,
+         state="closed" if mode == "on" else "open", r=0.10 if small else 0.075)
+    wire(ax, [(xS1, yT), (xA, yT)], left_c)
+    dot(ax, xA, yT)
+    wire(ax, [(xA, yT), (xD0, yT)], dio_c)
+    dio_h_left(ax, xD0, xD1, yT, c=dio_c)
+    wire(ax, [(xD1, yT), (xB, yT)], dio_c)
+    wire(ax, [(xB, yT), (xR, yT)])
+    dot(ax, xB, yT)
+    # 下側
+    wire(ax, [(xV, yB), (xA, yB)], left_c)
+    wire(ax, [(xA, yB), (xR, yB)])
+    dot(ax, xA, yB)
+    dot(ax, xB, yB)
+    # 素子
+    source(ax, xV, yB, yT, c=left_c)
+    ax.text(xV - 0.5, 0.5 * (yB + yT), r"$V_{\mathrm{in}}$",
+            ha="right", va="center", fontsize=fs, color=left_c)
+    ind_v(ax, xA, yT, yB)
+    ax.text(xA - 0.42, 0.5 * (yB + yT), "$L$", ha="right", va="center",
+            fontsize=fs)
+    ax.text(xA - 0.42, yT - 0.35, "$+$", ha="right", fontsize=fsd)
+    ax.text(xA - 0.42, yB + 0.18, "$-$", ha="right", fontsize=fsd)
+    ax.text(0.5 * (xD0 + xD1), yT + 0.42, r"$\mathrm{D}$",
+            ha="center", fontsize=fs, color=dio_c)
+    cap_v(ax, xB, yT, yB)
+    ax.text(xB + 0.4, 0.5 * (yB + yT), "$C$", ha="left", va="center", fontsize=fs)
+    res_v(ax, xR, yT, yB)
+    ax.text(xR + 0.32, 0.5 * (yB + yT), "$R$", ha="left", va="center", fontsize=fs)
+    if not small:
+        iarr(ax, xA + 0.55, 2.15, 0, -0.5, c=BLUE)
+        ax.text(xA + 0.75, 1.9, "$i_L$", ha="left", fontsize=fsd, color=BLUE)
+        # 極性表示は V_in と同じく「上を正」で測る（本文の約束）。V_out は負になる
+        ax.text(xR + 1.05, yT - 0.45, "$+$", ha="center", fontsize=fsd)
+        ax.text(xR + 1.05, 0.5 * (yB + yT), r"$V_{\mathrm{out}}$",
+                ha="center", va="center", fontsize=fs)
+        ax.text(xR + 1.05, yB + 0.45, "$-$", ha="center", fontsize=fsd)
+    # 電流経路の矢印
+    if mode == "on":
+        iarr(ax, 0.95, yT, 0.3, 0)
+        iarr(ax, 2.9, yB, -0.6, 0)
+    elif mode == "off":
+        iarr(ax, 4.9, yB, 0.6, 0)
+        iarr(ax, 6.3, yT, -0.4, 0)
+    ax.set_xlim(-1.3, 9.7)
+    ax.set_ylim(-0.75, 3.75)
+    ax.set_aspect("equal")
     ax.axis("off")
 
 
-fig, axes = plt.subplots(2, 1, figsize=(4.25, 2.7))
+fig = plt.figure(figsize=(4.25, 3.0))
+gs = fig.add_gridspec(2, 2, height_ratios=[1.35, 1.0], hspace=0.02, wspace=0.02)
 
-# --- (1) i_C：正の半周期（ゼロ交差の間）の面積が ΔQ
-ax = axes[0]
-setup(ax, -0.06, 0.06, [-0.05, 0, 0.05], "$i_C$ [A]")
-ax.plot(t, iC, color=BLUE, lw=1.1, zorder=3)
-# 1周期目のゼロ交差（上向き→下向き）を実データから求める
-zc = np.where(np.diff(np.sign(iC)) != 0)[0]
-zc = zc[t[zc] < T0 + TSW]
-t1, t2 = t[zc[0]], t[zc[1]]
-pos = (t >= t1) & (t <= t2)
-ax.fill_between(t[pos], 0, iC[pos], fc="#c5d5ef", ec=BLUE, hatch="////",
-                lw=0, alpha=0.6, zorder=1)  # 斜線部 = ΔQ
-ax.text(0.5 * (t1 + t2), 0.012, r"$\Delta Q$", ha="center", va="bottom",
-        fontsize=7.4, color=BLUE, zorder=4,
-        bbox=dict(fc="white", ec="none", alpha=0.85, pad=0.3))
-yb = 0.052
-ax.annotate("", xy=(t2, yb), xytext=(t1, yb),
-            arrowprops=dict(arrowstyle="<->", lw=0.8, color=BK,
-                            mutation_scale=7))
-ax.text(0.5 * (t1 + t2), yb + 0.006, "$T/2$", ha="center", va="bottom",
-        fontsize=6.6)
-ax.plot([t1, t1], [0, yb], color="#999", lw=0.5, ls=":")
-ax.plot([t2, t2], [0, yb], color="#999", lw=0.5, ls=":")
-imax = iC.max()
-ax.plot([T0 + DUTY * TSW, T1 + 0.05], [imax] * 2, color="#999", lw=0.5, ls=":")
-ax.text(T1 + 0.08, imax, r"$\Delta I_L/2$", ha="left", va="center",
-        fontsize=7.2)
+ax = fig.add_subplot(gs[0, :])
+draw_bb(ax, "full")
+ax.text(4.2, -0.55, "(a) 回路構成（出力の極性が反転する）", ha="center",
+        fontsize=7.2, fontproperties=JP, color="#555")
 
-# --- (2) v_out：i_C の積分。山と谷は i_C のゼロ交差の時刻
-ax = axes[1]
-setup(ax, 4.90, 5.10, [4.90, 4.95, 5.00, 5.05, 5.10], r"$v_{\mathrm{out}}$ [V]",
-      xaxis_at_zero=False)
-ax.plot(t, vout, color=BLUE, lw=1.1, zorder=3)
-ax.plot([T0, T1], [Vout] * 2, color=RED, lw=0.8, ls="--", zorder=2)
-ax.text(T0 + TSW, Vout + 0.012, r"$V_{\mathrm{out}}$", ha="center",
-        va="bottom", fontsize=6.6, color=RED)
-vmax, vmin = vout.max(), vout.min()
-xd = T1 + 0.12
-ax.annotate("", xy=(xd, vmax), xytext=(xd, vmin),
-            arrowprops=dict(arrowstyle="<->", lw=0.9, color=BK,
-                            mutation_scale=7))
-ax.text(xd + 0.05, Vout, r"$\Delta V_{\mathrm{out}}$", ha="left",
-        va="center", fontsize=7.0)
-ax.plot([t2 + TSW, xd + 0.04], [vmax] * 2, color="#999", lw=0.5, ls=":")
-ax.plot([t1 + TSW, xd + 0.04], [vmin] * 2, color="#999", lw=0.5, ls=":")
-# 山と谷が i_C のゼロ交差に現れることを縦の点線で示す
-for x in (t1, t2, t1 + TSW, t2 + TSW):
-    ax.plot([x, x], [4.90, vmax if x in (t2, t2 + TSW) else vmin],
-            color="#999", lw=0.5, ls=":")
+ax = fig.add_subplot(gs[1, 0])
+draw_bb(ax, "on", small=True)
+ax.text(4.2, -0.62, "(b) オン期間（Lに蓄える）", ha="center", fontsize=6.8,
+        fontproperties=JP, color="#555")
 
-fig.subplots_adjust(hspace=0.62)
+ax = fig.add_subplot(gs[1, 1])
+draw_bb(ax, "off", small=True)
+ax.text(4.2, -0.62, "(c) オフ期間（Lが放出）", ha="center", fontsize=6.8,
+        fontproperties=JP, color="#555")
+
 EPS = os.path.expanduser("~/text_power_electronics/book/figures/fig5.6.eps")
 fig.savefig(EPS, format="eps", bbox_inches="tight")
 print("wrote", EPS)
