@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
-# fig2.4（第2章）: MOSFETの構造と反転層。
-# (a) 横型MOSFETの断面。ゲート電圧ゼロでは2つのpn接合が電流を止める。
-# (b) ゲートに正電圧をかけると酸化膜下のp形表面に反転層（nチャネル）ができ，
-#     ソース-ドレイン間がつながる。
+# fig2.4（第2章）: バイアスとpn接合の整流特性。
+# 順バイアスで障壁が下がり電流が流れ，逆バイアスで障壁が上がり電流が止まる。
 import os
+import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib.patches import Rectangle
 from matplotlib import font_manager as fm
 
 JP = fm.FontProperties(fname="/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc")
@@ -15,65 +13,72 @@ plt.rcParams["axes.unicode_minus"] = False
 
 BLUE = "#2a5db0"
 RED = "#c0392b"
-MAG = "#c93c8c"
 
-fig, axes = plt.subplots(1, 2, figsize=(4.4, 2.3))
+fig, axes = plt.subplots(1, 3, figsize=(4.4, 2.05),
+                         gridspec_kw=dict(width_ratios=[1, 1, 1.15]))
 
-def draw_mosfet(ax, on):
-    # p形基板
-    ax.add_patch(Rectangle((0, 0), 10, 5, fc="#fdeceb", ec="#555", lw=0.9))
-    # n形ウェル（ソース・ドレイン）
-    ax.add_patch(Rectangle((0.7, 3.4), 2.2, 1.6, fc="#eaf0fa", ec="#555", lw=0.9))
-    ax.add_patch(Rectangle((7.1, 3.4), 2.2, 1.6, fc="#eaf0fa", ec="#555", lw=0.9))
-    ax.text(1.8, 4.15, "n", ha="center", va="center", fontsize=8)
-    ax.text(8.2, 4.15, "n", ha="center", va="center", fontsize=8)
-    ax.text(5.0, 1.6, "p", ha="center", va="center", fontsize=8)
-    # 酸化膜とゲート電極
-    ax.add_patch(Rectangle((2.9, 5.0), 4.2, 0.5, fc="#e8e8e8", ec="#555", lw=0.9))
-    ax.add_patch(Rectangle((3.3, 5.5), 3.4, 0.55, fc="#c9c9c9", ec="#555", lw=0.9))
-    ax.annotate("ゲート電極", xy=(3.5, 5.78), xytext=(-0.2, 7.5),
-                fontsize=8, fontproperties=JP, color="#333", ha="left",
-                arrowprops=dict(arrowstyle="-", lw=0.6, color="#888"))
-    ax.annotate("酸化膜（絶縁体）", xy=(6.9, 5.25), xytext=(10.4, 7.5),
-                fontsize=8, fontproperties=JP, color="#333", ha="right",
-                arrowprops=dict(arrowstyle="-", lw=0.6, color="#888"))
-    # 端子
-    ax.plot([1.8, 1.8], [5.0, 6.6], color="#333", lw=1.0)
-    ax.plot([8.2, 8.2], [5.0, 6.6], color="#333", lw=1.0)
-    ax.plot([5.0, 5.0], [6.05, 6.6], color="#333", lw=1.0)
-    ax.text(1.35, 6.5, "S", ha="right", fontsize=8)
-    ax.text(5.0, 6.95, "G", ha="center", fontsize=8)
-    ax.text(8.65, 6.5, "D", ha="left", fontsize=8)
-    if not on:
-        # 空乏層（pn接合のところ）で電流が止まる
-        ax.text(5.0, 3.9, "×", ha="center", va="center", fontsize=11, color=RED)
-        ax.text(5.0, -0.8, r"$v_{GS}=0$：オフ", ha="center", fontsize=8,
-                fontproperties=JP, color="#333")
-        ax.text(5.0, -1.75, "2つのpn接合が\n電流を止める", ha="center", va="top",
-                fontsize=8, fontproperties=JP, color="#555")
-    else:
-        # 反転層
-        ax.add_patch(Rectangle((2.9, 4.62), 4.2, 0.38, fc=MAG, ec="none"))
-        ax.annotate("反転層（nチャネル）", xy=(5.0, 4.7), xytext=(5.0, 2.6),
-                    fontsize=8, fontproperties=JP, ha="center", color=MAG,
-                    arrowprops=dict(arrowstyle="->", lw=0.8, color=MAG))
-        # 電子の流れ
-        ax.annotate("", xy=(8.0, 4.15), xytext=(2.0, 4.15),
-                    arrowprops=dict(arrowstyle="-|>", lw=1.3, color=BLUE))
-        ax.text(5.0, -0.8, r"$v_{GS}>V_{th}$：オン", ha="center", fontsize=8,
-                fontproperties=JP, color="#333")
-        ax.text(5.0, -1.75, "表面がn形に反転し\n電子の通り道ができる", ha="center",
-                va="top", fontsize=8, fontproperties=JP, color="#555")
-    ax.set_xlim(-0.5, 10.5)
-    ax.set_ylim(-4.6, 8.5)
+XP, XN0 = -0.5, 0.5
+
+def band(ax, xn, xp, height, title, note):
+    # 左が p 形側（エネルギーが高い），右が n 形側。バンドギャップ内に p/n を記す
+    ax.text(-1.1, 0.9 + height - 0.4, "p形", ha="center", va="center",
+            fontsize=8, fontproperties=JP, color="#333")
+    ax.text(1.3, 0.5, "n形", ha="center", va="center",
+            fontsize=8, fontproperties=JP, color="#333")
+    L = 1.8
+    xx = np.linspace(-L, L, 300)
+    def bend(x):
+        return np.where(x < xp, 1.0, np.where(x > xn, 0.0,
+                        0.5 * (1 + np.cos(np.pi * (x - xp) / (xn - xp)))))
+    ec = 0.9 + height * bend(xx)
+    ax.plot(xx, ec, color="#333", lw=1.1)
+    ax.plot(xx, ec - 0.8, color="#333", lw=1.1)
+    ax.annotate("", xy=(-L + 0.25, 0.9 + height), xytext=(-L + 0.25, 0.9),
+                arrowprops=dict(arrowstyle="<->", lw=0.8, color=RED))
+    ax.set_title(title, fontsize=8, fontproperties=JP, pad=2)
+    ax.text(0, -0.15, note, ha="center", va="top", fontsize=8,
+            fontproperties=JP, color="#555")
+    ax.set_xlim(-L - 0.2, L + 0.2)
+    ax.set_ylim(-1.15, 2.9)
     ax.axis("off")
+    return ec
 
-draw_mosfet(axes[0], on=False)
-draw_mosfet(axes[1], on=True)
-axes[0].text(5.0, -4.3, "(a)", ha="center", fontsize=8)
-axes[1].text(5.0, -4.3, "(b)", ha="center", fontsize=8)
+# --- (a) 順バイアス：障壁 e(Vbi−V) に下がる
+ax = axes[0]
+band(ax, 0.35, -0.35, 0.55, "(a) 順バイアス",
+     "障壁が下がり\n電流が流れる")
+ax.text(-1.75, 1.75, r"$e(V_{bi}-V)$", fontsize=8, color=RED)
+ax.annotate("", xy=(-1.0, 1.52), xytext=(0.85, 1.02),
+            arrowprops=dict(arrowstyle="-|>", lw=1.2, color=BLUE))
+ax.plot(1.1, 0.97, "o", ms=3.0, color=BLUE)
 
-fig.tight_layout(w_pad=0.5)
+# --- (b) 逆バイアス：障壁 e(Vbi+V) に上がる
+ax = axes[1]
+band(ax, 0.75, -0.75, 1.5, "(b) 逆バイアス",
+     "障壁が上がり\n電流は流れない")
+ax.text(-1.35, 2.6, r"$e(V_{bi}+V)$", fontsize=8, color=RED)
+ax.annotate("", xy=(-0.55, 2.15), xytext=(0.75, 1.35),
+            arrowprops=dict(arrowstyle="-|>", lw=1.0, color=BLUE, ls="--"))
+ax.text(0.12, 1.72, "×", fontsize=9, color=RED, ha="center", va="center")
+
+# --- (c) 電流-電圧特性（整流）
+ax = axes[2]
+v = np.linspace(-2.0, 0.85, 300)
+i = np.expm1(v / 0.24)
+i = np.clip(i, -1.2, 22)
+ax.plot(v, i, color=BLUE, lw=1.4)
+ax.axhline(0, color="#888", lw=0.7)
+ax.axvline(0, color="#888", lw=0.7)
+ax.text(0.95, 20.5, r"$I$", fontsize=8.5)
+ax.text(1.05, -3.6, r"$V$", fontsize=8.5)
+ax.text(-1.9, 5.5, "順方向だけ\n電流が流れる\n（整流）", fontsize=8,
+        fontproperties=JP, color="#555")
+ax.set_title("(c) 電流-電圧特性", fontsize=8, fontproperties=JP, pad=2)
+ax.set_xlim(-2.2, 1.3)
+ax.set_ylim(-6, 23)
+ax.axis("off")
+
+fig.tight_layout(w_pad=0.3)
 EPS = os.path.expanduser("~/text_power_electronics/book/figures/fig2.4.eps")
 fig.savefig(EPS, format="eps", bbox_inches="tight")
 print("wrote", EPS)

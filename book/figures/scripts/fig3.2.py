@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-# fig3.2（第3章）: ドリフト層の電界分布と耐圧。
-# 電界は接合面で最大の三角形分布。面積が耐圧V_B，高さの上限が絶縁破壊電界E_c。
-# 高耐圧には低濃度・厚いドリフト層が要る＝抵抗が増える，を視覚化する。
+# fig3.2（第3章）: ダイオードの電流-電圧特性（概念図）。
+# 順方向は約0.7 Vから指数関数的に立ち上がり，逆方向はごく小さい漏れ電流のみ。
+# 逆電圧が降伏電圧に達するとなだれ降伏で電流が急増する。
 import os
+import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib.patches import Rectangle
 from matplotlib import font_manager as fm
 
 JP = fm.FontProperties(fname="/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc")
@@ -14,68 +14,58 @@ plt.rcParams["axes.unicode_minus"] = False
 
 BLUE = "#2a5db0"
 RED = "#c0392b"
-FILLA = "#f2c48c"
-GRAY = "#555555"
 
-fig, ax = plt.subplots(figsize=(4.25, 2.45))
+fig, ax = plt.subplots(figsize=(4.2, 2.85))
 
-EC = 1.55          # 絶縁破壊電界の高さ
-BAR_Y, BAR_H = 2.05, 0.42
+# 概念図なので軸は目盛りなし（順方向と逆方向でスケールが違うことを注記）
+# 順方向: 0.7V付近から立ち上がる指数カーブ
+vf = np.linspace(0, 1.0, 300)
+i_f = 0.012 * (np.exp(vf / 0.075) - 1)
+i_f = np.clip(i_f, 0, 6.5)
+ax.plot(vf[i_f < 6.5], i_f[i_f < 6.5], color=BLUE, lw=1.6)
 
-def device(x0, wp, wn, wsub, labels=True):
-    # p+ | n-（ドリフト層）| n+ の構造バー
-    ax.add_patch(Rectangle((x0, BAR_Y), wp, BAR_H, fc="#e9b7b0", ec="#555", lw=0.8))
-    ax.add_patch(Rectangle((x0 + wp, BAR_Y), wn, BAR_H, fc="#dce8f8", ec="#555", lw=0.8))
-    ax.add_patch(Rectangle((x0 + wp + wn, BAR_Y), wsub, BAR_H, fc="#9fbde8", ec="#555", lw=0.8))
-    ax.text(x0 + wp / 2, BAR_Y + BAR_H / 2, "p$^+$", ha="center", va="center", fontsize=8)
-    ax.text(x0 + wp + wn / 2, BAR_Y + BAR_H / 2, "n$^-$", ha="center", va="center", fontsize=8)
-    ax.text(x0 + wp + wn + wsub / 2, BAR_Y + BAR_H / 2, "n$^+$", ha="center", va="center", fontsize=8)
-    return x0 + wp          # 接合面の位置
-
-# (a) 低耐圧: 高濃度・薄い
-xj1 = device(0.25, 0.32, 1.35, 0.45)
-W1 = 1.35
-ax.fill([xj1, xj1, xj1 + W1], [0, EC, 0], fc=FILLA, ec=RED, lw=1.1, alpha=0.85)
-# 小さい三角形には入らないので，ラベルは外に出して引き出し線で示す
-ax.annotate("面積 $=V_B$", xy=(xj1 + W1 * 0.38, 0.42), xytext=(xj1 + W1 + 0.12, 0.22),
-            fontsize=8, fontproperties=JP, color="#7a4a10", va="center",
-            arrowprops=dict(arrowstyle="-", lw=0.6, color="#7a4a10", shrinkB=2))
-ax.text(xj1 + W1 + 0.12, 0.95, "傾き $\\dfrac{eN_d}{\\varepsilon}$",
-        fontsize=8, color=RED, fontproperties=JP)
-ax.text(xj1 + W1 / 2, -0.98, "(a) 高濃度・薄い\n耐圧小・抵抗小", ha="center",
-        va="top", fontsize=8, fontproperties=JP, color="#333")
-
-# (b) 高耐圧: 低濃度・厚い
-xj2 = device(4.05, 0.32, 3.6, 0.45)
-W2 = 3.6
-ax.fill([xj2, xj2, xj2 + W2], [0, EC, 0], fc=FILLA, ec=RED, lw=1.1, alpha=0.85)
-ax.text(xj2 + W2 * 0.28, 0.5, "面積 $=V_B$（大）", fontsize=8,
-        fontproperties=JP, color="#7a4a10")
-ax.text(xj2 + W2 / 2, -0.98, "(b) 低濃度・厚い\n耐圧大・抵抗大", ha="center",
-        va="top", fontsize=8, fontproperties=JP, color="#333")
-for xj, W in [(xj1, W1), (xj2, W2)]:
-    ax.annotate("", xy=(xj + W, -0.15), xytext=(xj, -0.15),
-                arrowprops=dict(arrowstyle="<->", lw=0.8, color=GRAY))
-    ax.text(xj + W / 2, -0.40, "$W$", ha="center", va="center",
-            fontsize=8, color=GRAY)
-
-# 絶縁破壊電界の上限線
-ax.plot([0.0, 8.6], [EC, EC], ls="--", lw=0.9, color=RED)
-ax.text(8.55, EC + 0.09, "$\\mathcal{E}_c$（これ以上で絶縁破壊）", ha="right",
-        fontsize=8, fontproperties=JP, color=RED)
+# 逆方向: 小さい漏れ電流 → 降伏で急増
+vr = np.linspace(-3.4, 0, 200)
+i_r = -0.09 * np.ones_like(vr)
+ax.plot(vr, i_r, color=BLUE, lw=1.6)
+vb = np.linspace(-3.75, -3.4, 120)
+i_b = -0.09 - 5.5 * (np.exp(-(vb + 3.4) / 0.09) - 1)
+i_b = np.clip(i_b, -5.6, 0)
+ax.plot(vb, i_b, color=BLUE, lw=1.6)
 
 # 軸
-ax.annotate("", xy=(-0.35, 2.0), xytext=(-0.35, 0),
-            arrowprops=dict(arrowstyle="-|>", lw=0.9, color="#777"))
-ax.text(-0.55, 1.0, "電界の大きさ $\\mathcal{E}$", rotation=90, va="center",
-        ha="center", fontsize=8, fontproperties=JP, color="#555")
-ax.annotate("", xy=(8.75, 0), xytext=(-0.35, 0),
-            arrowprops=dict(arrowstyle="-|>", lw=0.9, color="#777"))
-ax.text(8.72, -0.28, "位置 $x$", ha="right", fontsize=8,
-        fontproperties=JP, color="#555")
+ax.axhline(0, color="#555", lw=0.8)
+ax.axvline(0, color="#555", lw=0.8)
+ax.annotate("", xy=(1.35, 0), xytext=(-4.35, 0),
+            arrowprops=dict(arrowstyle="-|>", lw=0.8, color="#555"))
+ax.annotate("", xy=(0, 7.0), xytext=(0, -6.2),
+            arrowprops=dict(arrowstyle="-|>", lw=0.8, color="#555"))
+ax.text(1.28, 0.55, r"$v_D$", fontsize=9)
+ax.text(0.12, 6.6, r"$i_D$", fontsize=9)
 
-ax.set_xlim(-0.8, 8.9)
-ax.set_ylim(-1.6, 2.75)
+# 注釈
+ax.annotate("約0.7 Vから\n電流が流れる", xy=(0.72, 1.3), xytext=(1.6, 3.3),
+            fontsize=8, fontproperties=JP, ha="center", color="#333",
+            arrowprops=dict(arrowstyle="->", lw=0.8, color="#777"))
+ax.plot([0.7, 0.7], [0, -0.4], ls=":", color="#999", lw=0.8)
+ax.text(0.7, -1.1, "0.7 V", ha="center", fontsize=8, color="#555")
+ax.text(-1.7, -1.15, "漏れ電流（ごく小さい）", ha="center", fontsize=8,
+        fontproperties=JP, color="#555")
+ax.annotate("降伏\n（絶縁が破れる）", xy=(-3.62, -3.6), xytext=(-2.4, -4.6),
+            fontsize=8, fontproperties=JP, ha="center", color=RED,
+            arrowprops=dict(arrowstyle="->", lw=0.8, color=RED))
+ax.plot([-3.4, -3.4], [0, 0.4], ls=":", color="#999", lw=0.8)
+ax.text(-3.4, 0.75, r"$-V_{BR}$", ha="center", fontsize=8, color="#555")
+
+ax.text(0.65, 5.9, "順方向\n（オン）", ha="left", fontsize=8, fontproperties=JP, color=BLUE)
+ax.text(-2.6, 2.2, "逆方向（オフ）", ha="center", fontsize=8,
+        fontproperties=JP, color=BLUE)
+# 注記は図の最下段（縦軸の矢印より下）に置き，降伏の縦線と重ねない
+ax.text(-4.4, -6.75, "※順方向と逆方向で電圧・電流のスケールは大きく異なる",
+        fontsize=8, fontproperties=JP, color="#666", ha="left", va="top")
+
+ax.set_xlim(-4.5, 2.6)
+ax.set_ylim(-7.7, 7.3)
 ax.axis("off")
 fig.tight_layout()
 EPS = os.path.expanduser("~/text_power_electronics/book/figures/fig3.2.eps")

@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-# fig2.1（第2章）: 半導体スイッチの応用マップ。
-# 縦軸=扱う電力（容量），横軸=スイッチング周波数。サイリスタ・IGBT・MOSFETの
-# 得意領域と代表的な応用先を示す概念図。
+# fig2.1（第2章）: 導体・半導体・絶縁体のバンド構造の比較。
+# バンドギャップの大小が電気の流れやすさを決める（半導体はその中間）。
 import os
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib.patches import FancyBboxPatch
+from matplotlib.patches import Rectangle
 from matplotlib import font_manager as fm
 
 JP = fm.FontProperties(fname="/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc")
@@ -14,59 +13,79 @@ plt.rcParams["axes.unicode_minus"] = False
 
 BLUE = "#2a5db0"
 RED = "#c0392b"
+VB = "#f2c48c"   # 価電子帯
+CB = "#fdf0c8"   # 伝導帯
 
-fig, ax = plt.subplots(figsize=(4.3, 2.9))
+fig, ax = plt.subplots(figsize=(4.4, 2.5))
 
-# 概念図：軸はけた（対数）のイメージ。x=log10(f/Hz), y=log10(S/VA)
-def region(x0, y0, w, h, fc, ec, ls="-"):
-    # 枠線の線種（実線・破線・点線）でも3つの領域を区別する（白黒印刷対策）
-    r = FancyBboxPatch((x0, y0), w, h, boxstyle="round,pad=0.12",
-                       fc=fc, ec=ec, lw=1.1, ls=ls)
+W = 1.7          # バンドの幅
+panels = [
+    ("導体（金属）", 0.0),
+    ("半導体", 2.7),
+    ("絶縁体", 5.4),
+]
+
+def band(x0, y0, h, color, hatch=None):
+    r = Rectangle((x0, y0), W, h, fc=color, ec="#555", lw=0.8)
     ax.add_patch(r)
+    return r
 
-# サイリスタ: 低周波・大容量
-region(1.7, 6.2, 1.5, 2.3, "#fdeceb", RED)
-ax.text(2.45, 8.05, "サイリスタ", ha="center", fontsize=8, fontproperties=JP, color=RED)
-ax.text(2.45, 7.15, "電鉄・製鉄\n直流送電", ha="center", va="center",
+# --- 導体: 伝導帯に電子が入っている（バンドが重なる/部分的に満ちる）
+x0 = panels[0][1]
+band(x0, 0.0, 1.1, VB)
+band(x0, 0.9, 1.1, CB)   # 重なり
+for i in range(4):
+    ax.plot(x0 + 0.3 + 0.37 * i, 1.05, "o", ms=3.2, color=BLUE)
+ax.text(x0 + W / 2, 1.55, "動ける電子", ha="center", fontsize=8,
+        fontproperties=JP, color=BLUE)
+ax.text(x0 + W / 2, 0.4, "価電子帯", ha="center", va="center",
+        fontsize=8, fontproperties=JP, color="#7a5a2a")
+ax.text(x0 + W / 2, -0.15, "バンドが重なる\n（すき間なし）", ha="center", va="top",
         fontsize=8, fontproperties=JP, color="#555")
 
-# IGBT: 中周波・中〜大容量
-region(3.2, 4.0, 1.9, 2.6, "#f5f0e3", "#8a6d1f", ls=(0, (4, 2)))
-ax.text(4.15, 6.1, "IGBT", ha="center", fontsize=8, color="#8a6d1f")
-ax.text(4.15, 5.1, "電気自動車\n産業用モータ\n太陽光発電", ha="center", va="center",
+# --- 半導体: 小さいギャップ。熱でわずかに励起
+x0 = panels[1][1]
+band(x0, 0.0, 1.0, VB)
+band(x0, 1.7, 1.0, CB)
+ax.annotate("", xy=(x0 + W + 0.18, 1.7), xytext=(x0 + W + 0.18, 1.0),
+            arrowprops=dict(arrowstyle="<->", lw=0.9, color=RED))
+ax.text(x0 + W + 0.28, 1.35, r"$E_g\approx$1 eV", fontsize=8, color=RED, va="center")
+ax.plot(x0 + 0.55, 1.85, "o", ms=3.2, color=BLUE)
+ax.plot(x0 + 0.55, 0.82, "o", ms=3.6, mfc="white", mec=RED, mew=0.9)
+ax.annotate("", xy=(x0 + 0.55, 1.78), xytext=(x0 + 0.55, 0.95),
+            arrowprops=dict(arrowstyle="-|>", lw=0.9, color=BLUE, ls="--"))
+ax.text(x0 + W / 2, -0.15, "熱でわずかに\n電子が飛び移れる", ha="center", va="top",
         fontsize=8, fontproperties=JP, color="#555")
 
-# MOSFET: 高周波・小容量
-region(5.0, 1.6, 1.9, 2.5, "#eaf0fa", BLUE, ls=(0, (1.2, 1.5)))
-ax.text(5.95, 3.6, "MOSFET", ha="center", fontsize=8, color=BLUE)
-ax.text(5.95, 2.65, "電源装置\n家電・情報機器", ha="center", va="center",
+# --- 絶縁体: 大きいギャップ
+x0 = panels[2][1]
+band(x0, 0.0, 1.0, VB)
+band(x0, 2.6, 1.0, CB)
+ax.annotate("", xy=(x0 + W + 0.18, 2.6), xytext=(x0 + W + 0.18, 1.0),
+            arrowprops=dict(arrowstyle="<->", lw=0.9, color=RED))
+ax.text(x0 + W + 0.28, 1.8, r"$E_g\gtrsim$5 eV", fontsize=8, color=RED, va="center")
+ax.text(x0 + W / 2, -0.15, "ギャップが広く\n電子は飛び移れない", ha="center", va="top",
         fontsize=8, fontproperties=JP, color="#555")
 
-# SiC・GaNによる拡大の矢印
-ax.annotate("", xy=(6.4, 5.6), xytext=(5.1, 4.3),
-            arrowprops=dict(arrowstyle="-|>", lw=1.2, color="#3a7d44", ls="--"))
-ax.text(6.05, 5.85, "SiC・GaNで\n領域が広がる", ha="center", fontsize=8,
-        fontproperties=JP, color="#3a7d44")
+# 共通ラベル
+for name, x0 in panels:
+    ax.text(x0 + W / 2, 3.85, name, ha="center", fontsize=8.4, fontproperties=JP)
+    if x0 > 0:
+        ax.text(x0 + W / 2, 0.5, "価電子帯", ha="center", va="center",
+                fontsize=8, fontproperties=JP, color="#7a5a2a")
+ax.text(panels[1][1] + W / 2, 2.2, "伝導帯", ha="center", va="center",
+        fontsize=8, fontproperties=JP, color="#7a5a2a")
+ax.text(panels[2][1] + W / 2, 3.1, "伝導帯", ha="center", va="center",
+        fontsize=8, fontproperties=JP, color="#7a5a2a")
 
-# 軸
-ax.annotate("", xy=(7.6, 0.6), xytext=(1.0, 0.6),
-            arrowprops=dict(arrowstyle="-|>", lw=1.0, color="#333"))
-ax.annotate("", xy=(1.0, 9.3), xytext=(1.0, 0.6),
-            arrowprops=dict(arrowstyle="-|>", lw=1.0, color="#333"))
-ax.text(4.4, -0.55, "スイッチング周波数", ha="center", fontsize=8, fontproperties=JP)
-ax.text(-0.35, 5.0, "扱う電力", rotation=90, va="center", ha="center",
-        fontsize=8, fontproperties=JP)
+# エネルギー軸
+ax.annotate("", xy=(-1.05, 3.6), xytext=(-1.05, 0.0),
+            arrowprops=dict(arrowstyle="-|>", lw=0.9, color="#777"))
+ax.text(-1.25, 1.8, "電子のエネルギー", rotation=90, va="center", ha="center",
+        fontsize=8, fontproperties=JP, color="#555")
 
-# 目盛りのめやす（けた）
-for x, lab in [(2.0, "50 Hz"), (3.9, "10 kHz"), (5.9, "1 MHz")]:
-    ax.plot([x, x], [0.52, 0.68], color="#333", lw=0.8)
-    ax.text(x, 0.15, lab, ha="center", fontsize=8)
-for y, lab in [(2.3, "1 kW"), (5.1, "1 MW"), (7.9, "1 GW")]:
-    ax.plot([0.93, 1.07], [y, y], color="#333", lw=0.8)
-    ax.text(0.85, y, lab, ha="right", va="center", fontsize=8)
-
-ax.set_xlim(-0.7, 7.9)
-ax.set_ylim(-1.0, 9.6)
+ax.set_xlim(-1.5, 8.1)
+ax.set_ylim(-1.25, 4.2)
 ax.axis("off")
 fig.tight_layout()
 EPS = os.path.expanduser("~/text_power_electronics/book/figures/fig2.1.eps")
