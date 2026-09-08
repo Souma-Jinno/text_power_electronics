@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# fig5.4（第5章）: 降圧チョッパの定常状態波形（v_L, i_L, i_C）。
+# fig5.4（第5章）: 降圧コンバータの定常状態波形（v_L, i_L, i_C）。
 # ボルト秒平衡（正負の面積が等しい）とリプル電流の定義を示す。
 # 波形は配布モデル ltspice/chapter05/buck_chopper.net（V_in=10 V, D=0.5,
 # f=1 kHz, L=30 mH, C=100 uF, R=10 Ω，ダイオードはほぼ理想）を ngspice で解いた結果そのもの。

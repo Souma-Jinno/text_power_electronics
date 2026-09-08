@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# fig5.6（第5章）: 昇圧チョッパの定常状態波形（v_L, i_L, i_D）。
+# fig5.6（第5章）: 昇圧コンバータの定常状態波形（v_L, i_L, i_D）。
 # オフ期間だけダイオードを通して出力へエネルギーが送られることを示す。
 # 波形は配布モデル ltspice/chapter05/boost_chopper.net（V_in=5 V, D=0.583,
 # f=20 kHz, L=700 uH, C=500 uF, R=28.8 Ω，ダイオードはほぼ理想）を ngspice で解いた結果そのもの。

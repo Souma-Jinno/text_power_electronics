@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-# fig7.2（第7章）: 12 V→5 V・1 A の降圧を，リニアレギュレータと降圧チョッパで
+# fig7.2（第7章）: 12 V→5 V・1 A の降圧を，リニアレギュレータと降圧コンバータで
 # 行ったときの電力の内訳。出力5 Wは同じでも，リニアは差分7 Wをすべて熱で捨てる
-# （η=42%）のに対し，チョッパは損失がわずか（η>90%）。
+# （η=42%）のに対し，降圧コンバータは損失がわずか（η>90%）。
 import os
 import numpy as np
 import matplotlib
@@ -21,7 +21,7 @@ Pout = 5.0                      # 出力電力 [W]（5 V×1 A）
 # リニア: 入力12 W，損失7 W
 lin_out, lin_loss = Pout, 7.0
 eta_lin = Pout / (Pout + 7.0)
-# チョッパ: η=90% とすると入力≒5.56 W，損失≒0.56 W
+# 降圧コンバータ: η=90% とすると入力≒5.56 W，損失≒0.56 W
 eta_ch = 0.90
 ch_in = Pout / eta_ch
 ch_loss = ch_in - Pout
@@ -48,7 +48,7 @@ ax.text(0, lin_out + lin_loss + 0.35, r"$\eta=42\%$",
 ax.text(1, ch_in + 0.35, r"$\eta>90\%$", ha="center", fontsize=8, color=BK)
 
 ax.set_xticks(x)
-ax.set_xticklabels(["リニア\nレギュレータ", "降圧\nチョッパ"],
+ax.set_xticklabels(["リニア\nレギュレータ", "降圧\nコンバータ"],
                    fontproperties=JP, fontsize=8)
 ax.set_ylabel("入力電力 [W]", fontproperties=JP, fontsize=8.5)
 ax.set_ylim(0, 13.5)

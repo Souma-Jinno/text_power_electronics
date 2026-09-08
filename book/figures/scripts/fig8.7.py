@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # fig8.7（第8章）: 昇圧型PFCの構成と入力電流整形。
-# ダイオードブリッジ＋昇圧チョッパ（5章の再利用）で，入力電流を
+# ダイオードブリッジ＋昇圧コンバータ（5章の再利用）で，入力電流を
 # 整流電圧に相似な正弦半波に整形し，力率を1に近づける。
 import os
 import numpy as np
@@ -146,7 +146,7 @@ ax.set_ylim(-1.1, 3.1)
 ax.set_aspect("equal")
 ax.axis("off")
 # 副題は (b) と同じく図の下に置く
-ax.text(3.3, -0.95, "(a) 昇圧型PFC（整流＋昇圧チョッパ）", ha="center", fontsize=6.8,
+ax.text(3.3, -0.95, "(a) 昇圧型PFC（整流＋昇圧コンバータ）", ha="center", fontsize=6.8,
         fontproperties=JP, color="#555", va="center")
 
 # --- (b) 入力電流整形
