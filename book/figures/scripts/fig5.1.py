@@ -64,24 +64,28 @@ def draw_wave(ax, D, panel):
             fontproperties=JP, color=BK)
     ax.text(XL + 0.14, 0.0, "オフ", ha="right", va="center", fontsize=7.5,
             fontproperties=JP, color=BK)
-    # 寸法線：T_on（オンの時間）と T（1周期）。補助の縦線は細い点線
-    yd1, yd2 = 1.22, 1.62
-    for x, ytop in ((0, yd2), (ton, yd1), (T, yd2)):
-        ax.plot([x, x], [1.0, ytop + 0.05], color="#888888", lw=0.5,
+    # 寸法線：T（1周期）は1周期目の上に，T_on（オンの時間）は2つ目のパルスの上に，
+    # 同じ高さで横に並べて置く。1周期目に上下に重ねて置くと，D が大きいとき
+    # T と T_on の矢印がほぼ同じ長さで重なり見分けがつかない
+    # （2026-09-08 著者指摘「TとTonが重なっている。2つ目の波形に矢印をして」）。
+    # 補助の縦線は細い点線で，矢印の高さまでにとどめる（ラベルと交差させない）。
+    yd = 1.22
+    for x in (0, T, T + ton):
+        ax.plot([x, x], [1.0, yd + 0.05], color="#888888", lw=0.5,
                 ls=(0, (1.5, 1.5)), zorder=1)
-    dim(ax, 0, ton, yd1, r"$T_{\mathrm{on}}$", c=RED)
-    dim(ax, 0, T, yd2, r"$T$", c=BK)
+    dim(ax, 0, T, yd, r"$T$", c=BK)
+    dim(ax, T, T + ton, yd, r"$T_{\mathrm{on}}$", c=RED)
     # 右端に D の値
-    ax.text(XR - 0.05, 1.42, r"$D = \dfrac{T_{\mathrm{on}}}{T} = %.2f$" % D,
+    ax.text(XR - 0.05, 1.38, r"$D = \dfrac{T_{\mathrm{on}}}{T} = %.2f$" % D,
             ha="right", va="center", fontsize=7.5, color=BK)
     ax.set_xlim(XL, XR)
-    ax.set_ylim(-0.42, 1.95)
+    ax.set_ylim(-0.42, 1.72)
     ax.axis("off")
     ax.text(0.5 * (XL + XR), -0.40, panel, ha="center", va="top", fontsize=7.2,
             fontproperties=JP, color="#555")
 
 
-fig, axes = plt.subplots(2, 1, figsize=(3.9, 2.55))
+fig, axes = plt.subplots(2, 1, figsize=(3.9, 2.4))
 fig.subplots_adjust(hspace=0.30)
 draw_wave(axes[0], 0.25, "(a) $D$が小さいとき（オンの時間が短い）")
 draw_wave(axes[1], 0.75, "(b) $D$が大きいとき（オンの時間が長い）")

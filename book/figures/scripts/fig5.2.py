@@ -16,7 +16,7 @@ import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib.patches import Rectangle
+from matplotlib.patches import Rectangle, ConnectionPatch
 from matplotlib import font_manager as fm
 
 JP = fm.FontProperties(fname="/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc")
@@ -28,13 +28,16 @@ RED = "#c0392b"
 SHADE = "#eef3fb"
 FILL_P = "#c5d5ef"  # v_L の正の面積（fig5.8 の ΔQ と同じ色）
 FILL_N = "#f3cfcb"  # v_L の負の面積
+EMPH_P = "#9fb8e6"  # 注記する周期の正の面積（濃い青）
+EMPH_N = "#eaa79f"  # 注記する周期の負の面積（濃い赤）
+GUIDE = "#999999"
 
 NET = os.path.expanduser(
     "~/text_power_electronics/book/figures/ltspice/chapter05/buck_chopper.net")
 T0, T1 = 0.0, 12.0    # 描画の時間軸 [ms]（起動から12周期）
 TSW, DUTY = 1.0, 0.5  # 周期 [ms]，デューティ比（ネットリストと同じ値）
 NP = int(round((T1 - T0) / TSW))
-KA = 1   # 過渡状態の例として注記する周期（2周期目）
+KA = 2   # 過渡状態の例として注記する周期（3周期目：減少ぶんも矢印で見える程度にある）
 KB = 10  # 定常状態の例として注記する周期（11周期目）
 TB = 8.0  # 図の上の「過渡状態」「定常状態」の矢印の境目 [ms]（1周期の増え分が ΔI_L の 1% を切る）
 
@@ -116,8 +119,10 @@ def setup(ax, ymin, ymax, yticks, label, xaxis_at_zero=True, top=0.18,
     ax.plot([T0, T0], [ymin, ymax], color=BK, lw=0.8)
     for x in np.arange(T0, T1 + 1e-9, 2.0):
         ax.plot([x, x], [y0 - 0.02 * dy, y0 + 0.02 * dy], color=BK, lw=0.7)
+        # 目盛ラベルは白地に載せ，上下のパネルを結ぶ点線が文字を横切らないようにする
         ax.text(x, ymin - 0.11 * dy, f"{x:g}", ha="center", va="top",
-                fontsize=6.2)
+                fontsize=6.2, zorder=6,
+                bbox=dict(fc="white", ec="none", pad=0.4))
     ax.text(T1 + 1.1, y0 - 0.06 * dy, "$t$ [ms]", ha="left", va="top",
             fontsize=6.6)
     for y in yticks:
@@ -130,35 +135,51 @@ def setup(ax, ymin, ymax, yticks, label, xaxis_at_zero=True, top=0.18,
     ax.axis("off")
 
 
-fig, axes = plt.subplots(2, 1, figsize=(4.25, 3.3))
+# 上下のパネルの高さ範囲（setup と同じ値）
+VMIN, VMAX = -6.5, 10.5
+IMIN, IMAX = 0.0, 0.6
+VTOP = 0.36   # 上パネルの上の余白（dy 比）
+ITOP = 0.30   # 下パネルの上の余白（dy 比）
+
+fig, axes = plt.subplots(2, 1, figsize=(4.25, 3.4),
+                         gridspec_kw=dict(height_ratios=[1.0, 1.12]))
+fig.subplots_adjust(hspace=0.32)   # 2つのパネルの間に注記（2行）を置く
 
 # --- (1) v_L：正の面積（青）と負の面積（赤）。はじめは正が大きく，やがて等しくなる
 ax = axes[0]
-setup(ax, -6.5, 10.5, [-5, 0, 5, 10], "$v_L$ [V]", top=0.55, label_y=0.40)
+setup(ax, VMIN, VMAX, [-5, 0, 5, 10], "$v_L$ [V]", top=VTOP, label_y=0.33)
 ax.fill_between(t, 0, vL, where=vL > 0, fc=FILL_P, ec="none", zorder=1)
 ax.fill_between(t, 0, vL, where=vL < 0, fc=FILL_N, ec="none", zorder=1)
+# 注記する周期（KA：過渡，KB：定常）の正負の面積を濃く塗り，縁取りで囲む
+for k in (KA, KB):
+    on = (t >= k * TSW) & (t <= (k + DUTY) * TSW)
+    off = (t >= (k + DUTY) * TSW) & (t <= (k + 1) * TSW)
+    ax.fill_between(t[on], 0, vL[on], fc=EMPH_P, ec=BLUE, lw=0.7, zorder=2)
+    ax.fill_between(t[off], 0, vL[off], fc=EMPH_N, ec=RED, lw=0.7, zorder=2)
 ax.plot(t, vL, color=BLUE, lw=0.9, zorder=3)
 # 定常値 V_in-V_out，-V_out の点線と右側のラベル
 on = (t >= T1 - TSW) & (t <= T1 - (1 - DUTY) * TSW)
 off = (t >= T1 - (1 - DUTY) * TSW) & (t <= T1)
 vp, vn = vL[on].mean(), vL[off].mean()
-ax.plot([TB, T1 + 0.3], [vp] * 2, color="#999", lw=0.5, ls=":", zorder=2)
-ax.plot([TB, T1 + 0.3], [vn] * 2, color="#999", lw=0.5, ls=":", zorder=2)
+ax.plot([TB, T1 + 0.3], [vp] * 2, color=GUIDE, lw=0.5, ls=":", zorder=2)
+ax.plot([TB, T1 + 0.3], [vn] * 2, color=GUIDE, lw=0.5, ls=":", zorder=2)
 ax.text(T1 + 0.45, vp, r"$V_{\mathrm{in}}-V_{\mathrm{out}}$", ha="left",
         va="center", fontsize=6.4)
 ax.text(T1 + 0.45, vn, r"$-V_{\mathrm{out}}$", ha="left",
         va="center", fontsize=6.4)
 # 起動直後は V_out がほぼ 0 なので v_L はほぼ V_in
-ax.text(T0 + 0.7, 9.2, r"起動直後は$V_{\mathrm{out}}\approx 0$",
-        ha="left", va="bottom", fontsize=6.0, fontproperties=JP, color="#555")
-# 面積の注記：過渡状態（負の面積がまだ小さい区間の下）と定常状態（波形の上）
-ax.text(T0 + 2.4, -5.3, "正の面積＞負の面積", ha="center", va="center",
-        fontsize=6.2, fontproperties=JP, color="#555")
-ax.text(T1 - 2.0, 8.0, "正の面積＝負の面積\n（ボルト秒平衡）", ha="center",
+ax.text(T0 + 0.15, 10.9, r"起動直後は$V_{\mathrm{out}}\approx 0$",
+        ha="left", va="bottom", fontsize=6.0, fontproperties=JP, color="#555",
+        zorder=7)
+# 面積の注記：注記する周期のそば（過渡は負の面積の下，定常は波形の上）
+ax.text((KA + 0.5) * TSW, -5.3, "正の面積＞負の面積", ha="center", va="center",
+        fontsize=6.2, fontproperties=JP, color="#555", zorder=6,
+        bbox=dict(fc="white", ec="none", pad=0.6))
+ax.text((KB + 0.5) * TSW, 8.2, "正の面積＝負の面積\n（ボルト秒平衡）", ha="center",
         va="center", fontsize=6.2, fontproperties=JP, color="#555",
         linespacing=1.15)
 # 図の上：過渡状態 → 定常状態
-ya = 13.8
+ya = 15.0
 for xa, xb, s in [(T0, TB, "過渡状態"), (TB, T1, "定常状態")]:
     ax.annotate("", xy=(xb, ya), xytext=(xa, ya),
                 arrowprops=dict(arrowstyle="<->", lw=0.7, color=BK,
@@ -170,30 +191,50 @@ ax.plot([TB, TB], [ya - 0.6, ya + 0.6], color=BK, lw=0.6)
 
 # --- (2) i_L：三角波が周期ごとに持ち上がり，やがて一定の高さで振動する
 ax = axes[1]
-setup(ax, 0.0, 0.6, [0, 0.2, 0.4, 0.6], "$i_L$ [A]", top=0.30)
+setup(ax, IMIN, IMAX, [0, 0.2, 0.4, 0.6], "$i_L$ [A]", top=ITOP)
 ax.plot(t, iL, color=BLUE, lw=0.9, zorder=3)
 ax.plot([T0, T1 + 0.3], [Iout] * 2, color=RED, lw=0.8, ls="--", zorder=2)
 ax.text(T1 + 0.45, Iout, r"$I_{\mathrm{out}}$", ha="left", va="center",
         fontsize=6.6, color=RED)
-# 過渡状態の例（KA 周期目）：1周期で電流が増える
-_, _, ia0, ia1 = period(KA)
-xa, xb = KA * TSW, (KA + 1) * TSW
-ax.plot([xa, xb], [ia0] * 2, color="#999", lw=0.5, ls=":", zorder=2)
-ax.annotate("", xy=(xb, ia1), xytext=(xb, ia0),
-            arrowprops=dict(arrowstyle="-|>", lw=0.9, color=RED,
-                            mutation_scale=7, shrinkA=0, shrinkB=0), zorder=4)
-ax.plot(xa, ia0, "o", ms=2.2, color=BK, zorder=5)
-ax.text(xb + 0.2, 0.05, "1周期で増える", ha="left", va="bottom",
-        fontsize=6.2, fontproperties=JP, color="#555")
-# 定常状態の例（KB 周期目）：1周期でもとの値に戻る
-_, _, ib0, ib1 = period(KB)
-xa, xb = KB * TSW, (KB + 1) * TSW
-ax.plot([xa, xb], [ib0] * 2, color="#999", lw=0.5, ls=":", zorder=2)
-ax.plot([xa, xb], [ib0, ib1], "o", ms=2.2, color=BK, zorder=5)
-ax.text(0.5 * (xa + xb), 0.62, "1周期で戻る", ha="center", va="bottom",
-        fontsize=6.2, fontproperties=JP, color="#555")
 
-fig.subplots_adjust(hspace=0.12)
+
+def rise_fall(ax, k, label):
+    """k 周期目の i_L の増加（オン期間，青の上向き矢印）と減少（オフ期間，赤の下向き矢印）。
+    上パネルの正の面積（青）が増加に，負の面積（赤）が減少に対応する。"""
+    xa, xm, xb = k * TSW, (k + DUTY) * TSW, (k + 1) * TSW
+    i0, ipk, i1 = (np.interp(x, t, iL) for x in (xa, xm, xb))
+    ax.plot([xa, xb], [i0] * 2, color=GUIDE, lw=0.5, ls=":", zorder=2)   # 始点の高さ
+    ax.plot([xm, xb], [ipk] * 2, color=GUIDE, lw=0.5, ls=":", zorder=2)  # 山の高さ
+    ax.annotate("", xy=(xm, ipk), xytext=(xm, i0),
+                arrowprops=dict(arrowstyle="-|>", lw=1.0, color=BLUE,
+                                mutation_scale=7, shrinkA=0, shrinkB=0), zorder=4)
+    ax.annotate("", xy=(xb, i1), xytext=(xb, ipk),
+                arrowprops=dict(arrowstyle="-|>", lw=1.0, color=RED,
+                                mutation_scale=7, shrinkA=0, shrinkB=0), zorder=4)
+    ax.plot([xa, xb], [i0, i1], "o", ms=2.2, color=BK, zorder=5)
+    ax.text(xm, i0 - 0.035, label, ha="center", va="top", fontsize=6.2,
+            fontproperties=JP, color="#555", zorder=6,
+            bbox=dict(fc="white", ec="none", pad=0.6))
+
+
+rise_fall(ax, KA, "増加＞減少")
+rise_fall(ax, KB, "増加＝減少")
+
+# --- 上下のパネルを結ぶ：注記する周期の両端を点線で結び，その間に理由を書く
+notes = {KA: "正の面積が大きいので，\n電流が増加している",
+         KB: "正と負の面積が等しいので，\n増加と減少が等しい"}
+for k, s in notes.items():
+    for x in (k * TSW, (k + 1) * TSW):
+        cp = ConnectionPatch(xyA=(x, VMAX), coordsA=axes[0].transData,
+                             xyB=(x, IMIN), coordsB=axes[1].transData,
+                             color=GUIDE, lw=0.6, ls=(0, (1.5, 1.5)), zorder=0.5)
+        axes[0].add_artist(cp)
+    # 注記はパネルの間（上パネルの目盛ラベルの下）に置く
+    axes[0].text((k + 0.5) * TSW, VMIN - 0.36 * (VMAX - VMIN) - 0.3, s,
+                 ha="center", va="top", fontsize=6.2, fontproperties=JP,
+                 color=BK, linespacing=1.2, clip_on=False, zorder=6,
+                 bbox=dict(fc="white", ec="none", pad=1.0))
+
 EPS = os.path.expanduser("~/text_power_electronics/book/figures/fig5.2.eps")
 fig.savefig(EPS, format="eps", bbox_inches="tight")
 print("wrote", EPS)

@@ -115,14 +115,17 @@ def iarr(ax, x, y, dx, dy, c=None):
 
 def draw_buck(ax, mode, small=False):
     yT, yB = 2.9, 0.6
-    xV = 0.7
-    xS0, xS1 = 1.35, 3.15
-    xA = 3.9
-    xL0, xL1 = 4.5, 6.1
-    xB = 6.9
-    xR = 8.5
-    fs = 6.6 if small else 8
-    fsd = 6.2 if small else 7.4
+    if small:
+        # (b)(c) の等価回路：素子間の配線を詰めて回路全体の幅を縮め，同じ紙幅に
+        # 描いたとき素子記号が (a) に近い大きさになるようにする
+        # （2026-09-08 著者指摘「(b)と(c)の回路大きくして」）
+        xV, xS0, xS1, xA, xL0, xL1, xB, xR = 0.6, 1.1, 2.5, 3.0, 3.5, 5.1, 5.7, 6.9
+        xlim = (-0.8, 7.7)
+    else:
+        xV, xS0, xS1, xA, xL0, xL1, xB, xR = 0.7, 1.35, 3.15, 3.9, 4.5, 6.1, 6.9, 8.5
+        xlim = (-1.3, 10.0)
+    fs = 7.2 if small else 8
+    fsd = 6.6 if small else 7.4
     left_c = GY if mode == "off" else BK
     dio_c = GY if mode in ("full_on_only",) else (GY if mode == "on" else BK)
     if mode == "full":
@@ -130,7 +133,7 @@ def draw_buck(ax, mode, small=False):
     # 上側
     wire(ax, [(xV, yT), (xS0, yT)], left_c)
     sw_h(ax, xS0, xS1, yT, c=left_c, fs=fs,
-         state="closed" if mode == "on" else "open", r=0.10 if small else 0.075)
+         state="closed" if mode == "on" else "open", r=0.085 if small else 0.075)
     wire(ax, [(xS1, yT), (xA, yT)], left_c)
     dot(ax, xA, yT)
     wire(ax, [(xA, yT), (xL0, yT)])
@@ -167,19 +170,22 @@ def draw_buck(ax, mode, small=False):
         ax.text(xR + 1.05, yB + 0.45, "$-$", ha="center", fontsize=fsd)
     # 電流経路の矢印
     if mode == "on":
-        iarr(ax, 0.95, yT, 0.3, 0)
-        iarr(ax, 5.4, yB, -0.6, 0)
+        iarr(ax, xV + 0.25, yT, 0.3, 0)
+        iarr(ax, 0.5 * (xA + xB) + 0.3, yB, -0.6, 0)
     elif mode == "off":
         iarr(ax, xA + 0.5, 0.85, 0, 0.5)
-        iarr(ax, 5.4, yB, -0.6, 0)
-    ax.set_xlim(-1.3, 10.0)
-    ax.set_ylim(-0.75, 3.75)
+        iarr(ax, 0.5 * (xA + xB) + 0.3, yB, -0.6, 0)
+    ax.set_xlim(*xlim)
+    ax.set_ylim(-0.8, 3.65)
     ax.set_aspect("equal")
     ax.axis("off")
 
 
-fig = plt.figure(figsize=(4.25, 3.0))
-gs = fig.add_gridspec(2, 2, height_ratios=[1.35, 1.0], hspace=0.02, wspace=0.02)
+fig = plt.figure(figsize=(4.05, 2.4))   # bbox tight の余白 0.1 in ×2 を足して幅 4.25 in（見本原稿の本文幅 4.35 in に収める）
+# (a) は従来の大きさのまま。(b)(c) は横に2つ並べたまま図の幅いっぱいに広げ，
+# 回路の配線を詰めて描くことで素子記号を (a) の8割程度の大きさにする。
+gs = fig.add_gridspec(2, 2, height_ratios=[1.31, 1.12], left=0, right=1,
+                      top=1, bottom=0, hspace=0.0, wspace=0.03)
 
 ax = fig.add_subplot(gs[0, :])
 draw_buck(ax, "full")
@@ -188,12 +194,12 @@ ax.text(4.35, -0.55, "(a) 回路構成", ha="center", fontsize=7.2,
 
 ax = fig.add_subplot(gs[1, 0])
 draw_buck(ax, "on", small=True)
-ax.text(4.35, -0.62, "(b) オン期間（Sが導通）", ha="center", fontsize=6.8,
+ax.text(3.45, -0.62, "(b) オン期間（Sが導通）", ha="center", fontsize=6.8,
         fontproperties=JP, color="#555")
 
 ax = fig.add_subplot(gs[1, 1])
 draw_buck(ax, "off", small=True)
-ax.text(4.35, -0.62, "(c) オフ期間（Dが還流）", ha="center", fontsize=6.8,
+ax.text(3.45, -0.62, "(c) オフ期間（Dが還流）", ha="center", fontsize=6.8,
         fontproperties=JP, color="#555")
 
 EPS = os.path.expanduser("~/text_power_electronics/book/figures/fig5.3.eps")
