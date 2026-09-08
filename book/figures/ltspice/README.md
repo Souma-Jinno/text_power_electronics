@@ -32,10 +32,10 @@ verify_all.sh        全ファイルの照合（コミット前に必ず通す�
 
 ```bash
 # 1つ作る（生成と同時に .asc → ネットリスト → 原本 の往復照合が走る）
-python3 netlist-to-schematic/tools/net2asc.py chapter05/buck_chopper.net -o chapter05/buck_chopper.asc
+python3 netlist-to-schematic/tools/net2asc.py chapter05/buck_converter.net -o chapter05/buck_converter.asc
 
 # 既にある .asc が .net と同じ回路かを確かめるだけ
-python3 netlist-to-schematic/tools/net2asc.py chapter05/buck_chopper.net --check chapter05/buck_chopper.asc
+python3 netlist-to-schematic/tools/net2asc.py chapter05/buck_converter.net --check chapter05/buck_converter.asc
 
 # 全部確かめる
 bash verify_all.sh

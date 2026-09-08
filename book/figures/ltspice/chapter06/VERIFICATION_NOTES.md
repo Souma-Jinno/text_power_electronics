@@ -44,7 +44,7 @@ netlistのdirective行として素通しするため、K文の特別な解析コ
 ## 3ケースの検算（ex6.5(b)が指定する降圧・等倍・昇圧の3パターン）
 
 いずれもngspice直接実行、`.tran 2u 100m 95m`で定常状態の最終1msを評価（ケースcのみ
-R=28.8Ωで時定数τ=RC=14.4msだが、第5章boost_chopperと同一R値・同一.tran設定で定常到達
+R=28.8Ωで時定数τ=RC=14.4msだが、第5章boost_converterと同一R値・同一.tran設定で定常到達
 することを確認済みのため流用）。**(a)のみコミット**（`flyback_converter.asc`、他章の
 「1ケース代表コミット・残りはVERIFICATION_NOTES.mdに記録」という第4章以来の運用を踏襲）、
 (b)(c)は`.param`のみ書き換えたスクラッチnetlistで検算（コミットせず、本メモに結果のみ記録）。

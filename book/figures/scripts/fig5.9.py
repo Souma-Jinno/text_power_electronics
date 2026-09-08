@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # fig5.9（第5章）: インダクタ電流の連続モード（CCM）・境界・不連続モード（DCM）。
 # 負荷電流が ΔI_L/2 を下回ると電流がゼロに張り付く期間が現れる。
-# 波形は配布モデル ltspice/chapter05/buck_chopper.net（V_in=10 V, D=0.5, f=1 kHz,
+# 波形は配布モデル ltspice/chapter05/buck_converter.net（V_in=10 V, D=0.5, f=1 kHz,
 # L=30 mH, C=100 uF，ダイオードはほぼ理想）の負荷抵抗 R だけを 3 通りに変えて
 # ngspice で解いた結果そのもの（定常状態に達した 118〜120 ms の 2 周期を切り出し，
 # 切り出しの先頭を t=0 として描く）。R が大きいほど定常状態に達するのが遅いので，
@@ -32,14 +32,14 @@ RED = "#c0392b"
 SHADE = "#eef3fb"
 
 NET = os.path.expanduser(
-    "~/text_power_electronics/book/figures/ltspice/chapter05/buck_chopper.net")
+    "~/text_power_electronics/book/figures/ltspice/chapter05/buck_converter.net")
 T0, T1 = 118.0, 120.0   # 表示区間 [ms]（定常状態の2周期）
 TSW, DUTY = 1.0, 0.5    # 周期 [ms]，デューティ比（ネットリストと同じ値）
 LOADS = [40.0, 120.0, 300.0]  # 負荷抵抗 [Ω]：CCM／境界／DCM
 
 
 def run_ngspice(R):
-    """buck_chopper.net の R1 を R に置き換えて過渡解析し，(t[ms], iL, vout) を返す。"""
+    """buck_converter.net の R1 を R に置き換えて過渡解析し，(t[ms], iL, vout) を返す。"""
     exe = shutil.which("ngspice") or os.path.expanduser("~/miniforge3/bin/ngspice")
     if not os.path.isfile(exe):
         sys.exit("error: ngspice が見つかりません（PATH か ~/miniforge3/bin に置いてください）")

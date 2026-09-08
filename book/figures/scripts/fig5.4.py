@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # fig5.4（第5章）: 降圧コンバータの定常状態波形（v_L, i_L, i_C）。
 # ボルト秒平衡（正負の面積が等しい）とリプル電流の定義を示す。
-# 波形は配布モデル ltspice/chapter05/buck_chopper.net（V_in=10 V, D=0.5,
+# 波形は配布モデル ltspice/chapter05/buck_converter.net（V_in=10 V, D=0.5,
 # f=1 kHz, L=30 mH, C=100 uF, R=10 Ω，ダイオードはほぼ理想）を ngspice で解いた結果そのもの。
 # 定常状態に達した 19〜21 ms（2周期）を切り出し，切り出しの先頭を t=0 として描く
 # （fig5.6・fig5.9 と同じ流儀）。解析時間はネットリストの .tran（22 ms）と同じ。
@@ -26,14 +26,14 @@ RED = "#c0392b"
 SHADE = "#eef3fb"
 
 NET = os.path.expanduser(
-    "~/text_power_electronics/book/figures/ltspice/chapter05/buck_chopper.net")
+    "~/text_power_electronics/book/figures/ltspice/chapter05/buck_converter.net")
 W0, W1 = 19.0, 21.0   # 切り出し区間 [ms]（定常状態の2周期）
 T0, T1 = 0.0, W1 - W0  # 描画の時間軸 [ms]（切り出しの先頭を 0 とする）
 TSW, DUTY = 1.0, 0.5  # 周期 [ms]，デューティ比（ネットリストと同じ値）
 
 
 def run_ngspice():
-    """buck_chopper.net を ngspice で過渡解析し，(t[ms], vL, iL, iC, vout) を返す。"""
+    """buck_converter.net を ngspice で過渡解析し，(t[ms], vL, iL, iC, vout) を返す。"""
     exe = shutil.which("ngspice") or os.path.expanduser("~/miniforge3/bin/ngspice")
     if not os.path.isfile(exe):
         sys.exit("error: ngspice が見つかりません（PATH か ~/miniforge3/bin に置いてください）")

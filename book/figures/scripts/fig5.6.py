@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # fig5.6（第5章）: 昇圧コンバータの定常状態波形（v_L, i_L, i_D）。
 # オフ期間だけダイオードを通して出力へエネルギーが送られることを示す。
-# 波形は配布モデル ltspice/chapter05/boost_chopper.net（V_in=5 V, D=0.583,
+# 波形は配布モデル ltspice/chapter05/boost_converter.net（V_in=5 V, D=0.583,
 # f=20 kHz, L=700 uH, C=500 uF, R=28.8 Ω，ダイオードはほぼ理想）を ngspice で解いた結果そのもの。
 # 定常状態に達した 200.0〜200.1 ms（2周期）を切り出し，切り出しの先頭を t=0 として描く。
 # 理論値: V_out = V_in/(1-D) = 12.0 V, I_in = I_out/(1-D) = 1.00 A,
@@ -30,13 +30,13 @@ RED = "#c0392b"
 SHADE = "#eef3fb"
 
 NET = os.path.expanduser(
-    "~/text_power_electronics/book/figures/ltspice/chapter05/boost_chopper.net")
+    "~/text_power_electronics/book/figures/ltspice/chapter05/boost_converter.net")
 T0, T1 = 200.0, 200.1   # 表示区間 [ms]（定常状態の2周期）
 TSW, DUTY = 50.0, 0.583  # 周期 [us]，デューティ比（ネットリストと同じ値）
 
 
 def run_ngspice():
-    """boost_chopper.net を ngspice で過渡解析し，(t[ms], vL, iL, iD, vout) を返す。"""
+    """boost_converter.net を ngspice で過渡解析し，(t[ms], vL, iL, iD, vout) を返す。"""
     exe = shutil.which("ngspice") or os.path.expanduser("~/miniforge3/bin/ngspice")
     if not os.path.isfile(exe):
         sys.exit("error: ngspice が見つかりません（PATH か ~/miniforge3/bin に置いてください）")

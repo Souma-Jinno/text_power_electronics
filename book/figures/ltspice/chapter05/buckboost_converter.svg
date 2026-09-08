@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:s="https://github.com/nturley/netlistsvg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="full" height="100%" version="1.1" viewBox="-96.4 -96.4 1155.184000000001 808.704" width="100%">
-  <title>buckboost_chopper.svg</title>
+  <title>buckboost_converter.svg</title>
   <defs/>
   <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="0" x2="232" y1="0" y2="0"/>
   <line stroke="black" stroke-linecap="round" stroke-width="2.0" x1="232" x2="400" y1="96" y2="96"/>

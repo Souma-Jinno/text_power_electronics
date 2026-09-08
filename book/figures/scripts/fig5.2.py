@@ -3,7 +3,7 @@
 # v_L の正の面積が負の面積より大きく，インダクタ電流は周期ごとに増えていく（過渡状態）。
 # V_out が D*V_in に落ち着くと正負の面積が等しくなり（ボルト秒平衡），
 # i_L は毎周期同じ三角波を繰り返す（定常状態）。
-# 波形は配布モデル ltspice/chapter05/buck_chopper.net（V_in=10 V, D=0.5,
+# 波形は配布モデル ltspice/chapter05/buck_converter.net（V_in=10 V, D=0.5,
 # f=1 kHz, L=30 mH, C=100 uF, R=10 Ω，ダイオードはほぼ理想）を ngspice で解いた結果そのもの。
 # fig5.4 が定常状態（19〜21 ms）を切り出すのに対し，この図は起動 t=0 から 12 ms
 # （12周期）をそのまま描く。解析時間はネットリストの .tran（22 ms）と同じ。
@@ -33,7 +33,7 @@ EMPH_N = "#eaa79f"  # 注記する周期の負の面積（濃い赤）
 GUIDE = "#999999"
 
 NET = os.path.expanduser(
-    "~/text_power_electronics/book/figures/ltspice/chapter05/buck_chopper.net")
+    "~/text_power_electronics/book/figures/ltspice/chapter05/buck_converter.net")
 T0, T1 = 0.0, 12.0    # 描画の時間軸 [ms]（起動から12周期）
 TSW, DUTY = 1.0, 0.5  # 周期 [ms]，デューティ比（ネットリストと同じ値）
 NP = int(round((T1 - T0) / TSW))
@@ -43,7 +43,7 @@ TB = 8.0  # 図の上の「過渡状態」「定常状態」の矢印の境目 [
 
 
 def run_ngspice():
-    """buck_chopper.net を ngspice で過渡解析し，(t[ms], vL, iL, vout) を返す。"""
+    """buck_converter.net を ngspice で過渡解析し，(t[ms], vL, iL, vout) を返す。"""
     exe = shutil.which("ngspice") or os.path.expanduser("~/miniforge3/bin/ngspice")
     if not os.path.isfile(exe):
         sys.exit("error: ngspice が見つかりません（PATH か ~/miniforge3/bin に置いてください）")

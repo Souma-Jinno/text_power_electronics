@@ -1,7 +1,7 @@
 # chapter05 LTspice検証メモ
 
 第5章（直流-直流変換(1) 非絶縁型）は本文が「本章の3つの回路（降圧・昇圧・昇降圧チョッパ）」と
-明言する構成のため、見込み通り3回路（`buck_chopper` / `boost_chopper` / `buckboost_chopper`）を
+明言する構成のため、見込み通り3回路（`buck_converter` / `boost_converter` / `buckboost_converter`）を
 作成した（他章のような本文優先の絞り込みは不要だった）。
 
 いずれも corpus（`book/figures/ltspice/corpus/prof_*.asc`、先生が2026-07-18に直接追加した
@@ -30,7 +30,7 @@ LTspice独自の振る舞いダイオードパラメータで、ngspiceは`Ron`/
 
 ## 3回路の検算結果（ngspice直接実行、`.meas tran`使用、いずれも定常状態の最終1周期分で評価）
 
-### buck_chopper（降圧チョッパ、sec5.2）— 例題5.1/5.3/5.4 + 章末問題ex5.6 と同一定数
+### buck_converter（降圧チョッパ、sec5.2）— 例題5.1/5.3/5.4 + 章末問題ex5.6 と同一定数
 
 Vin=10V, D=0.5, f=1kHz, L=30mH, C=100µF, R=10Ω（章末問題ex5.6が指定する
 `LTspice/Lecture5/back_withC`と同一、corpus `prof_02_back_withC.asc`と同一定数）。
@@ -42,7 +42,7 @@ Vin=10V, D=0.5, f=1kHz, L=30mH, C=100µF, R=10Ω（章末問題ex5.6が指定す
 | $\Delta V_{out}$ | 0.1042V(式5.24) | 0.109V | 上記$\Delta I_L$の実測値を使えば0.110V、実測と一致 |
 | $i_{L,min}$ | — | 0.430A(>0) | CCM維持を確認（本文の仮定(3)と整合） |
 
-### boost_chopper（昇圧チョッパ、sec5.3）— 例題5.2 + corpus `prof_00_boost.asc` と同一定数
+### boost_converter（昇圧チョッパ、sec5.3）— 例題5.2 + corpus `prof_00_boost.asc` と同一定数
 
 Vin=5V, D=0.583（例題5.2の$D=7/12\approx0.583$）, f=20kHz, L=700µH, C=500µF, R=28.8Ω
 （$R=V_{out}/I_{out}=12/0.42\approx28.6$Ω — 例題5.2(b)の$I_{out}=0.42$A設定と符合する値を
@@ -55,7 +55,7 @@ corpusが既に選んでいた）。
 | $\Delta I_L$ | 0.208A(式、$V_{in}$のみ依存) | 0.245A | 実測がやや高い（動作点のズレの二次的影響、原因は未特定・正直に記載） |
 | $i_{L,min}$ | — | 0.835A(>0) | CCM維持を確認 |
 
-### buckboost_chopper（昇降圧チョッパ、sec5.4）— 章末問題ex5.3(a) + corpus `prof_01_back_boost_back.asc` と同一定数
+### buckboost_converter（昇降圧チョッパ、sec5.4）— 章末問題ex5.3(a) + corpus `prof_01_back_boost_back.asc` と同一定数
 
 Vin=12V, D=0.2941（$D=5/17$、ex5.3(a)「入力12Vから$-5$V」の設計解）, f=20kHz, L=700µH,
 C=500µF, R=5Ω。
