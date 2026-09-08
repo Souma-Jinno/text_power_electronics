@@ -61,8 +61,17 @@ def sw_h(ax, x1, x2, y, c=BK, fs=8, state="open", r=0.075):
         ax.text(xc, y + 0.50, "S", ha="center", va="bottom", fontsize=fs, color=c)
 
 
-def ind_v(ax, x, y1, y2, c=BK, n=4):
-    # y1: 上端，y2: 下端。右へ膨らむ
+PITCH = 0.40   # コイル1巻きぶんの長さ（fig5.3 の横コイルに合わせた）
+
+
+def ind_v(ax, x, y1, y2, c=BK, n=None):
+    # y1: 上端，y2: 下端。右へ膨らむ。
+    # 巻き数は，横向きコイル ind_h と「ピッチ（1巻きぶんの長さ）」が揃うように
+    # 区間の長さから決める。固定の4巻きにすると，縦コイルは区間が長いぶん
+    # 1つ1つの弧が大きく間延びして，コイルではなく円弧の列に見えてしまう
+    # （2026-09-08 著者指摘「コイルの素子がおかしいです」）。
+    if n is None:
+        n = max(4, int(round((y1 - y2) / PITCH)))
     dy = (y1 - y2) / n
     r = dy / 2
     t = np.linspace(-np.pi / 2, np.pi / 2, 30)
@@ -70,6 +79,14 @@ def ind_v(ax, x, y1, y2, c=BK, n=4):
         yc = y1 - dy * (k + 0.5)
         ax.plot(x + 0.85 * r * np.cos(t), yc + r * np.sin(t),
                 color=c, lw=1.0, zorder=2)
+
+
+def gnd(ax, x, y, c=BK):
+    # 基準電位（グランド）。2026-09-08 著者指示「回路図にグランド入れて」。
+    wire(ax, [(x, y), (x, y - 0.30)], c)
+    for i, wd in enumerate([0.44, 0.26, 0.10]):
+        yy = y - 0.30 - i * 0.11
+        ax.plot([x - wd / 2, x + wd / 2], [yy, yy], color=c, lw=1.0, zorder=2)
 
 
 def cap_v(ax, x, y1, y2, c=BK):
@@ -146,6 +163,8 @@ def draw_bb(ax, mode, small=False):
     wire(ax, [(xA, yB), (xR, yB)])
     dot(ax, xA, yB)
     dot(ax, xB, yB)
+    if not small:
+        gnd(ax, 0.5 * (xA + xB), yB)
     # 素子
     source(ax, xV, yB, yT, c=left_c)
     ax.text(xV - 0.5, 0.5 * (yB + yT), r"$V_{\mathrm{in}}$",
