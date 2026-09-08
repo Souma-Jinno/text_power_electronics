@@ -18,6 +18,12 @@ BLUE = "#2a5db0"
 RED = "#c0392b"
 
 
+PITCH = 0.40                    # コイル1巻きぶんの長さ
+TURNS = 3                       # 巻き数（2026-09-08 著者指示「コイルですが3巻にして」）
+COILLEN = TURNS * PITCH         # コイルの長さ。区間の中央にこの長さぶんだけ描き，
+                                # 残りは素の配線でつなぐ。こうすると，置き場所の
+                                # 長さが違っても，巻き数も1巻きの大きさも変わらない。
+
 def wire(ax, pts, c=BK):
     xs = [p[0] for p in pts]
     ys = [p[1] for p in pts]
@@ -59,14 +65,21 @@ def sw_v(ax, x, y1, y2, c=BK, fs=8, state="open", r=0.075):
     ax.text(x - 0.62, yc, "S", ha="right", va="center", fontsize=fs, color=c)
 
 
-def ind_h(ax, x1, x2, y, c=BK, n=4):
-    dx = (x2 - x1) / n
+def ind_h(ax, x1, x2, y, c=BK):
+    xc = 0.5 * (x1 + x2)
+    xa, xb = xc - COILLEN / 2, xc + COILLEN / 2
+    if xa > x1:
+        wire(ax, [(x1, y), (xa, y)], c)
+    if x2 > xb:
+        wire(ax, [(xb, y), (x2, y)], c)
+    dx = COILLEN / TURNS
     r = dx / 2
     t = np.linspace(0, np.pi, 30)
-    for k in range(n):
-        xc = x1 + dx * (k + 0.5)
-        ax.plot(xc - r * np.cos(t), y + 0.85 * r * np.sin(t),
+    for k in range(TURNS):
+        xk = xa + dx * (k + 0.5)
+        ax.plot(xk - r * np.cos(t), y + 0.85 * r * np.sin(t),
                 color=c, lw=1.0, zorder=2)
+
 
 
 def gnd(ax, x, y, c=BK):

@@ -19,6 +19,12 @@ RED = "#c0392b"
 SHADE = "#eef3fb"
 
 
+PITCH = 0.40                    # コイル1巻きぶんの長さ
+TURNS = 3                       # 巻き数（2026-09-08 著者指示「コイルですが3巻にして」）
+COILLEN = TURNS * PITCH         # コイルの長さ。区間の中央にこの長さぶんだけ描き，
+                                # 残りは素の配線でつなぐ。こうすると，置き場所の
+                                # 長さが違っても，巻き数も1巻きの大きさも変わらない。
+
 def wire(ax, pts, c=BK):
     ax.plot([p[0] for p in pts], [p[1] for p in pts], color=c, lw=1.0,
             solid_capstyle="round", zorder=1)
@@ -28,13 +34,21 @@ def dot(ax, x, y, c=BK):
     ax.plot([x], [y], "o", ms=2.3, color=c, zorder=3)
 
 
-def ind_h(ax, x1, x2, y, c=BK, n=4):
-    dx = (x2 - x1) / n
+def ind_h(ax, x1, x2, y, c=BK):
+    xc = 0.5 * (x1 + x2)
+    xa, xb = xc - COILLEN / 2, xc + COILLEN / 2
+    if xa > x1:
+        wire(ax, [(x1, y), (xa, y)], c)
+    if x2 > xb:
+        wire(ax, [(xb, y), (x2, y)], c)
+    dx = COILLEN / TURNS
     r = dx / 2
-    th = np.linspace(0, np.pi, 30)
-    for k in range(n):
-        xc = x1 + dx * (k + 0.5)
-        ax.plot(xc - r * np.cos(th), y + 0.8 * r * np.sin(th), color=c, lw=1.0, zorder=2)
+    t = np.linspace(0, np.pi, 30)
+    for k in range(TURNS):
+        xk = xa + dx * (k + 0.5)
+        ax.plot(xk - r * np.cos(t), y + 0.85 * r * np.sin(t),
+                color=c, lw=1.0, zorder=2)
+
 
 
 def dio_v(ax, x, y1, y2, c=BK):

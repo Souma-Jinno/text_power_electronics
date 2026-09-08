@@ -19,6 +19,12 @@ BLUE = "#2a5db0"
 RED = "#c0392b"
 
 
+PITCH = 0.40                    # コイル1巻きぶんの長さ
+TURNS = 3                       # 巻き数（2026-09-08 著者指示「コイルですが3巻にして」）
+COILLEN = TURNS * PITCH         # コイルの長さ。区間の中央にこの長さぶんだけ描き，
+                                # 残りは素の配線でつなぐ。こうすると，置き場所の
+                                # 長さが違っても，巻き数も1巻きの大きさも変わらない。
+
 def wire(ax, pts, c=BK):
     xs = [p[0] for p in pts]
     ys = [p[1] for p in pts]
@@ -61,25 +67,24 @@ def sw_h(ax, x1, x2, y, c=BK, fs=8, state="open", r=0.075):
         ax.text(xc, y + 0.50, "S", ha="center", va="bottom", fontsize=fs, color=c)
 
 
-PITCH = 0.40    # コイル1巻きぶんの長さ（fig5.3 の横コイルに合わせた）
-COILLEN = 1.6   # コイルの長さ（fig5.3 の横コイルと同じ）
 
 
-def ind_v(ax, x, y1, y2, c=BK, n=None):
-    # y1: 上端，y2: 下端。右へ膨らむ。
-    # 巻き数は，横向きコイル ind_h と「ピッチ（1巻きぶんの長さ）」が揃うように
-    # 区間の長さから決める。固定の4巻きにすると，縦コイルは区間が長いぶん
-    # 1つ1つの弧が大きく間延びして，コイルではなく円弧の列に見えてしまう
-    # （2026-09-08 著者指摘「コイルの素子がおかしいです」）。
-    if n is None:
-        n = max(4, int(round((y1 - y2) / PITCH)))
-    dy = (y1 - y2) / n
+def ind_v(ax, x, y1, y2, c=BK):
+    # y1: 上端，y2: 下端。右へ膨らむ。横向き ind_h と同じ巻き数・同じ大きさ。
+    yc = 0.5 * (y1 + y2)
+    yt, yb = yc + COILLEN / 2, yc - COILLEN / 2
+    if y1 > yt:
+        wire(ax, [(x, y1), (x, yt)], c)
+    if yb > y2:
+        wire(ax, [(x, yb), (x, y2)], c)
+    dy = COILLEN / TURNS
     r = dy / 2
     t = np.linspace(-np.pi / 2, np.pi / 2, 30)
-    for k in range(n):
-        yc = y1 - dy * (k + 0.5)
-        ax.plot(x + 0.85 * r * np.cos(t), yc + r * np.sin(t),
+    for k in range(TURNS):
+        yk = yt - dy * (k + 0.5)
+        ax.plot(x + 0.85 * r * np.cos(t), yk + r * np.sin(t),
                 color=c, lw=1.0, zorder=2)
+
 
 
 def gnd(ax, x, y, c=BK):
@@ -170,16 +175,7 @@ def draw_bb(ax, mode, small=False):
     source(ax, xV, yB, yT, c=left_c)
     ax.text(xV - 0.5, 0.5 * (yB + yT), r"$V_{\mathrm{in}}$",
             ha="right", va="center", fontsize=fs, color=left_c)
-    # 縦向きコイルは，横向きコイル（fig5.3・fig5.5 の L）と「同じ大きさ・同じ巻き数」に
-    # なるよう，区間の中央に長さ COILLEN（＝横向きコイルと同じ 1.6）ぶんだけ描き，
-    # 上下は素の配線でつなぐ。区間いっぱいに描くと巻き数か1巻きの大きさのどちらかが
-    # 横向きと食い違い，別の素子に見えてしまう
-    # （2026-09-08 著者指摘「図5.7のコイルですが，他の回路図と違います。揃えて」）。
-    ycen = 0.5 * (yT + yB)
-    yc0, yc1 = ycen + COILLEN / 2, ycen - COILLEN / 2
-    wire(ax, [(xA, yT), (xA, yc0)])
-    ind_v(ax, xA, yc0, yc1)
-    wire(ax, [(xA, yc1), (xA, yB)])
+    ind_v(ax, xA, yT, yB)
     ax.text(xA - 0.42, 0.5 * (yB + yT), "$L$", ha="right", va="center",
             fontsize=fs)
     ax.text(xA - 0.42, yT - 0.35, "$+$", ha="right", fontsize=fsd)
