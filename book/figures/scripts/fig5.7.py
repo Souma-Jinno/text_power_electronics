@@ -125,17 +125,42 @@ def dio_h_left(ax, x1, x2, y, c=BK):
     ax.plot([xc - a, xc - a], [y - s, y + s], color=c, lw=1.2, zorder=2)
 
 
+_ARROWS = []
+
+
 def iarr(ax, x, y, dx, dy, c=None):
-    # c=None のとき「電流の経路」を示す太い矢印（色に依らず太さで区別する）。
-    # 色を指定したときは細い矢印（i_L の向きなど）。
-    if c is None:
-        ax.annotate("", xy=(x + dx, y + dy), xytext=(x, y),
-                    arrowprops=dict(arrowstyle="-|>", lw=1.9, color=BK,
-                                    mutation_scale=10), zorder=4)
-    else:
-        ax.annotate("", xy=(x + dx, y + dy), xytext=(x, y),
-                    arrowprops=dict(arrowstyle="-|>", lw=1.1, color=c,
-                                    mutation_scale=8), zorder=4)
+    # 矢印はここでは描かず，軸の縮尺が決まってから draw_arrows() でまとめて描く。
+    # (a) と (b)(c) では縮尺が違うので，データ座標で長さを指定すると小さい図では
+    # 矢じりだけになって線が潰れて見えてしまうため（著者指摘 2026-09-08）。
+    _ARROWS.append((ax, x, y, dx, dy, c))
+
+
+def draw_arrows():
+    # 紙面上の長さを一定にして，どの図でも同じ形の矢印にする。
+    # c=None のとき「電流の経路」を示す太い矢印，色を指定したときは細い矢印（i_L など）。
+    for ax, x, y, dx, dy, c in _ARROWS:
+        n = (dx * dx + dy * dy) ** 0.5
+        ux, uy = dx / n, dy / n
+        # 全長は 12 pt（細い矢印は 10 pt）を上限に，指定された区間に収まる長さにする。
+        # 下限 7.5 pt は，矢じりだけになって線が潰れて見えないための最小の長さ。
+        span = n * abs(ax.transData.transform((1, 0))[0]
+                       - ax.transData.transform((0, 0))[0]) * 72.0 / ax.figure.dpi
+        arrlen = min(12.0 if c is None else 10.0, max(7.5, span))
+        lw = 1.7 if c is None else 1.0
+        ms = 7.5 if c is None else 6.5           # 矢じりの大きさ
+        col = BK if c is None else c
+        # 指定された区間の中央に，一定の長さで置く
+        px = ax.transData.transform((x + 0.5 * dx, y + 0.5 * dy))
+        half = 0.5 * arrlen * ax.figure.dpi / 72.0
+        head = ax.transData.inverted().transform(
+            (px[0] + ux * half, px[1] + uy * half))
+        ax.annotate("", xy=(head[0], head[1]), xycoords="data",
+                    xytext=(-ux * arrlen, -uy * arrlen),
+                    textcoords="offset points",
+                    arrowprops=dict(arrowstyle="-|>", lw=lw, color=col,
+                                    mutation_scale=ms,
+                                    shrinkA=0, shrinkB=0), zorder=4)
+    _ARROWS.clear()
 
 
 def draw_bb(ax, mode, small=False):
@@ -195,12 +220,13 @@ def draw_bb(ax, mode, small=False):
                 ha="center", va="center", fontsize=fs)
         ax.text(xR + 1.05, yB + 0.45, "$-$", ha="center", fontsize=fsd)
     # 電流経路の矢印
+    # 矢印は配線の上に置き，素子や節点の丸と重ならない範囲を指定する
     if mode == "on":
-        iarr(ax, xV + 0.25, yT, 0.3, 0)
-        iarr(ax, 0.5 * (xV + xA) + 0.6, yB, -0.6, 0)
+        iarr(ax, xV + 0.06, yT, 0.38, 0)
+        iarr(ax, 0.5 * (xV + xA) + 0.65, yB, -0.7, 0)
     elif mode == "off":
-        iarr(ax, 0.5 * (xA + xB) - 0.35, yB, 0.6, 0)
-        iarr(ax, xB - 0.3, yT, -0.4, 0)
+        iarr(ax, 0.5 * (xA + xB) - 0.35, yB, 0.7, 0)
+        iarr(ax, xB - 0.05, yT, -0.5, 0)
     ax.set_xlim(*xlim)
     ax.set_ylim(-0.8, 3.65)
     ax.set_aspect("equal")
@@ -229,5 +255,7 @@ ax.text(3.35, -0.62, "(c) オフ期間（Lが放出）", ha="center", fontsize=6
         fontproperties=JP, color="#555")
 
 EPS = os.path.expanduser("~/text_power_electronics/book/figures/fig5.7.eps")
+fig.canvas.draw()   # aspect="equal" の縮尺を確定させてから矢印を描く
+draw_arrows()
 fig.savefig(EPS, format="eps", bbox_inches="tight")
 print("wrote", EPS)

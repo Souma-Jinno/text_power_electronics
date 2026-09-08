@@ -23,17 +23,17 @@ NP = 4           # 描く周期の数（2026-09-08 著者指示「4つぐらい�
 XL, XR = -0.32, NP * T + 0.55  # 描画範囲（左に「オン」「オフ」，右に t の余白）
 
 
-def dim(ax, x1, x2, y, label, c=BK, fs=7.5, below=False):
-    # 寸法線（両矢印）と，その上のラベル
+def dim(ax, x1, x2, y, label, c=BK, fs=7.5, below=False, pad=0.06):
+    # 寸法線（両矢印）と，その上のラベル。pad はラベルと寸法線のすきま
     ax.annotate("", xy=(x2, y), xytext=(x1, y),
                 arrowprops=dict(arrowstyle="<->", lw=0.8, color=c,
                                 mutation_scale=7, shrinkA=0, shrinkB=0),
                 zorder=4)
     if below:
-        ax.text(0.5 * (x1 + x2), y - 0.06, label, ha="center", va="top",
+        ax.text(0.5 * (x1 + x2), y - pad, label, ha="center", va="top",
                 fontsize=fs, color=c)
     else:
-        ax.text(0.5 * (x1 + x2), y + 0.06, label, ha="center", va="bottom",
+        ax.text(0.5 * (x1 + x2), y + pad, label, ha="center", va="bottom",
                 fontsize=fs, color=c)
 
 
@@ -74,13 +74,14 @@ def draw_wave(ax, D, panel):
     # 付け，段の間隔を広くとって当たらないようにする（下に付けると波形に重なる）。
     # 補助の縦線はそれぞれの段の高さまでで止める。
     # こうしないと，D が大きいとき2本の矢印がほぼ同じ長さで重なって読めない。
-    yd_on, yd_T = 1.18, 1.62
+    yd_on, yd_T = 1.12, 1.62
     for x in (0, ton):
         ax.plot([x, x], [1.0, yd_on + 0.04], color="#888888", lw=0.5,
                 ls=(0, (1.5, 1.5)), zorder=1)
     ax.plot([T, T], [1.0, yd_T + 0.04], color="#888888", lw=0.5,
             ls=(0, (1.5, 1.5)), zorder=1)
-    dim(ax, 0, ton, yd_on, r"$T_{\mathrm{on}}$", c=RED)
+    # T_on のラベルは寸法線から離す（2026-09-08 著者指摘「Tonが矢印に被ってます」）
+    dim(ax, 0, ton, yd_on, r"$T_{\mathrm{on}}$", c=RED, pad=0.17)
     dim(ax, 0, T, yd_T, r"$T$", c=BK)
     # 右端に D の値
     ax.text(XR - 0.05, 1.62, r"$D = \dfrac{T_{\mathrm{on}}}{T} = %.2f$" % D,
