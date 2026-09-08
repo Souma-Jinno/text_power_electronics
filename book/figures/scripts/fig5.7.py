@@ -61,7 +61,8 @@ def sw_h(ax, x1, x2, y, c=BK, fs=8, state="open", r=0.075):
         ax.text(xc, y + 0.50, "S", ha="center", va="bottom", fontsize=fs, color=c)
 
 
-PITCH = 0.40   # コイル1巻きぶんの長さ（fig5.3 の横コイルに合わせた）
+PITCH = 0.40    # コイル1巻きぶんの長さ（fig5.3 の横コイルに合わせた）
+COILLEN = 1.6   # コイルの長さ（fig5.3 の横コイルと同じ）
 
 
 def ind_v(ax, x, y1, y2, c=BK, n=None):
@@ -169,7 +170,16 @@ def draw_bb(ax, mode, small=False):
     source(ax, xV, yB, yT, c=left_c)
     ax.text(xV - 0.5, 0.5 * (yB + yT), r"$V_{\mathrm{in}}$",
             ha="right", va="center", fontsize=fs, color=left_c)
-    ind_v(ax, xA, yT, yB)
+    # 縦向きコイルは，横向きコイル（fig5.3・fig5.5 の L）と「同じ大きさ・同じ巻き数」に
+    # なるよう，区間の中央に長さ COILLEN（＝横向きコイルと同じ 1.6）ぶんだけ描き，
+    # 上下は素の配線でつなぐ。区間いっぱいに描くと巻き数か1巻きの大きさのどちらかが
+    # 横向きと食い違い，別の素子に見えてしまう
+    # （2026-09-08 著者指摘「図5.7のコイルですが，他の回路図と違います。揃えて」）。
+    ycen = 0.5 * (yT + yB)
+    yc0, yc1 = ycen + COILLEN / 2, ycen - COILLEN / 2
+    wire(ax, [(xA, yT), (xA, yc0)])
+    ind_v(ax, xA, yc0, yc1)
+    wire(ax, [(xA, yc1), (xA, yB)])
     ax.text(xA - 0.42, 0.5 * (yB + yT), "$L$", ha="right", va="center",
             fontsize=fs)
     ax.text(xA - 0.42, yT - 0.35, "$+$", ha="right", fontsize=fsd)
