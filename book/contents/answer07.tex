@@ -36,6 +36,18 @@ I_Z = \frac{12 - 4.7}{1075} \approx 6.8\,\mathrm{mA}
 
 %%--- 章末問題 7.3 ---
 \item[\ref{ex7.3}]
+(a) 式\ref{eq7.9}より$V_{\mathrm{out}}/V_{\mathrm{ref}} = 1 + R_1/R_2$だから
+\begin{equation*}
+\frac{R_1}{R_2} = \frac{V_{\mathrm{out}}}{V_{\mathrm{ref}}} - 1 = \frac{5.0}{2.5} - 1 = 1
+\end{equation*}
+すなわち$R_1 = R_2$でよい。
+
+(b) $R_2 = 10$\,k$\Omega$なら$R_1 = 10$\,k$\Omega$である。
+出力は抵抗の絶対値ではなく比だけで決まるので，$100$\,k$\Omega$どうしにしても同じ$5.0$\,Vが得られる
+（絶対値は，分圧抵抗に流れる電流や雑音を見て選ぶ）。
+
+%%--- 章末問題 7.4 ---
+\item[\ref{ex7.4}]
 (a) 式\ref{eq7.9}より
 \begin{equation*}
 \frac{R_1}{R_2} = \frac{V_{\mathrm{out}}}{V_{\mathrm{ref}}} - 1
@@ -53,8 +65,8 @@ V_{\mathrm{ref}} = \frac{R_2}{R_1+R_2}V_{\mathrm{out}}
 $V_{\mathrm{out}} = \dfrac{R_1+R_2}{R_2}V_{\mathrm{ref}} = \left(1+\dfrac{R_1}{R_2}\right)V_{\mathrm{ref}}$
 （式\ref{eq7.9}）を得る。
 
-%%--- 章末問題 7.4 ---
-\item[\ref{ex7.4}]
+%%--- 章末問題 7.5 ---
+\item[\ref{ex7.5}]
 (a) $P_{\mathrm{out}} = 3.3\times1.5 = 4.95$\,W。式\ref{eq7.2}より
 \begin{equation*}
 P_{\mathrm{loss}} = (12 - 3.3)\times1.5 = 8.7\times1.5 \approx 13\,\mathrm{W}
@@ -67,8 +79,8 @@ P_{\mathrm{loss}} = (12 - 3.3)\times1.5 = 8.7\times1.5 \approx 13\,\mathrm{W}
 大きな放熱器が必要になる（\ref{sec7.4}節の注意）。
 電圧差が大きく電流も大きいこの用途では，損失が20分の1で済む\textbf{降圧コンバータがふさわしい}。
 
-%%--- 章末問題 7.5 ---
-\item[\ref{ex7.5}]
+%%--- 章末問題 7.6 ---
+\item[\ref{ex7.6}]
 \rev{（シミュレーションの確認ポイント）
 (a) ツェナー基準だけの回路の出力は式\ref{eq7.10}の$V_{\mathrm{out}} = V_Z - V_{\mathrm{BE}} = 4.7 - 0.7 \approx 4.0$\,Vである。
 負荷$10 \to 50 \to 100\,\Omega$で出力電流は$0.40 \to 0.08 \to 0.04$\,Aと変わるが，

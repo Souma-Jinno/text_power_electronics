@@ -194,7 +194,7 @@ V_{\mathrm{on}} \cdot DT + V_{\mathrm{off}} \cdot (1-D)T = 0
 本章の解析では次の4つを仮定する。(1)~スイッチとダイオードは理想的（オンで電圧降下ゼロ，オフで電流ゼロ，切替えは一瞬）。
 (2)~回路は定常状態にある。(3)~インダクタ電流は常に正である
 （\index{でんりゅうれんぞくもーど@電流連続モード}\textbf{電流連続モード}。\ref{sec5.7}節で崩れる場合を扱う）。
-(4)~出力電圧のリプルは小さく，$v_{\mathrm{out}}$は一定値$V_{\mathrm{out}}$とみなせる。仮定が崩れるとどうなるかは\ref{sec5.7}節と章末問題\ref{ex5.5}で確かめる。
+(4)~出力電圧のリプルは小さく，$v_{\mathrm{out}}$は一定値$V_{\mathrm{out}}$とみなせる。仮定が崩れるとどうなるかは\ref{sec5.7}節と章末問題\ref{ex5.7}で確かめる。
 \end{注意}
 
 \subsection{オン期間とオフ期間の等価回路}
@@ -265,7 +265,7 @@ $i_L$は平均値$I_{\mathrm{out}}$のまわりを直線的に増減する三角
 D = \frac{V_{\mathrm{out}}}{V_{\mathrm{in}}} = \frac{5}{12} \approx 0.417
 \end{equation*}
 周期は$T = 1/f = 10\,\mathrm{\mu s}$だから，Sの導通時間は$DT \approx 4.2\,\mathrm{\mu s}$，
-ダイオードの導通時間は$(1-D)T \approx 5.8\,\mathrm{\mu s}$である。この動作点は\ref{sec5.5}節・\ref{sec5.6}節の設計例題でも使う。
+ダイオードの導通時間は$(1-D)T \approx 5.8\,\mathrm{\mu s}$である。この動作点は\ref{sec5.5}節の設計例題でも使う。
 \end{解答}
 \end{例題}
 
@@ -363,22 +363,6 @@ $D$が1に近づくとオフ期間がごく短くなり，蓄えたエネルギ�
 \textbf{エネルギーの流れ}：オン期間は電源のエネルギーをすべて$L$に蓄え込み（その間の負荷は$C$が支える），
 オフ期間に電源と$L$が力を合わせて，高い電圧で$C$と負荷へ送り出す。
 「低い電圧で時間をかけて蓄え，高い電圧で短時間に放出する」― 蓄えと放出の時間配分が電圧比$1/(1-D)$を作っている。
-
-\begin{例題}[昇圧コンバータの動作点]
-\label{rei5.2}
-バッテリー電圧$5$\,Vから$12$\,Vを作る昇圧コンバータについて，(a)~デューティ比$D$，(b)~出力電流が$0.42$\,Aのときの入力電流を求めよ。損失はないものとする。
-\begin{解答}
-(a) 式\ref{eq5.13}を$D$について解くと
-\begin{equation*}
-D = 1 - \frac{V_{\mathrm{in}}}{V_{\mathrm{out}}} = 1 - \frac{5}{12}= \frac{7}{12} \approx 0.583
-\end{equation*}
-(b) 式\ref{eq5.14}より
-\begin{equation*}
-I_{\mathrm{in}} = \frac{I_{\mathrm{out}}}{1-D}= \frac{0.42}{5/12} \approx 1.0\,\mathrm{A}
-\end{equation*}
-出力の2.4倍の電流が入力側に流れる。昇圧コンバータの入力側の配線・インダクタ・スイッチは，この大きな電流を前提に選ばなければならない。
-\end{解答}
-\end{例題}
 
 \begin{問}
 \item 太陽電池の$24$\,Vを$96$\,Vに昇圧したい。デューティ比を求めよ。また$D = 0.9$まで使えるとすると，理論上の最大出力電圧は入力の何倍か。
@@ -518,7 +502,7 @@ L = \frac{(V_{\mathrm{in}} - V_{\mathrm{out}})\, D}{f\, \mathit{\Delta}I_L}
 \end{screen}
 
 \begin{例題}[インダクタの設計]
-\label{rei5.3}
+\label{rei5.2}
 $12$\,Vから$5$\,V・$2$\,Aを作る降圧コンバータ（$f = 100$\,kHz）で，
 リプル電流を$\mathit{\Delta}I_L = 0.4$\,A（負荷電流の2割）まで許すとき，必要なインダクタンス$L$と，インダクタ電流の最大値を求めよ。
 \begin{解答}
@@ -601,21 +585,6 @@ C = \frac{\mathit{\Delta}I_L}{8 f\, \mathit{\Delta}V_{\mathrm{out}}}
 \end{enumerate}
 \end{screen}
 
-\begin{例題}[キャパシタの設計]
-\label{rei5.4}
-例題\ref{rei5.3}の降圧コンバータ（$f = 100$\,kHz，$\mathit{\Delta}I_L = 0.4$\,A）で，
-リプル電圧を$\mathit{\Delta}V_{\mathrm{out}} = 50$\,mV（出力$5$\,Vの1\,\%）に抑えたい。必要なキャパシタンスを求めよ。
-\begin{解答}
-式\ref{eq5.25}より
-\begin{eqnarray}
-C &=& \frac{\mathit{\Delta}I_L}{8 f\, \mathit{\Delta}V_{\mathrm{out}}}
-= \frac{0.4}{8 \times 100 \times 10^{3} \times 0.05} \nonumber\\
-&=& 10\,\mathrm{\mu F} \nonumber
-\end{eqnarray}
-リプル電流$0.4$\,Aに対してわずか$10\,\mathrm{\mu F}$で済むのは，スイッチング周波数が高いからである（\ref{sec5.8}節）。
-\end{解答}
-\end{例題}
-
 \begin{注意}
 実際のキャパシタには\index{とうかちょくれつていこう@等価直列抵抗}\textbf{等価直列抵抗}
 （\index{いーえすあーる@ESR}ESR：equivalent series resistance。4章）$r_C$があり，リプル電流が流れるとそれだけで$r_C\, \mathit{\Delta}I_L$の電圧の揺れが生じる。
@@ -649,7 +618,7 @@ ESRによる電圧の段差も$r_C\, i_L$と大きい。昇圧・昇降圧では
 \begin{問}
 \item 降圧コンバータで$V_{\mathrm{in}} = 10$\,V，$D = 0.5$，$f = 1$\,kHz，
 $L = 30$\,mH，$C = 100\,\mathrm{\mu F}$のとき，リプル電流$\mathit{\Delta}I_L$とリプル電圧$\mathit{\Delta}V_{\mathrm{out}}$を求めよ
-（この定数は章末問題\ref{ex5.6}のLTspice演習と同じである）。
+（この定数は章末問題\ref{ex5.8}のLTspice演習と同じである）。
 \end{問}
 
 \begin{問}
@@ -719,7 +688,7 @@ V_{\mathrm{on}} \cdot DT + V_{\mathrm{off}} \cdot D_2 T = 0
 \end{箇条書}
 
 \begin{問}
-\item 例題\ref{rei5.3}の設計（$12$\,V→$5$\,V，$f = 100$\,kHz，
+\item 例題\ref{rei5.2}の設計（$12$\,V→$5$\,V，$f = 100$\,kHz，
 $L = 73\,\mathrm{\mu H}$，$\mathit{\Delta}I_L = 0.4$\,A）で，負荷電流がいくら以下になるとDCMに入るか。またそのときの負荷抵抗はいくら以上か。
 \end{問}
 
@@ -739,7 +708,7 @@ $L = 73\,\mathrm{\mu H}$，$\mathit{\Delta}I_L = 0.4$\,A）で，負荷電流が
 \begin{center}
 \includegraphics[clip]{figures/fig5.10.eps}
 \end{center}
-\caption{スイッチング周波数と必要な$L$・$C$（例題\ref{rei5.3}・例題\ref{rei5.4}の設計仕様の場合）。リプルを一定に保つなら，どちらも$1/f$で小さくできる}
+\caption{スイッチング周波数と必要な$L$・$C$（例題\ref{rei5.2}の設計仕様で，$\mathit{\Delta}V_{\mathrm{out}} = 50$\,mVとした場合）。リプルを一定に保つなら，どちらも$1/f$で小さくできる}
 \label{fig5.10}
 \end{figure}
 
@@ -755,13 +724,7 @@ $L = 73\,\mathrm{\mu H}$，$\mathit{\Delta}I_L = 0.4$\,A）で，負荷電流が
 
 %%======================================================================
 \begin{章末問題}
-\item \label{ex5.1}入力$24$\,Vから$12$\,V・$3$\,Aを作る降圧コンバータを設計する。スイッチング周波数は$f = 200$\,kHzとする。
-\begin{enumerate}
-\item[(a)] デューティ比$D$を求めよ。
-\item[(b)] リプル電流を$0.6$\,A（負荷電流の2割）に抑えるための$L$を求めよ。
-\item[(c)] リプル電圧を$50$\,mVに抑えるための$C$を求めよ。
-\item[(d)] インダクタ電流の最大値を求めよ。
-\end{enumerate}
+\item \label{ex5.1}バッテリー電圧$5$\,Vから$12$\,Vを作る昇圧コンバータについて，(a)~デューティ比$D$，(b)~出力電流が$0.42$\,Aのときの入力電流を求めよ。損失はないものとする。
 
 \item \label{ex5.2}バッテリー$12$\,Vから$48$\,V・$0.5$\,Aを作る昇圧コンバータ（$f = 100$\,kHz，$L = 100\,\mathrm{\mu H}$）について，損失を無視して答えよ。
 \begin{enumerate}
@@ -773,27 +736,38 @@ $L = 73\,\mathrm{\mu H}$，$\mathit{\Delta}I_L = 0.4$\,A）で，負荷電流が
 \item \label{ex5.3}昇降圧コンバータについて，オン期間とオフ期間の等価回路を描き，ボルト秒平衡から式\ref{eq5.18}を導け。
 また，入力$12$\,Vから大きさ$12$\,V，$5$\,V，$24$\,Vの負電圧を得るためのデューティ比をそれぞれ求めよ。
 
-\item \label{ex5.4}降圧コンバータがCCMを保つ条件を負荷抵抗$R$で表そう。
+\item \label{ex5.4}入力$24$\,Vから$12$\,V・$3$\,Aを作る降圧コンバータを設計する。スイッチング周波数は$f = 200$\,kHzとする。
 \begin{enumerate}
-\item[(a)] $I_{\mathrm{out}} = V_{\mathrm{out}}/R$と式\ref{eq5.27}から，CCMとDCMの境界の負荷抵抗が$R_B = \dfrac{2 f L}{1-D}$と書けることを示せ。
-\item[(b)] 例題\ref{rei5.3}の設計（$D = 0.417$，$f = 100$\,kHz，$L = 73\,\mathrm{\mu H}$）の$R_B$を求め，\ref{sec5.7}節の問の結果と一致することを確かめよ。
+\item[(a)] デューティ比$D$を求めよ。
+\item[(b)] リプル電流を$0.6$\,A（負荷電流の2割）に抑えるための$L$を求めよ。
+\item[(c)] リプル電圧を$50$\,mVに抑えるための$C$を求めよ。
+\item[(d)] インダクタ電流の最大値を求めよ。
 \end{enumerate}
 
-\item \label{ex5.5}ダイオードの順方向電圧降下$V_F$を無視しない場合の降圧コンバータを考える（それ以外の仮定はそのまま）。
+\item \label{ex5.5}$12$\,Vから$5$\,V・$2$\,Aを作る降圧コンバータ（$f = 100$\,kHz，リプル電流$\mathit{\Delta}I_L = 0.4$\,A。例題\ref{rei5.2}の設計）で，
+リプル電圧を$\mathit{\Delta}V_{\mathrm{out}} = 50$\,mV（出力$5$\,Vの1\,\%）に抑えたい。必要なキャパシタンスを求めよ。
+
+\item \label{ex5.6}降圧コンバータがCCMを保つ条件を負荷抵抗$R$で表そう。
+\begin{enumerate}
+\item[(a)] $I_{\mathrm{out}} = V_{\mathrm{out}}/R$と式\ref{eq5.27}から，CCMとDCMの境界の負荷抵抗が$R_B = \dfrac{2 f L}{1-D}$と書けることを示せ。
+\item[(b)] 例題\ref{rei5.2}の設計（$D = 0.417$，$f = 100$\,kHz，$L = 73\,\mathrm{\mu H}$）の$R_B$を求め，\ref{sec5.7}節の問の結果と一致することを確かめよ。
+\end{enumerate}
+
+\item \label{ex5.7}ダイオードの順方向電圧降下$V_F$を無視しない場合の降圧コンバータを考える（それ以外の仮定はそのまま）。
 \begin{enumerate}
 \item[(a)] オフ期間のインダクタ電圧が$v_L = -V_{\mathrm{out}} - V_F$となることを示し，ボルト秒平衡から$V_{\mathrm{out}} = D V_{\mathrm{in}} - (1-D) V_F$を導け。
 \item[(b)] $V_{\mathrm{in}} = 12$\,V，$D = 0.417$，$V_F = 0.7$\,Vのとき
 出力電圧はいくらか。理想値$5$\,Vからのずれを求めよ。この損失を避けるために\ref{sec5.7}節の同期整流が使われる。
 \end{enumerate}
 
-\item \label{ex5.6}
+\item \label{ex5.8}
 （LTspiceで確かめよ）\rev{配布モデル\texttt{chapter05/buck\_converter.asc}}の降圧コンバータ（$V_{\mathrm{in}} = 10$\,V，$D = 0.5$，$f = 1$\,kHz，$L = 30$\,mH，
 $C = 100\,\mathrm{\mu F}$，$R = 10\,\Omega$）をシミュレーションし，次を確かめよ。
 \begin{enumerate}
 \item[(a)] 定常状態の$\mathit{\Delta}I_L$と$\mathit{\Delta}V_{\mathrm{out}}$を
 波形から読み取り，式\ref{eq5.19}・式\ref{eq5.24}の計算値（\ref{sec5.6}節の問）と比較せよ。
 \item[(b)] 負荷を$R = 150\,\Omega$に変えると波形はどう変わるか。
-出力電圧が$5$\,Vより高くなることを確かめ，理由を説明せよ（境界は章末問題\ref{ex5.4}の$R_B$で見積もれる）。
+出力電圧が$5$\,Vより高くなることを確かめ，理由を説明せよ（境界は章末問題\ref{ex5.6}の$R_B$で見積もれる）。
 \item[(c)] $f$を$10$\,kHzに上げると，$R = 10\,\Omega$のままで$\mathit{\Delta}I_L$と$\mathit{\Delta}V_{\mathrm{out}}$はどうなるか。式から予想してから確かめよ。
 \item[(d)] $L$を$3$\,mHに減らすと$\mathit{\Delta}I_L$はどうなるか。また$R = 150\,\Omega$のままではモードはどうなるか。予想してから確かめよ。
 \end{enumerate}

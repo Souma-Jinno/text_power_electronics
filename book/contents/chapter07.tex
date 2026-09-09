@@ -248,21 +248,6 @@ V_{\mathrm{out}} = \left(1 + \frac{R_1}{R_2}\right) V_{\mathrm{ref}}
 を得る。\textbf{抵抗の比だけで出力電圧が決まる}のが要点である。$R_1 = 0$（または$R_2 \to \infty$）なら$V_{\mathrm{out}} = V_{\mathrm{ref}}$，
 $R_1$を大きくするほど高い出力が得られる。負荷が変わっても入力が揺れても，負帰還がこの式の値になるよう出力を保ち続ける。
 
-\begin{例題}[出力電圧の設定]
-\label{rei7.2}
-基準電圧$V_{\mathrm{ref}} = 2.5$\,Vのオペアンプ回路（\ref{fig7.4}）で，出力$V_{\mathrm{out}} = 5.0$\,Vを得たい。
-分圧抵抗$R_1$，$R_2$の比を求めよ。また$R_2 = 10$\,k$\Omega$とするとき$R_1$はいくらか。
-\begin{解答}
-式\ref{eq7.9}より$V_{\mathrm{out}}/V_{\mathrm{ref}} = 1 + R_1/R_2$だから
-\begin{equation*}
-\frac{R_1}{R_2} = \frac{V_{\mathrm{out}}}{V_{\mathrm{ref}}} - 1 = \frac{5.0}{2.5} - 1 = 1
-\end{equation*}
-すなわち$R_1 = R_2$でよい。$R_2 = 10$\,k$\Omega$なら$R_1 = 10$\,k$\Omega$である。
-抵抗の絶対値ではなく比だけで決まるので，$1$\,k$\Omega$どうし，$100$\,k$\Omega$どうしでも同じ$5$\,Vが得られる
-（消費電流や雑音を見て絶対値を選ぶ）。
-\end{解答}
-\end{例題}
-
 \begin{問}
 \item \ref{fig7.4}の回路で$V_{\mathrm{ref}} = 2.5$\,V，$R_1 = R_2 = 10$\,k$\Omega$のときの出力電圧を求めよ。
 つぎに$R_1$だけを$30$\,k$\Omega$に変えると出力はいくらになるか。
@@ -354,20 +339,26 @@ V_{\mathrm{in}} \geq V_{\mathrm{out}} + V_{\mathrm{dropout}}
 \item[(b)] 入力が$9$\,Vから$12$\,Vに上がったとき，$R_s$が同じなら$I_Z$はいくらに変わるか（$V_Z$は$4.7$\,Vのまま一定として計算せよ）。ツェナー電圧がほぼ動かないことが，なぜ基準電圧に都合がよいかを説明せよ。
 \end{enumerate}
 
-\item \label{ex7.3}オペアンプと負帰還を用いたリニアレギュレータ（\ref{fig7.5}）を設計する。基準電圧は$V_{\mathrm{ref}} = 2.5$\,Vとする。
+\item \label{ex7.3}基準電圧$V_{\mathrm{ref}} = 2.5$\,Vのオペアンプ回路（\ref{fig7.4}）で，出力$V_{\mathrm{out}} = 5.0$\,Vを得たい。
+\begin{enumerate}
+\item[(a)] 分圧抵抗$R_1$，$R_2$の比を求めよ。
+\item[(b)] $R_2 = 10$\,k$\Omega$とするとき$R_1$を求めよ。また，$R_1$，$R_2$をともに$100$\,k$\Omega$に変えると出力はどうなるか。
+\end{enumerate}
+
+\item \label{ex7.4}オペアンプと負帰還を用いたリニアレギュレータ（\ref{fig7.5}）を設計する。基準電圧は$V_{\mathrm{ref}} = 2.5$\,Vとする。
 \begin{enumerate}
 \item[(a)] 出力$V_{\mathrm{out}} = 12$\,Vを得るための分圧比$R_1/R_2$を求めよ。
 \item[(b)] $R_2 = 4.7$\,k$\Omega$とするとき$R_1$を求めよ。
 \item[(c)] 仮想短絡を使って(a)の関係式$V_{\mathrm{out}} = (1 + R_1/R_2) V_{\mathrm{ref}}$を導け。
 \end{enumerate}
 
-\item \label{ex7.4}ある機器で，$12$\,Vの電源から$3.3$\,V・$1.5$\,Aを作る必要がある。
+\item \label{ex7.5}ある機器で，$12$\,Vの電源から$3.3$\,V・$1.5$\,Aを作る必要がある。
 \begin{enumerate}
 \item[(a)] リニアレギュレータで作るときの損失$P_{\mathrm{loss}}$と効率$\eta$を求めよ。
 \item[(b)] この損失はすべてパストランジスタ1個で発熱する。同じ$3.3$\,V・$1.5$\,Aを効率$88\,\%$の降圧コンバータで作ると損失はいくらか。両者を比べ，この用途にどちらがふさわしいか理由とともに述べよ。
 \end{enumerate}
 
-\item \label{ex7.5}\rev{（LTspiceで確かめよ）配布モデル\texttt{chapter07/linear\_reg\_zener.asc}と\texttt{chapter07/linear\_reg\_opamp.asc}を用いて，次を確かめよ。
+\item \label{ex7.6}\rev{（LTspiceで確かめよ）配布モデル\texttt{chapter07/linear\_reg\_zener.asc}と\texttt{chapter07/linear\_reg\_opamp.asc}を用いて，次を確かめよ。
 パストランジスタはどちらもNPN型バイポーラトランジスタ（$h_{\mathrm{FE}} = 100$）である。}
 \begin{enumerate}
 \item[(a)] \rev{ツェナー基準＋パストランジスタの回路（\texttt{linear\_reg\_zener}：$V_{\mathrm{in}} = 10$\,V，$V_Z = 4.7$\,V，$R_s = 400\,\Omega$）で，負荷抵抗を$10\,\Omega \to 50\,\Omega \to 100\,\Omega$と変えたとき，出力電圧の変動を読み取れ。式\ref{eq7.10}の$V_{\mathrm{out}} = V_Z - V_{\mathrm{BE}}$と比べ，$V_{\mathrm{BE}}$の変動が出力に残ることを確かめよ。}

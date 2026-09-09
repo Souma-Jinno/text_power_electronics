@@ -52,6 +52,24 @@ $L$を3倍にすると，同じ$60\,\mathrm{\mu J}$の往復を3倍の$LI_{\math
 
 %%--- 章末問題 4.3 ---
 \item[\ref{ex4.3}]
+キルヒホッフの電流則より，キャパシタに流れ込む電流は
+$i_C = i_{\mathrm{in}} - I_1$である。すなわち
+\begin{eqnarray*}
+i_C &=& I_0 - I_1
+\qquad\mbox{（オン期間　$0 \le t < DT$）} \\
+i_C &=& -I_1
+\qquad\quad\ \ \,\mbox{（オフ期間　$DT \le t < T$）}
+\end{eqnarray*}
+定理\ref{th4.2}のアンペア秒平衡を適用すると
+\begin{equation*}
+DT(I_0 - I_1) + (T - DT)(-I_1) = 0
+\qquad\therefore\ I_1 = DI_0
+\end{equation*}
+負荷には方形波電流の平均が流れる。
+例題\ref{rei4.1}の電圧と電流を入れ替えただけで，答えの形まで同じである。
+
+%%--- 章末問題 4.4 ---
+\item[\ref{ex4.4}]
 オン期間のキャパシタ電流は$i_C = I_0 - I_1 = (1-D)I_0$で一定だから，
 式\ref{eq4.9}より電圧はオン期間$DT$の間に
 \begin{equation*}
@@ -67,8 +85,8 @@ $\mathit{\Delta}i_L \to \mathit{\Delta}v_C$と読み替えたものにちょう�
 インダクタの電流リプルとキャパシタの電圧リプルは双対（\TABref{tab4.1}）であり，
 片方を導けばもう片方は読み替えだけで得られる。
 
-%%--- 章末問題 4.4 ---
-\item[\ref{ex4.4}]
+%%--- 章末問題 4.5 ---
+\item[\ref{ex4.5}]
 (a) 式\ref{eq4.4}と式\ref{eq4.8}より
 \begin{equation*}
 W_L = \frac{1}{2}\times100\times10^{-6}\times10^2 = 5\,\mathrm{mJ}，\qquad
@@ -88,8 +106,25 @@ $60\,\mathrm{\mu J}$，電力にして$6$\,W分（負荷電力$12$\,Wのオフ�
 スイッチング周波数を高くするほど，同じインダクタ（あるいはもっと小さなインダクタ）で
 大きな電力を扱える ― 電源装置の小型化が高周波化とともに進んできた理由である。
 
-%%--- 章末問題 4.5 ---
-\item[\ref{ex4.5}]
+%%--- 章末問題 4.6 ---
+\item[\ref{ex4.6}]
+(a) 式\ref{eq4.16}より
+\begin{equation*}
+f_0 = \frac{1}{2\pi\sqrt{100\times10^{-6}\times10\times10^{-6}}}
+= \frac{1}{2\pi\times3.16\times10^{-5}} \approx 5.0\,\mathrm{kHz}
+\end{equation*}
+(b) $\omega = 2\pi\times10^5$\,rad/sだから
+\begin{equation*}
+\omega L = 2\pi\times10^5\times10^{-4} \approx 63\,\Omega，\qquad
+\frac{1}{\omega C} = \frac{1}{2\pi\times10^5\times10^{-5}} \approx 0.16\,\Omega
+\end{equation*}
+$f$は$f_0$の20倍にあり，
+スイッチング成分に対してインダクタは$63\,\Omega$の壁，
+キャパシタは$0.16\,\Omega$の抜け道になる。
+式\ref{eq4.13}の周波数の分離が，実際の数字でどれほど効いているかがわかる。
+
+%%--- 章末問題 4.7 ---
+\item[\ref{ex4.7}]
 （シミュレーションの確認ポイント）
 (a) 出力電圧の平均は$DV_0 = 6$\,Vに落ち着く。
 起動直後は振動（過渡状態）が見えるが，やがて定常状態に収束する。

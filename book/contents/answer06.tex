@@ -3,6 +3,23 @@
 
 %%--- 章末問題 6.1 ---
 \item[\ref{ex6.1}]
+式\ref{eq6.4}より，電圧が$+10$\,Vの間，$i_m$は一定の傾き
+\begin{equation*}
+\frac{di_m}{dt} = \frac{v_1}{L_m} = \frac{10}{1\times10^{-3}}
+= 1.0\times10^{4}\,\mathrm{A/s}
+\end{equation*}
+で増える。半周期$1.0$\,$\mu$sでの増加量は
+\begin{equation*}
+\mathit{\Delta}I_m = \frac{v_1}{L_m}\,\mathit{\Delta}t
+= 1.0\times10^{4} \times 1.0\times10^{-6} = 10\,\mathrm{mA}
+\end{equation*}
+電圧が$-10$\,Vの半周期には同じ傾きで減る。
+方形波は正負対称でボルト秒平衡が自動的に満たされるから，
+$i_m$は$-5$\,mAから$+5$\,mAの間を往復する三角波になる。
+電圧が方形波，電流が三角波 ― 5章のインダクタ電流と同じ形である。
+
+%%--- 章末問題 6.2 ---
+\item[\ref{ex6.2}]
 (a) 式\ref{eq6.12}より
 \begin{equation*}
 \rev{V_{\mathrm{out}} = \frac{N_2}{N_1}DV_{\mathrm{in}} = \frac{1}{6}\times0.375\times48 = 3.0\,\mathrm{V}}
@@ -21,8 +38,8 @@
 リプルの式は5章の降圧コンバータと同形であり，
 出力段が降圧コンバータそのものであることの表れである。
 
-%%--- 章末問題 6.2 ---
-\item[\ref{ex6.2}]
+%%--- 章末問題 6.3 ---
+\item[\ref{ex6.3}]
 (a) 式\ref{eq6.15}に$N_3/N_1 = 1/2$を代入して
 \begin{equation*}
 D \le \frac{1}{1 + 1/2} = \frac{2}{3}
@@ -35,19 +52,6 @@ D \le \frac{1}{1 + 1/2} = \frac{2}{3}
 入力電圧が低いときも必要な出力を出しやすくなる。
 代償：リセットが急ぐ分だけ1次巻線の跳ね返り電圧が大きくなり，
 \rev{スイッチに要求される耐圧が$2V_{\mathrm{in}}$から$3V_{\mathrm{in}}$へ上がる。}
-
-%%--- 章末問題 6.3 ---
-\item[\ref{ex6.3}]
-(a) \rev{式\ref{eq6.20}に$N_2/N_1 = 1$，$V_{\mathrm{out}} = V_{\mathrm{in}} = 12$\,Vを代入すると}
-$\dfrac{D}{1-D} = 1$，よって$D = 0.5$。
-(b) $N_2/N_1 = 2$より
-\begin{equation*}
-\rev{\frac{D}{1-D} = \frac{N_1}{N_2}\cdot\frac{V_{\mathrm{out}}}{V_{\mathrm{in}}}
-= \frac{1}{2}\times\frac{48}{12} = 2}
-\qquad\Rightarrow\qquad D = \frac{2}{3} \approx 0.67
-\end{equation*}
-昇圧の一部を巻数比（$\times2$）が受け持つことで，
-$D$を極端に大きくせずに4倍の昇圧ができている。
 
 %%--- 章末問題 6.4 ---
 \item[\ref{ex6.4}]
@@ -72,6 +76,39 @@ $D$を極端に大きくせずに4倍の昇圧ができている。
 
 %%--- 章末問題 6.5 ---
 \item[\ref{ex6.5}]
+(a) \rev{式\ref{eq6.20}に$N_2/N_1 = 1$，$V_{\mathrm{out}} = V_{\mathrm{in}} = 12$\,Vを代入すると}
+$\dfrac{D}{1-D} = 1$，よって$D = 0.5$。
+(b) $N_2/N_1 = 2$より
+\begin{equation*}
+\rev{\frac{D}{1-D} = \frac{N_1}{N_2}\cdot\frac{V_{\mathrm{out}}}{V_{\mathrm{in}}}
+= \frac{1}{2}\times\frac{48}{12} = 2}
+\qquad\Rightarrow\qquad D = \frac{2}{3} \approx 0.67
+\end{equation*}
+昇圧の一部を巻数比（$\times2$）が受け持つことで，
+$D$を極端に大きくせずに4倍の昇圧ができている。
+
+%%--- 章末問題 6.6 ---
+\item[\ref{ex6.6}]
+(a) 式\ref{eq6.20}を巻数比について解くと
+\begin{equation*}
+\frac{N_1}{N_2} = \frac{D}{1-D}\cdot\frac{V_{\mathrm{in}}}{V_{\mathrm{out}}}
+= \frac{0.4}{0.6}\times\frac{141}{5} \approx 18.8
+\end{equation*}
+(b) 巻数は整数だから$N_1 : N_2 = 19 : 1$に丸める。式\ref{eq6.20}より
+\begin{equation*}
+\frac{D}{1-D} = \frac{N_1}{N_2}\cdot\frac{V_{\mathrm{out}}}{V_{\mathrm{in}}}
+= 19\times\frac{5}{141} \approx 0.674
+\qquad\Rightarrow\qquad
+D \approx 0.40
+\end{equation*}
+となり，ほぼ狙いどおりの$D$で動作できる。
+$141$\,Vから$5$\,Vという28倍の変換でも，
+巻数比が大部分を受け持つおかげで$D$は0.4に保てる。
+ACアダプタや携帯機器の充電器で
+フライバックが定番である理由がここにある。
+
+%%--- 章末問題 6.7 ---
+\item[\ref{ex6.7}]
 (a) 理論値は式\ref{eq6.20}より
 \begin{equation*}
 \rev{V_{\mathrm{out}} = \frac{0.2941}{1-0.2941}\times12 \approx 5.0\,\mathrm{V}}

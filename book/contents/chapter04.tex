@@ -461,32 +461,7 @@ v_C(t_e) = v_C(t_s) + \frac{1}{C}\int_{t_s}^{t_e} i_C(t)\,dt
 インダクタ電流の平均はそっくり負荷へ行き，変動分だけがキャパシタに流れ込む。
 5章で出力電圧のリプルを求めるときは，この変動分が半周期の間にキャパシタへ運び込む電荷$\mathit{\Delta}Q$を求め，
 式\ref{eq4.9}で電圧の揺れ$\mathit{\Delta}v_C = \mathit{\Delta}Q/C$に換算する。
-次の例題はその最も簡単な形である。}
-
-\begin{例題}[アンペア秒平衡で負荷電流を求める]
-\label{rei4.2}
-$I_0$と$0$を繰り返すデューティ比$D$の方形波電流源が，
-キャパシタ$C$と負荷に並列に接続されている。
-負荷には一定電流$I_1$が流れているとする。
-定常状態における$I_1$を求めよ。
-\begin{解答}
-キルヒホッフの電流則より，キャパシタに流れ込む電流は
-$i_C = i_{\mathrm{in}} - I_1$である。すなわち
-\begin{eqnarray}
-i_C &=& I_0 - I_1
-\qquad\mbox{（オン期間　$0 \le t < DT$）} \nonumber\\
-i_C &=& -I_1
-\qquad\quad\ \ \,\mbox{（オフ期間　$DT \le t < T$）} \nonumber
-\end{eqnarray}
-定理\ref{th4.2}のアンペア秒平衡を適用すると
-\begin{equation*}
-DT(I_0 - I_1) + (T - DT)(-I_1) = 0
-\qquad\therefore\ I_1 = DI_0
-\end{equation*}
-負荷には方形波電流の平均が流れる。
-例題\ref{rei4.1}の電圧と電流を入れ替えただけで，答えの形まで同じである。
-\end{解答}
-\end{例題}
+その最も簡単な形を章末問題\ref{ex4.3}で扱う。}
 
 \begin{問}
 \item $C = 10\,\mathrm{\mu F}$のキャパシタに$1$\,Aの一定電流を$10\,\mathrm{\mu s}$流し込んだ。
@@ -786,29 +761,6 @@ Q = \frac{\omega_0 L}{R} = \frac{1}{R}\sqrt{\frac{L}{C}}
 \end{equation}
 $R$が小さいほど$Q$は大きく，エネルギーの交換が長く続き，共振は鋭くなる。
 
-\begin{例題}[LCフィルタの周波数特性を数字で見る]
-\label{rei4.3}
-$L = 100\,\mathrm{\mu H}$，$C = 10\,\mathrm{\mu F}$，$R = 0.5\,\Omega$の直列RLC回路について，
-(a)共振周波数$f_0$，(b)スイッチング周波数$f = 100$\,kHzにおける
-$\omega L$と$1/\omega C$を求めよ。
-\begin{解答}
-(a) 式\ref{eq4.16}より
-\begin{equation*}
-f_0 = \frac{1}{2\pi\sqrt{100\times10^{-6}\times10\times10^{-6}}}
-= \frac{1}{2\pi\times3.16\times10^{-5}} \approx 5.0\,\mathrm{kHz}
-\end{equation*}
-(b) $\omega = 2\pi\times10^5$\,rad/sだから
-\begin{equation*}
-\omega L = 2\pi\times10^5\times10^{-4} \approx 63\,\Omega，\qquad
-\frac{1}{\omega C} = \frac{1}{2\pi\times10^5\times10^{-5}} \approx 0.16\,\Omega
-\end{equation*}
-$f$は$f_0$の20倍にあり，
-スイッチング成分に対してインダクタは$63\,\Omega$の壁，
-キャパシタは$0.16\,\Omega$の抜け道になる。
-式\ref{eq4.13}の周波数の分離が，実際の数字でどれほど効いているかがわかる。
-\end{解答}
-\end{例題}
-
 \subsection{フィルタと共振器 ― 同じLC，2つの顔}
 
 同じ$L$と$C$の組合せでも，働かせる周波数によってまったく違う顔を見せる。
@@ -863,14 +815,21 @@ $L = 100\,\mathrm{\mu H}$のときの$\mathit{\Delta}i_L$を求めよ。
 $L = 100\,\mathrm{\mu H}$の場合と比べて気付くことを述べよ。}
 
 \item \label{ex4.3}
-例題\ref{rei4.2}の回路（$I_1 = DI_0$）で，オン期間に流れ込む電荷から，
+$I_0$と$0$を繰り返すデューティ比$D$の方形波電流源が，
+キャパシタ$C$と負荷に並列に接続されている。
+負荷には一定電流$I_1$が流れているとする。
+定常状態における$I_1$をアンペア秒平衡（定理\ref{th4.2}）から求めよ。
+例題\ref{rei4.1}の電圧と電流を入れ替えた回路である。
+
+\item \label{ex4.4}
+章末問題\ref{ex4.3}の回路（$I_1 = DI_0$）で，オン期間に流れ込む電荷から，
 キャパシタ電圧のリプル$\mathit{\Delta}v_C$が
 $\mathit{\Delta}v_C = D(1-D)I_0 T/C$と表せることを導け。
 さらに$I_0 = 2$\,A，$D = 0.5$，$f = 100$\,kHz，
 $C = 10\,\mathrm{\mu F}$のときの$\mathit{\Delta}v_C$を求めよ。
 この結果が章末問題\ref{ex4.2}とどう対応しているか（双対性）も述べよ。
 
-\item \label{ex4.4}
+\item \label{ex4.5}
 (a) $L = 100\,\mathrm{\mu H}$のインダクタに$10$\,Aが流れているときの磁気エネルギーと，
 $C = 100\,\mathrm{\mu F}$のキャパシタが$400$\,Vに充電されているときの静電エネルギーを
 それぞれ求めよ。
@@ -881,7 +840,13 @@ $C = 100\,\mathrm{\mu F}$のキャパシタが$400$\,Vに充電されている�
 スイッチング周波数を高くすると同じインダクタで大きな電力を扱える理由を，
 この計算から説明せよ。
 
-\item \label{ex4.5}
+\item \label{ex4.6}
+$L = 100\,\mathrm{\mu H}$，$C = 10\,\mathrm{\mu F}$，$R = 0.5\,\Omega$の直列RLC回路について，
+(a)共振周波数$f_0$，(b)スイッチング周波数$f = 100$\,kHzにおける
+$\omega L$と$1/\omega C$を求めよ。
+また，(b)の結果から，スイッチング成分に対してインダクタとキャパシタがそれぞれどう振る舞うかを述べよ。
+
+\item \label{ex4.7}
 LTspiceで，$V_0$と$0$を繰り返す方形波電圧源（$V_0 = 12$\,V，$D = 0.5$，
 $f = 100$\,kHz）に$L = 100\,\mathrm{\mu H}$，$C = 10\,\mathrm{\mu F}$の
 LCフィルタと負荷抵抗$R = 6\,\Omega$をつなぎ，出力電圧の波形を観測せよ。
