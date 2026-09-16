@@ -113,9 +113,12 @@ wire(ax, [(xL + 0.5, yM), (xLoad, yM)])
 ax.text(xLoad + 0.05, yM, "誘導性\n負荷へ", ha="left", va="center", fontsize=5.8,
         fontproperties=JP)
 # 還流電流の矢印（赤）: 負荷→ノード→D2→下レール
-ax.annotate("", xy=(xL + 0.5, yM - 0.02), xytext=(xLoad - 0.3, yM - 0.02),
+# [2026-09-16] 矢印の向きが D2 の導通方向と逆だった。D2 はアノードが−レール側，
+#   カソードが中点側なので，還流電流は「−レール→D2を上向き→中点→負荷へ」と流れる。
+#   負荷への矢印を右向き，D2 の矢印を上向きに直した。
+ax.annotate("", xy=(xLoad - 0.3, yM - 0.02), xytext=(xL + 0.5, yM - 0.02),
             arrowprops=dict(arrowstyle="-|>", lw=1.3, color=RED, mutation_scale=8))
-ax.annotate("", xy=(xL + 0.5, yB + 0.35), xytext=(xL + 0.5, yM - 0.35),
+ax.annotate("", xy=(xL + 0.5, yM - 0.35), xytext=(xL + 0.5, yB + 0.35),
             arrowprops=dict(arrowstyle="-|>", lw=1.3, color=RED, mutation_scale=8))
 # D2 のラベルは素子記号の右に置く（記号と重ねない）
 ax.text(xL + 0.5 + 0.28, 1.02, r"$\mathrm{D}_2$", ha="left", va="center",

@@ -84,13 +84,17 @@ dot(ax, L, cy); dot(ax, R, cy); dot(ax, cx, Tn); dot(ax, cx, Bn)
 # 交流電源（左）
 xS = 0.35
 wire(ax, [(xS, cy + 1.0), (L, cy + 1.0)]); wire(ax, [(L, cy + 1.0), (L, cy)])
-wire(ax, [(xS, cy - 1.0), (R - 0.0, cy - 1.0)])
-wire(ax, [(xS, cy + 1.0), (xS, cy + 0.42)]); wire(ax, [(xS, cy - 1.0), (xS, cy - 0.42)])
+# [2026-09-16] 電源の帰路（右ノードへ回る線）が出力の−側の線とほぼ同じ高さで，
+#   1本に見えてしまい D4 が短絡しているように読めた。帰路を十分下へ下げて分離する。
+yret = cy - 1.55
+wire(ax, [(xS, yret), (R, yret)])
+wire(ax, [(xS, cy + 1.0), (xS, cy + 0.42)]); wire(ax, [(xS, yret), (xS, cy - 0.42)])
 ax.add_patch(Circle((xS, cy), 0.42, fc="white", ec=BK, lw=1.0, zorder=2))
 s = np.linspace(-0.22, 0.22, 40)
 ax.plot(xS + s, cy + 0.14 * np.sin(s / 0.22 * np.pi), color=BK, lw=0.9, zorder=3)
-# ここで下側の線を R ノードへ回す
-wire(ax, [(R, cy - 1.0), (R, cy)])
+# ここで下側の線を R ノードへ回す（出力の−側の線とは交差するだけでつながらない。
+#   接続点には●を置いてあるので，●のない交差は非接続を表す）
+wire(ax, [(R, yret), (R, cy)])
 ax.text(xS - 0.32, cy, r"$v_S$", ha="right", va="center", fontsize=8)
 # 出力（上ノード→R→下ノード）
 xout = R + 1.15
@@ -101,10 +105,10 @@ ax.text(xout + 0.62, Tn - 0.30, "$+$", ha="center", fontsize=7)
 ax.text(xout + 0.62, cy, r"$v_R$", ha="center", va="center", fontsize=8)
 ax.text(xout + 0.62, Bn + 0.30, "$-$", ha="center", fontsize=7)
 ax.set_xlim(-0.4, xout + 1.1)
-ax.set_ylim(cy - 1.5, cy + 1.5)
+ax.set_ylim(cy - 2.0, cy + 1.5)
 ax.set_aspect("equal")
 ax.axis("off")
-ax.text(cx, cy - 1.75, "(a) ブリッジ回路", ha="center", fontsize=7.0,
+ax.text(cx, cy - 2.05, "(a) ブリッジ回路", ha="center", fontsize=7.0,
         fontproperties=JP, color="#555")
 
 # --- (b) 出力波形（全波整流 |sin|）

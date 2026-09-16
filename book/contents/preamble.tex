@@ -74,3 +74,11 @@
 %% （この環境では \ref が式番号を括弧付きで返す）
 \renewcommand*{\eqref}[1]{\ref{#1}}
 
+
+%% [2026-09-16] 大きい図（縦380pt級）が本文のある頁に載らず，章末へまとめて流れて
+%%   図だけの頁ができていた（6章の図6.4〜6.6）。LaTeX の既定は「頁の上部に置ける
+%%   図は版面の70%まで」なので，そこを緩めて本文と同じ頁に載るようにする。
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.8}
