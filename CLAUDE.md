@@ -36,7 +36,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - 講義スライドPDF: 本リポ `pdf/`（全14回）
 - 講義テキスト（LaTeX・です・ます調）: `~/power_electronics_oit_jinno/lecture_notes/chapters/chapter01〜11`（である調へ変換して素材化）
 - LTspiceシミュレーション: `~/power_electronics_oit_jinno/LTspice/`
-- 電磁気教科書 `~/text_electromagnetic_theory`: 体裁・環境の使い方・「本章の現在地」等の様式の参照元
+- 電磁気教科書 `~/text_electromagnetic_theory`: 体裁・環境の使い方等の様式の参照元
 
 ## 新章と素材の対応
 
@@ -61,7 +61,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 1. `WRITING_GUIDE.md` と企画書の該当章概要を読む
 2. lecture_notes の該当章とスライドPDFを素材に corona 環境（定義・例題・解答・問・章末問題・注意・COLUMN）で書き直す（です・ます調→である調）
-3. 第II部の章は冒頭に「本章の現在地」（fig0.1の地図+エネルギー視点の一言）を置く
+3. 章冒頭の「本章の現在地」囲みは置かない（2026-10-05 著者指示「これは不要。他の章もいらない」で全章から削除）
 4. 問・章末問題には巻末解答（toianswerNN/answerNN）を同期
 5. `platex` でエラー0を確認
 6. コミットはメインセッションが監査後に実施
