@@ -56,9 +56,7 @@
 \begin{center}
 \includegraphics[clip]{figures/fig6.1.eps}
 \end{center}
-\caption{絶縁の役割。(a)非絶縁型では出力端子が入力側の電位を引きずり，
-大地との間に商用電源の電位差が現れる。(b)絶縁型ではトランスが電流の道を断ち切り，
-2次側で新しい基準電位を選べる}
+\caption{絶縁の役割（(a)非絶縁型，(b)絶縁型）}
 \label{fig6.1}
 \end{figure}
 
@@ -122,9 +120,7 @@ v_2 = N_2 \frac{d\mathit{\Phi}}{dt}
 \begin{center}
 \includegraphics[clip]{figures/fig6.2.eps}
 \end{center}
-\caption{変圧器の構造と等価回路。(a)鉄心を貫く磁束$\mathit{\Phi}$が2つの巻線を結び，
-(b)等価回路では磁束を作る役割を励磁インダクタンス$L_m$が，
-電圧・電流の変換を理想変圧器が受け持つ}
+\caption{変圧器の(a)構造と(b)等価回路}
 \label{fig6.2}
 \end{figure}
 
@@ -197,9 +193,7 @@ $\pm5$\,mAの三角波（章末問題\ref{ex6.1}）で，
 \begin{center}
 \includegraphics[clip]{figures/fig6.3.eps}
 \end{center}
-\caption{励磁電流と\rev{反射電流}（$N_1=N_2$，$L_m=1$\,mH，負荷500\,$\Omega$）。
-1次電流$i_1$は，磁束を作る励磁電流$i_m$（三角波）と，
-2次電流の磁束を打ち消す\rev{反射電流}$i_{\ell}$（方形波）の和である}
+\caption{励磁電流と\rev{反射電流}\LTspicefile{ch06_magnetizing_current.asc}}
 \label{fig6.3}
 \end{figure}
 
@@ -283,10 +277,7 @@ $\mathrm{D_1}$から後ろは5章の降圧コンバータの出力段そのも�
 \begin{center}
 \includegraphics[clip]{figures/fig6.4.eps}
 \end{center}
-\caption{フォワードコンバータ。(a)回路。5章の降圧コンバータのスイッチの後ろに
-変圧器を挟んだ形で，リセット巻線$N_3$が励磁エネルギーを電源へ返す。
-(b)動作波形。$v_L$のボルト秒平衡は5章の降圧コンバータと同形で，
-励磁電流$i_m$はオンで増えリセットでゼロに戻る}
+\caption{フォワードコンバータの回路と動作波形\LTspicefile{ch06_forward_converter.asc}}
 \label{fig6.4}
 \end{figure}
 
@@ -446,10 +437,7 @@ D \le \frac{1}{1 + N_3/N_1}
 \begin{center}
 \includegraphics[clip]{figures/fig6.5.eps}
 \end{center}
-\caption{フライバックコンバータ。(a)回路。極性マークが上下逆であることに注意。
-(b)動作波形。オン期間は1次電流$i_1$が励磁エネルギーを蓄え，
-オフ期間は2次電流$i_2$がそれを負荷へ放出する。電流の受け渡しの瞬間，
-巻数比に応じて値が飛ぶ}
+\caption{フライバックコンバータの回路と動作波形\LTspicefile{flyback_converter.asc}}
 \label{fig6.5}
 \end{figure}
 
@@ -609,8 +597,7 @@ $W$と$P$の右辺の単位がそれぞれJとWになることを確かめよ。
 \begin{center}
 \includegraphics[clip]{figures/fig6.6.eps}
 \end{center}
-\caption{エネルギーの流れの対比。フォワードはオン期間にトランスを素通しで渡し
-（励磁分だけはリセットで返却），フライバックはオン期間に溜めてオフ期間に渡す}
+\caption{フォワードとフライバックのエネルギーの流れ}
 \label{fig6.6}
 \end{figure}
 

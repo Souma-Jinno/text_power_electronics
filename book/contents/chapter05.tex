@@ -61,7 +61,7 @@ $f = 1/T$を\index{すいっちんぐしゅうはすう@スイッチング周波
 \begin{center}
 \includegraphics[clip]{figures/fig5.1.eps}
 \end{center}
-\caption{デューティ比。スイッチのオン・オフを周期$T$で繰り返し，そのうちオンの時間が$T_{\mathrm{on}}$である。$D = T_{\mathrm{on}}/T$は1周期のうちオンの時間が占める割合を表す。(a)$D$が小さいとき，(b)$D$が大きいとき}
+\caption{デューティ比（(a)$D$が小さいとき，(b)$D$が大きいとき）}
 \label{fig5.1}
 \end{figure}
 
@@ -98,15 +98,13 @@ i_L(T) - i_L(0) = \frac{1}{L} \int_0^T v_L(t)\, dt
 回路に電源を入れた直後は，この値は正で，電流は周期ごとに増えていく（過渡状態）。
 やがて毎周期同じ波形を繰り返す\index{ていじょうじょうたい@定常状態}\textbf{定常状態}に落ち着くと，
 $i_L(T) = i_L(0)$，すなわち1周期あたりの電流の増減はゼロになる。このとき式\ref{eq5.3}の右辺の積分もゼロでなければならない。
-\rev{この移り変わりを\FIGref{fig5.2}に示す。電源を入れた直後は$v_L$の正の面積が負の面積より大きく，$i_L$は周期ごとに階段状に持ち上がっていくが，やがて正負の面積が等しくなると，$i_L$は1周期でもとの値に戻り，毎周期同じ三角波を繰り返すだけになる。}
+\rev{この移り変わりを\FIGref{fig5.2}に示す。図は次節の降圧コンバータ（$V_{\mathrm{in}} = 10$\,V，$D = 0.5$，$f = 1$\,kHz）を電源投入から計算した波形である。電源を入れた直後は$v_L$の正の面積が負の面積より大きく，$i_L$は周期ごとに階段状に持ち上がっていくが，やがて正負の面積が等しくなると，$i_L$は1周期でもとの値に戻り，毎周期同じ三角波を繰り返すだけになる。}
 
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig5.2.eps}
 \end{center}
-\caption{過渡状態から定常状態へ（次節の降圧コンバータを電源投入から計算した波形。$V_{\mathrm{in}} = 10$\,V，$D = 0.5$，$f = 1$\,kHz）。
-過渡状態では$v_L$の正の面積が負の面積より大きく，$i_L$は1周期ごとに増える。
-定常状態では正負の面積が等しく（ボルト秒平衡），$i_L$は1周期でもとの値に戻る}
+\caption{過渡状態から定常状態へ\LTspicefile{buck_converter.asc}}
 \label{fig5.2}
 \end{figure}
 
@@ -171,7 +169,7 @@ V_{\mathrm{on}} \cdot DT + V_{\mathrm{off}} \cdot (1-D)T = 0
 \begin{center}
 \includegraphics[clip]{figures/fig5.3.eps}
 \end{center}
-\caption{降圧コンバータ。(a)回路構成，(b)オン期間，(c)オフ期間の等価回路。灰色は電流が流れない部分，\rev{太い矢印は電流の経路を表す}}
+\caption{降圧コンバータ（(a)回路構成，(b)オン期間，(c)オフ期間の等価回路）}
 \label{fig5.3}
 \end{figure}
 
@@ -186,7 +184,7 @@ V_{\mathrm{on}} \cdot DT + V_{\mathrm{off}} \cdot (1-D)T = 0
 
 \subsection{オン期間とオフ期間の等価回路}
 
-\textbf{オン期間}（$0 \le t < DT$）は，Sが導通し，電流は電源→S→$L$→負荷の経路を流れる（\ref{fig5.3}(b)）。
+\textbf{オン期間}（$0 \le t < DT$）は，Sが導通し，電流は電源→S→$L$→負荷の経路を流れる（\ref{fig5.3}(b)。等価回路の太い矢印が電流の経路，灰色は電流が流れない部分を表す）。
 このときダイオードには$V_{\mathrm{in}}$が逆向きにかかるので導通しない（切り離されたのと同じ）。
 経路に沿ってキルヒホッフの電圧則を立てると$V_{\mathrm{in}} = v_L + V_{\mathrm{out}}$，すなわち
 \begin{equation}
@@ -229,13 +227,12 @@ $0 < D < 1$だから，出力は必ず入力より低い。そして$D$を変え
 \begin{center}
 \includegraphics[clip]{figures/fig5.4.eps}
 \end{center}
-\caption{降圧コンバータの定常状態波形。$v_L$の正負の面積が等しく（ボルト秒平衡），
-$i_L$は三角波状に増減する。$i_L$の変動分はキャパシタ電流$i_C$となり，平均値$I_{\mathrm{out}}$だけが負荷へ流れる}
+\caption{降圧コンバータの定常状態波形\LTspicefile{buck_converter.asc}}
 \label{fig5.4}
 \end{figure}
 
 定常状態の波形を\FIGref{fig5.4}に示す。$v_L$は$V_{\mathrm{in}}-V_{\mathrm{out}}$と$-V_{\mathrm{out}}$の2値の矩形波，
-$i_L$は平均値$I_{\mathrm{out}}$のまわりを直線的に増減する三角波である。この三角波の振れ幅（\ref{sec5.5}節のリプル電流）と，
+$i_L$は平均値$I_{\mathrm{out}}$のまわりを直線的に増減する三角波である。$i_L$の変動分はキャパシタ電流$i_C$（3段目）となり，平均値$I_{\mathrm{out}}$だけが負荷へ流れる。この三角波の振れ幅（\ref{sec5.5}節のリプル電流）と，
 それをキャパシタが受け持つことで生じる出力電圧の振れ（\ref{sec5.6}節）が，そのまま$L$と$C$の設計につながる。
 
 \textbf{エネルギーの流れ}：オン期間は電源が負荷へ電力を送りながら，余り分を$L$の磁場に蓄える。
@@ -278,7 +275,7 @@ D = \frac{V_{\mathrm{out}}}{V_{\mathrm{in}}} = \frac{5}{12} \approx 0.417
 \begin{center}
 \includegraphics[clip]{figures/fig5.5.eps}
 \end{center}
-\caption{昇圧コンバータ。(a)回路構成，(b)オン期間，(c)オフ期間の等価回路。オン期間は出力がダイオードで切り離され，$C$が負荷への供給を受け持つ}
+\caption{昇圧コンバータ（(a)回路構成，(b)オン期間，(c)オフ期間の等価回路）}
 \label{fig5.5}
 \end{figure}
 
@@ -326,13 +323,12 @@ $0 < D < 1$だから$1-D < 1$，出力は必ず入力より高い。たとえば
 \begin{center}
 \includegraphics[clip]{figures/fig5.6.eps}
 \end{center}
-\caption{昇圧コンバータの定常状態波形。インダクタ電流$i_L$の平均は入力電流
-$I_{\mathrm{in}}$であり，オフ期間だけダイオード電流$i_{\mathrm{D}}$として出力へ流れる。その平均が負荷電流$I_{\mathrm{out}}$になる}
+\caption{昇圧コンバータの定常状態波形\LTspicefile{boost_converter.asc}}
 \label{fig5.6}
 \end{figure}
 
 定常状態の波形を\FIGref{fig5.6}に示す。降圧コンバータと違い，$i_L$の平均は\textbf{入力電流}$I_{\mathrm{in}}$である。
-出力へは，オフ期間だけダイオードを通して電流が届く。損失がなければ入力と出力の電力は等しいから
+出力へは，オフ期間だけダイオードを通して電流$i_{\mathrm{D}}$が届き，その平均が負荷電流$I_{\mathrm{out}}$になる。損失がなければ入力と出力の電力は等しいから
 $V_{\mathrm{in}} I_{\mathrm{in}} = V_{\mathrm{out}} I_{\mathrm{out}}$であり，式\ref{eq5.13}を使うと
 \begin{equation}
 I_{\mathrm{in}} = \frac{V_{\mathrm{out}}}{V_{\mathrm{in}}}\, I_{\mathrm{out}}= \frac{I_{\mathrm{out}}}{1-D}
@@ -371,8 +367,7 @@ $D$が1に近づくとオフ期間がごく短くなり，蓄えたエネルギ�
 \begin{center}
 \includegraphics[clip]{figures/fig5.7.eps}
 \end{center}
-\caption{昇降圧コンバータ。(a)回路構成，(b)オン期間，(c)オフ期間の等価回路。
-エネルギーはいったんすべて$L$に蓄えられてから負荷へ渡り，出力の極性が反転する（上の端子が負になる）}
+\caption{昇降圧コンバータ（(a)回路構成，(b)オン期間，(c)オフ期間の等価回路）}
 \label{fig5.7}
 \end{figure}
 
@@ -537,14 +532,13 @@ i_C = i_L - I_{\mathrm{out}}
 \begin{center}
 \includegraphics[clip]{figures/fig5.8.eps}
 \end{center}
-\caption{リプル電圧の発生。$i_C$が正の間（$T/2$の間），
-斜線部の電荷$\mathit{\Delta}Q$がキャパシタに蓄えられ，電圧を$\mathit{\Delta}V_{\mathrm{out}}$だけ押し上げる。電圧の山と谷は$i_C$のゼロ交差の時刻に現れる}
+\caption{リプル電圧の発生\LTspicefile{buck_converter.asc}}
 \label{fig5.8}
 \end{figure}
 
 \subsection{リプル電圧を求める}
 
-\FIGref{fig5.8}を見ながら，1周期の間の電圧の揺れ幅を求めよう。キャパシタの電圧は$i_C > 0$の間だけ上がり続ける。
+\FIGref{fig5.8}を見ながら，1周期の間の電圧の揺れ幅を求めよう。キャパシタの電圧は$i_C > 0$の間だけ上がり続けるから，電圧の山と谷は$i_C$のゼロ交差の時刻に現れる。
 $i_C$は平均ゼロの三角波だから，正である時間はちょうど半周期$T/2$である。
 その間に流れ込む電荷$\mathit{\Delta}Q$は図の斜線部（三角形）の面積であり，底辺$T/2$，高さ$\mathit{\Delta}I_L/2$だから
 \begin{equation}
@@ -629,14 +623,14 @@ i_{L,\min} = I_{\mathrm{out}} - \frac{\mathit{\Delta}I_L}{2}
 \end{equation}
 である。リプル電流$\mathit{\Delta}I_L$は式\ref{eq5.19}のとおり
 負荷によらず一定だから，負荷電流$I_{\mathrm{out}}$が減っていくと（\index{けいふか@軽負荷}\textbf{軽負荷}），
-やがて谷が0に触れ，さらに負荷が軽くなると電流が0に張り付く期間が現れる（\FIGref{fig5.9}）。
+やがて谷が0に触れ，さらに負荷が軽くなると電流が0に張り付く期間が現れる（\FIGref{fig5.9}。降圧コンバータの負荷抵抗を(a)40\,$\Omega$，(b)120\,$\Omega$，(c)300\,$\Omega$と変えた波形）。
 ダイオードは逆向きに電流を流せないので，電流が0に達した瞬間に勝手にオフしてしまうからである。
 
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig5.9.eps}
 \end{center}
-\caption{インダクタ電流のモード。負荷電流が$\mathit{\Delta}I_L/2$を下回ると，電流が0に張り付く第3の期間が現れる（DCM）}
+\caption{インダクタ電流のCCMとDCM\LTspicefile{buck_converter.asc}}
 \label{fig5.9}
 \end{figure}
 
@@ -687,7 +681,7 @@ $L = 73\,\mathrm{\mu H}$，$\mathit{\Delta}I_L = 0.4$\,A）で，負荷電流が
 
 本章の設計式をあらためて眺めると，重要なことに気づく。
 必要なインダクタンス（式\ref{eq5.21}）もキャパシタンス（式\ref{eq5.25}）も，分母にスイッチング周波数$f$をもつ ―
-つまり\textbf{同じリプルを許すなら，$f$を10倍にすれば$L$も$C$も10分の1で済む}（\FIGref{fig5.10}）。インダクタとキャパシタは電源の体積の大半を占める部品だから，
+つまり\textbf{同じリプルを許すなら，$f$を10倍にすれば$L$も$C$も10分の1で済む}（\FIGref{fig5.10}。例題\ref{rei5.2}の設計仕様で$\mathit{\Delta}V_{\mathrm{out}} = 50$\,mVとした場合）。インダクタとキャパシタは電源の体積の大半を占める部品だから，
 \index{こうしゅうはか@高周波化}\textbf{高周波化}はそのまま電源の小型化・軽量化につながる。単位体積あたりに変換できる電力
 （\index{ぱわーみつど@パワー密度}\textbf{パワー密度}）を高める最も効く手段である。
 
@@ -695,7 +689,7 @@ $L = 73\,\mathrm{\mu H}$，$\mathit{\Delta}I_L = 0.4$\,A）で，負荷電流が
 \begin{center}
 \includegraphics[clip]{figures/fig5.10.eps}
 \end{center}
-\caption{スイッチング周波数と必要な$L$・$C$（例題\ref{rei5.2}の設計仕様で，$\mathit{\Delta}V_{\mathrm{out}} = 50$\,mVとした場合）。リプルを一定に保つなら，どちらも$1/f$で小さくできる}
+\caption{スイッチング周波数と必要な$L$・$C$}
 \label{fig5.10}
 \end{figure}
 

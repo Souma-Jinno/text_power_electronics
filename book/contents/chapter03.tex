@@ -57,15 +57,14 @@ BJT・MOSFET・IGBTは自己消弧形，サイリスタは他励形である。
 \textbf{電圧}をかけるだけで制御する
 \index{でんあつくどう@電圧駆動}\textbf{電圧駆動}（MOSFET，IGBT）である。
 電流駆動はオンの間じゅう駆動電流を流し続ける電力が要る。
-\FIGref{fig3.1}に5つの素子の記号と層構成，制御のしかたをまとめた。
+\FIGref{fig3.1}に5つの素子の回路記号（上段）と層構成（下段），制御のしかたをまとめた。どの素子もp形とn形の層の並べ方が違うだけである。
 %% [2026-10-05 森北192] 用途の一文は3.9節（図3.9）と重複するので削除
 
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig3.1.eps}
 \end{center}
-\caption{本章で扱う5つの半導体スイッチ。回路記号（上），半導体の層構成（下），
-制御のしかた。どの素子もp形とn形の層の並べ方が違うだけである}
+\caption{本章で扱う5つの半導体スイッチ}
 \label{fig3.1}
 \end{figure}
 
@@ -98,8 +97,7 @@ $I_0$は\index{ぎゃくほうこうほうわでんりゅう@逆方向飽和電�
 \begin{center}
 \includegraphics[clip]{figures/fig3.2.eps}
 \end{center}
-\caption{ダイオードの電流電圧特性。順方向は約0.7\,Vから立ち上がり，
-逆方向は降伏電圧まで電流をほぼ遮断する}
+\caption{ダイオードの電流電圧特性\LTspicefile{pn_junction_iv.asc}}
 \label{fig3.2}
 \end{figure}
 
@@ -164,9 +162,7 @@ p形の半導体に2つのn形領域を作り，それぞれ
 \begin{center}
 \includegraphics[clip]{figures/fig3.3.eps}
 \end{center}
-\caption{MOSFETの構造と反転層。(a)ゲート電圧がなければ2つのpn接合が電流を止める。
-(b)ゲートに正電圧をかけると酸化膜の下のp形表面がn形に反転し，
-ソースとドレインをつなぐ電子の通り道（nチャネル）ができる}
+\caption{MOSFETの構造と反転層}
 \label{fig3.3}
 \end{figure}
 
@@ -193,6 +189,7 @@ $v_{GS} > V_{th}$になると反転層を通ってソースからドレインへ
 電子はソース→反転層→ドレインとすべてn形の中を\textbf{一度もpn接合の障壁を越えずに}流れるから，
 0.7\,Vのようなオン電圧の下駄がない。
 オン状態のMOSFETは単なる抵抗$R_{\mathrm{on}}$として振る舞い，導通損失は式\ref{eq3.1}の型になる。
+$R_{\mathrm{on}}$は原点付近の直線の傾きの逆数$v_{DS}/i_D$で，$v_{GS}$が高いほど反転層の電子が多く小さくなる。
 多数キャリアの電子だけで動くので少数キャリアの蓄積がなく，オフへの切り替えも速い。
 ゲートは絶縁されているから定常状態では電流が流れず\textbf{駆動電力はほぼゼロ}で，
 スイッチングの瞬間だけ，ゲートと半導体がなすキャパシタ（\index{げーとようりょう@ゲート容量}\textbf{ゲート容量}）を
@@ -202,9 +199,7 @@ $v_{GS} > V_{th}$になると反転層を通ってソースからドレインへ
 \begin{center}
 \includegraphics[clip]{figures/fig3.4.eps}
 \end{center}
-\caption{MOSFETの出力特性。原点から直線的に立ち上がる（オン電圧の下駄がない）ので，
-オン状態は抵抗$R_{\mathrm{on}}$とみなせる。
-原点付近の直線の傾きの逆数$v_{DS}/i_D$が$R_{\mathrm{on}}$で，$v_{GS}$が高いほど反転層の電子が多く$R_{\mathrm{on}}$は小さい}
+\caption{MOSFETの出力特性\LTspicefile{mosfet_output_char.asc}}
 \label{fig3.4}
 \end{figure}
 
@@ -225,9 +220,7 @@ BJTの「飽和」（フルオン）とは意味が入れ違っている。ス�
 \begin{center}
 \includegraphics[clip]{figures/fig3.5.eps}
 \end{center}
-\caption{縦型パワーMOSFETとIGBTの断面。(a)縦型MOSFETは電流を表から裏へ縦に流し，
-n$^-$ドリフト層が耐圧を受け持つ。(b)IGBTは裏面にp形層を加えた4層構造。
-オン時にこの層から正孔が注入され，ドリフト層の抵抗が下がる（伝導度変調）}
+\caption{縦型パワーMOSFETとIGBTの断面}
 \label{fig3.5}
 \end{figure}
 
@@ -339,14 +332,14 @@ W = \frac{2V_B}{\mathcal{E}_c}
 \end{equation}
 である。
 一方，三角形の傾きはドナーの固定電荷の濃度$N_d$に比例するから，
-高さを$\mathcal{E}_c$以下に抑えたまま層を厚くするには濃度を薄くしなければならない（$N_d \propto 1/V_B$）。
+高さを$\mathcal{E}_c$以下に抑えたまま層を厚くするには濃度を薄くしなければならない（$N_d \propto 1/V_B$，\ref{fig3.6}(b)）。
 耐圧を決めた瞬間に，ドリフト層の\textbf{厚さも濃度も決まってしまう}のである。
 
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig3.6.eps}
 \end{center}
-\caption{ドリフト層の電界分布と耐圧。ドナーの固定電荷が一様なので電場は直線的に変わり，接合面で最大の三角形分布になる。電圧はこの三角形の面積で，高さの上限が絶縁破壊電界$\mathcal{E}_c$である。高い耐圧を得るには(b)のように低濃度で厚い層が必要になり，その層がオン状態では抵抗になる}
+\caption{ドリフト層の電界分布と耐圧}
 \label{fig3.6}
 \end{figure}
 
@@ -367,7 +360,7 @@ R_{\mathrm{on}}A = \frac{4V_B^2}{\varepsilon\mu_n\mathcal{E}_c^3}
 \item 分母は材料定数だけ：$\varepsilon\mu_n\mathcal{E}_c^3$が大きい材料ほど低いオン抵抗で済み，特に$\mathcal{E}_c$は\textbf{3乗}で効く
 \end{箇条書}
 
-材料を決めれば，式\ref{eq3.6}は耐圧と特性オン抵抗の平面上に1本の限界線を引く（\FIGref{fig3.7}）。
+材料を決めれば，式\ref{eq3.6}は耐圧と特性オン抵抗の平面上に1本の限界線を引く（\FIGref{fig3.7}，両対数で傾き2の直線）。
 シリコンの線は\index{しりこんげんかい@シリコン限界}\textbf{シリコン限界}と呼ばれ，
 通常の構造のシリコン素子はこの線より下（低抵抗側）へは行けない。
 式\ref{eq3.6}はドリフト層だけの下限で，実際にはチャネルやパッケージの抵抗が上乗せされる。
@@ -376,7 +369,7 @@ R_{\mathrm{on}}A = \frac{4V_B^2}{\varepsilon\mu_n\mathcal{E}_c^3}
 \begin{center}
 \includegraphics[clip]{figures/fig3.7.eps}
 \end{center}
-\caption{耐圧と特性オン抵抗のトレードオフ（式\ref{eq3.6}による材料限界線）。$R_{\mathrm{on}}A$は$V_B^2$に比例し（両対数で傾き2），材料の限界線より下へは行けない。SiC・GaNは$\mathcal{E}_c$が約10倍大きいため，限界線が2桁半ほど下にある}
+\caption{耐圧と特性オン抵抗のトレードオフ}
 \label{fig3.7}
 \end{figure}
 
@@ -433,7 +426,7 @@ P_{\mathrm{total}} = P_{\mathrm{cond}} + P_{\mathrm{sw}}
 \begin{center}
 \includegraphics[clip]{figures/fig3.8.eps}
 \end{center}
-\caption{スイッチング波形と損失。切り替えの途中では電圧と電流が同時に存在し，瞬時電力$p=vi$の山ができる。山の面積が1回あたりのスイッチング損失$E_{\mathrm{on}}$，$E_{\mathrm{off}}$で，山を底辺が切り替え時間$t$，高さが$VI$の三角形とみなせば面積は$\frac{1}{2}VIt$である。オン期間中も小さな導通損失$R_{\mathrm{on}}I^2$が出続ける}
+\caption{スイッチング波形と損失\LTspicefile{switching_loss_double_pulse.asc}}
 \label{fig3.8}
 \end{figure}
 
@@ -501,14 +494,14 @@ IGBT & ゲート電圧 & 電圧 & 可 & $V_{\mathrm{on}}I$型（1〜2\,V） & 0.
 
 MOSFETとIGBTは，導通損失が等しくなる電流$I^* = V_{\mathrm{on}}/R_{\mathrm{on}}$（章末問題\ref{ex3.3}）を境に，
 小電流ではMOSFET，大電流ではIGBTが有利になる。
-これに周波数の軸を重ねた\FIGref{fig3.9}のすみ分けは，
+これに周波数の軸を重ね，スイッチング周波数と電力容量の平面に各素子を置いた\FIGref{fig3.9}のすみ分けは，
 「伝導度変調は導通損失を減らすがスイッチングを遅くする」という1つのトレードオフの必然である。
 
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig3.9.eps}
 \end{center}
-\caption{デバイス選択の地図。スイッチング周波数と電力容量の平面で，各素子は物理の必然としてすみ分ける。SiC・GaNは同じ平面の右上（高周波・大電力側）へ適用範囲を広げつつある}
+\caption{デバイス選択の地図}
 \label{fig3.9}
 \end{figure}
 
@@ -602,7 +595,7 @@ SiCはこの領域を\textbf{速いユニポーラデバイスのまま}カバ�
 チップ面積を小さくできるので容量も小さく，同じ損失のままスイッチング周波数を1けた上げられ（式\ref{eq3.8}），
 漏れ電流が小さく高温に強く，SiCは熱伝導率もシリコンの約3倍である。
 GaNではAlGaN/GaN界面の2次元電子ガスをチャネルに使う横型の\index{へむと@HEMT}\textbf{HEMT}が作れ，MHz級の動作に向く。
-現在は650\,V程度まではGaN，1200\,V以上はSiCというすみ分けが進んでいる（\ref{fig3.9}）。
+現在は650\,V程度まではGaN，1200\,V以上はSiCというすみ分けが進み，両者は\ref{fig3.9}の右上（高周波・大電力側）へ適用範囲を広げつつある。
 
 \begin{問}
 \item 耐圧1200\,Vのドリフト層をGaNで設計すると，厚さ$W$は何$\mathrm{\mu m}$になるか。

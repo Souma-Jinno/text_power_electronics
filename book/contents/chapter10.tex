@@ -34,7 +34,7 @@
 \section{間接式と直接式の周波数変換}
 \label{sec10.2}
 
-\FIGref{fig10.1}の構成を見てほしい。前段は交流を直流に変える整流回路（8章），
+\FIGref{fig10.1}の構成を見てほしい。前段は交流を直流に変える整流回路（8章。実用機ではPFC回路を含む），
 後段は直流から任意の周波数・振幅の交流を作るインバータ（9章）であり，
 両者の間を\index{でぃーしーりんく@DCリンク}\textbf{DCリンク}と呼ぶ直流部分がつなぐ。
 どちらの段も既習の回路そのままであり，新しい素子は1つもない。
@@ -43,7 +43,7 @@
 \begin{center}
 \includegraphics[clip]{figures/fig10.1.eps}
 \end{center}
-\caption{間接式周波数変換（AC-DC-AC変換）のブロック図。前段は8章の整流回路（実用機では力率改善（PFC）回路を含む），後段は9章のインバータであり，本章で新しく学ぶ素子はない。中間のDCリンクキャパシタがエネルギーの緩衝役を務める}
+\caption{間接式周波数変換（AC-DC-AC変換）の構成}
 \label{fig10.1}
 \end{figure}
 
@@ -115,14 +115,14 @@
 \begin{center}
 \includegraphics[clip]{figures/fig10.2.eps}
 \end{center}
-\caption{交流位相調整回路。2個のサイリスタを逆並列にした素子（トライアック）で，各半周期の点弧角$\alpha$以降だけを負荷につなぐ。ゲートパルスは$\theta = \alpha,\ \pi+\alpha,\ 2\pi+\alpha,\ \ldots$で与える}
+\caption{交流位相調整回路\LTspicefile{phase_control_r_load.asc}}
 \label{fig10.2}
 \end{figure}
 
 \FIGref{fig10.2}に回路と波形を示す。交流の正負両方の半周期を扱うため，
 サイリスタ$\mathrm{T}_1$，$\mathrm{T}_2$を互いに逆向きに並列接続する。
 この逆並列対を1素子に集積したものを\index{とらいあっく@トライアック}\textbf{トライアック}という。
-各半周期の途中でゲートパルスを与えると，そこから半周期の終わり（電流ゼロ）までが負荷につながり，
+各半周期の途中（$\theta = \alpha,\ \pi+\alpha,\ 2\pi+\alpha,\ \ldots$）でゲートパルスを与えると，そこから半周期の終わり（電流ゼロ）までが負荷につながり，
 電圧波形の前半が削り取られる。
 このように交流の位相を基準にオンのタイミングを制御する方式を
 \index{いそうせいぎょ@位相制御}\textbf{位相制御}といい，
@@ -172,7 +172,7 @@ $\alpha = \pi$（全部削る）なら根号の中は$1 - 1 + 0 = 0$で，出力
 \begin{center}
 \includegraphics[clip]{figures/fig10.3.eps}
 \end{center}
-\caption{点弧角$\alpha$と出力実効値・出力電力の関係（式\ref{eq10.3}，抵抗負荷）。$\alpha = 90^\circ$で実効値は$1/\sqrt{2} \approx 0.707$倍，電力はちょうど半分になる}
+\caption{点弧角$\alpha$と出力実効値・出力電力（抵抗負荷）}
 \label{fig10.3}
 \end{figure}
 
@@ -227,16 +227,16 @@ $\alpha = 0$のときに対する比は根号の中身そのもの，すなわ�
 \end{equation}
 となり（導出は\rev{章末問題\ref{ex10.4}}），$\alpha = 0$の最大値$0.955 V_0$から$\alpha > 90^\circ$の\textbf{負}の値まで自在に動かせる。
 そこで$\alpha$を時間とともにゆっくり揺らすと，平均電圧が正弦波状に上下し，
-入力より低い周波数の交流が「平均値として」描かれる（\FIGref{fig10.4}）。
+入力より低い周波数の交流が「平均値として」描かれる（\FIGref{fig10.4}。灰色が三相の線間電圧，青が切り出した電圧，赤破線がその平均）。
 これが\index{さいくろこんばーた@サイクロコンバータ}\textbf{サイクロコンバータ}である。
 電流の向きに応じて，正の電流を受け持つ\index{せいぐんぶりっじ@正群ブリッジ}\textbf{正群ブリッジ}と
-負の電流を受け持つ\index{ふぐんぶりっじ@負群ブリッジ}\textbf{負群ブリッジ}を逆並列に置いて切り替える。
+負の電流を受け持つ\index{ふぐんぶりっじ@負群ブリッジ}\textbf{負群ブリッジ}を逆並列に置いて切り替える（\ref{fig10.4}は正群ブリッジによる合成）。
 
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig10.4.eps}
 \end{center}
-\caption{サイクロコンバータの出力合成のイメージ。三相の線間電圧（灰色）から点弧角を変えながら区分的に切り出すと（青），その平均（赤破線）が入力より低い周波数の正弦波を描く。図は正群ブリッジによる合成を示す}
+\caption{サイクロコンバータの出力合成\LTspicefile{ch10_cycloconverter.asc}}
 \label{fig10.4}
 \end{figure}
 

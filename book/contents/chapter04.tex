@@ -177,9 +177,7 @@ i_L(t_e) = i_L(t_s) + \frac{1}{L}\int_{t_s}^{t_e} v_L(t)\,dt
 \begin{center}
 \includegraphics[clip]{figures/fig4.1.eps}
 \end{center}
-\caption{インダクタの積分作用。(a)正の電圧をかけ続けると電流は傾き$V_0/L$で増え続ける。
-(b)正と負の電圧を交互にかけ，1周期の面積（ボルト秒）が釣り合うと，
-電流は三角波を描いて同じ振動を繰り返す}
+\caption{インダクタの積分作用\LTspicefile{ch04_inductor_integration.asc}}
 \label{fig4.1}
 \end{figure}
 
@@ -286,8 +284,7 @@ V_1 = DV_0
 \begin{center}
 \includegraphics[clip]{figures/fig4.2.eps}
 \end{center}
-\caption{エネルギーバッファとしてのインダクタ。オン期間に磁気エネルギーを蓄え，
-オフ期間に放出して負荷への供給の穴を埋める。定常状態では1周期の収支がゼロになる}
+\caption{エネルギーバッファとしてのインダクタ}
 \label{fig4.2}
 \end{figure}
 
@@ -421,8 +418,7 @@ v_C(t_e) = v_C(t_s) + \frac{1}{C}\int_{t_s}^{t_e} i_C(t)\,dt
 \begin{center}
 \includegraphics[clip]{figures/fig4.3.eps}
 \end{center}
-\caption{キャパシタの積分作用。方形波の電流を流し込むと電圧は三角波を描く。
-\ref{fig4.1}(b)の電圧と電流を入れ替えた形になっている（双対性）}
+\caption{キャパシタの積分作用\LTspicefile{ch04_capacitor_integration.asc}}
 \label{fig4.3}
 \end{figure}
 
@@ -587,9 +583,7 @@ $r_C$での発熱も生じる。高いスイッチング周波数ではこちら
 \begin{center}
 \includegraphics[clip]{figures/fig4.4.eps}
 \end{center}
-\caption{LCフィルタの平滑化。スイッチングの方形波から直流成分（平均$DV_0$）だけを取り出し，
-出力には小さなリプルが残る。リプルは$L$，$C$を大きくするか，
-スイッチング周波数を上げると小さくなる}
+\caption{LCフィルタによる平滑化\LTspicefile{lc_filter_square_wave.asc}}
 \label{fig4.4}
 \end{figure}
 
@@ -642,8 +636,7 @@ LCフィルタを通った出力は\rev{$0.5V_0$を中心に振幅$0.45V_0$で�
 \begin{center}
 \includegraphics[clip]{figures/fig4.5.eps}
 \end{center}
-\caption{PWMによる任意波形の生成。デューティ比を正弦波状に変えると，
-スイッチング波形の平均（＝フィルタ後の出力）が正弦波になる}
+\caption{PWMによる正弦波の生成\LTspicefile{ch04_pwm_sine.asc}}
 \label{fig4.5}
 \end{figure}
 
@@ -720,17 +713,14 @@ f_0 = \frac{1}{2\pi\sqrt{LC}}
 \end{equation}
 を得る。この$f_0$を\index{きょうしんしゅうはすう@共振周波数}\textbf{共振周波数}といい，
 このときインピーダンスは最小値$|Z| = R$まで下がって，
-回路は純粋な抵抗に見える（\FIGref{fig4.6}）。
+回路は純粋な抵抗に見える（\FIGref{fig4.6}，$L=100\,\mathrm{\mu H}$，$C=10\,\mathrm{\mu F}$の例）。
 この現象が\index{きょうしん@共振}\textbf{共振}である。
 
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig4.6.eps}
 \end{center}
-\caption{RLC直列回路のインピーダンスの大きさ$|Z|$の周波数特性
-（$L=100\,\mathrm{\mu H}$，$C=10\,\mathrm{\mu F}$）。
-低周波では$C$が，高周波では$L$が支配し，共振周波数$f_0$で$|Z|=R$まで下がる。
-$R$が小さいほど谷は深く鋭い}
+\caption{RLC直列回路の$|Z|$の周波数特性\LTspicefile{ch04_rlc_impedance.asc}}
 \label{fig4.6}
 \end{figure}
 

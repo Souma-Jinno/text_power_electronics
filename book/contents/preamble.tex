@@ -83,6 +83,13 @@
 \renewcommand{\textfraction}{0.07}
 \renewcommand{\floatpagefraction}{0.8}
 
+%% [2026-10-05 森北r1] 図の説明文の末尾に，対応する LTspice ファイル名を添える
+%%   例：\caption{降圧コンバータの定常状態波形\LTspicefile{buck_converter.asc}}
+%%   配布ファイルは book/figures/ltspice/chapterNN/ に置く。名前の _ はそのまま書いてよい。
+%%   ファイル名は途中で改行できないので，直前で改行させて2行目に置き，1行目は左詰めにする
+%%   （両端揃えで1行目の字間が大きく空く／題名の途中で折れるのを防ぐ）。
+\DeclareRobustCommand{\LTspicefile}[1]{\hskip 0pt plus 1fil\penalty-200\hskip 0pt plus -1fil\mbox{（LTspice：\texttt{\detokenize{#1}}）}}
+
 %% [2026-10-05 森北r1] 囲み（screen）の見出し行。直後に箇条（enumerate 等）が来る囲みで使う。
 %%   旧来の「\noindent\textbf{見出し}\\[3pt]」に箇条を続けると，\\ のあとに空の行が1つ
 %%   できて見出しと項目1の間が大きく空いていた（著者指摘「余白減らす」）。

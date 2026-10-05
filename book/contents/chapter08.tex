@@ -41,7 +41,7 @@
 \begin{center}
 \includegraphics[clip]{figures/fig8.1.eps}
 \end{center}
-\caption{半波整流回路と電圧波形。ダイオードは$v_S>0$の半周期だけ導通し，出力$v_R$には正の山だけが現れる}
+\caption{半波整流回路と電圧波形\LTspicefile{ch08_half_wave_rectifier.asc}}
 \label{fig8.1}
 \end{figure}
 
@@ -93,7 +93,7 @@ V_{\mathrm{rms}} = V_m\sqrt{\frac{1}{2\pi}\cdot\frac{\pi}{2}} = \frac{V_m}{2}
 \begin{center}
 \includegraphics[clip]{figures/fig8.2.eps}
 \end{center}
-\caption{ダイオードブリッジによる全波整流回路と出力波形。どちらの半周期でも負荷には同じ向きに電流が流れ，出力は$v_R = |v_S|$となる}
+\caption{全波整流回路と出力波形\LTspicefile{ch08_bridge_r_load.asc}}
 \label{fig8.2}
 \end{figure}
 
@@ -186,15 +186,14 @@ V_{\mathrm{avg}} = \frac{2V_m}{\pi} = \frac{2\times141}{\pi} \approx 90\,\mathrm
 \subsection{キャパシタで谷を埋める}
 
 整流しただけの出力は，\ref{fig8.2}(b)のように大きく脈動していて，そのままでは直流電源として使えない。
-そこで\ref{fig8.3}のように，出力に大容量のキャパシタ$C$を並列につなぐ。すると$C$が電圧の谷を埋め，出力はほぼ一定の直流に近づく。
+そこで\ref{fig8.3}（全波整流の場合）のように，出力に大容量のキャパシタ$C$を並列につなぐ。すると$C$が電圧の谷を埋め，出力はほぼ一定の直流に近づく。
 このように，整流の直後にキャパシタを置いて電圧を平滑にする方式を\index{きゃぱしたいんぷっとがた@キャパシタインプット形}\textbf{キャパシタインプット形}という。
 
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig8.3.eps}
 \end{center}
-\caption{キャパシタインプット形の平滑動作（全波整流の場合）。整流電圧がキャパシタ電圧より高い短い期間だけダイオードが導通して$C$を充電し（下段のパルス状電流），
-残りの期間は$C$が放電して負荷に電流を供給する。この充放電の繰返しがリプル電圧$\mathit{\Delta}V$を生む}
+\caption{キャパシタインプット形の平滑動作\LTspicefile{bridge_rectifier.asc}}
 \label{fig8.3}
 \end{figure}
 
@@ -286,14 +285,14 @@ P = \frac{1}{T}\int_0^T \frac{v^2(t)}{R}\, dt = \frac{1}{R}\cdot\frac{1}{T}\int_
 \label{eq8.13}
 \end{equation}
 となり，これは直流電圧$V = V_{\mathrm{rms}}$を加えたときの電力$V^2/R$と同じ形である。つまり実効値とは，
-\textbf{同じ抵抗に同じ発熱（同じ平均電力）を生じさせる直流の値}にほかならない（\FIGref{fig8.4}）。
+\textbf{同じ抵抗に同じ発熱（同じ平均電力）を生じさせる直流の値}にほかならない（\FIGref{fig8.4}。下段は脈動する瞬時電力$v^2/R$とその時間平均）。
 「AC\,$100$\,V」と「DC\,$100$\,V」は，抵抗負荷に対して同じ熱を出すという意味で等価なのである。
 
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig8.4.eps}
 \end{center}
-\caption{実効値の意味。瞬時電力$v^2/R$は脈動するが（下段），その時間平均は実効値$V_{\mathrm{rms}}$の直流を加えたときの一定電力に等しい。この「同じ発熱」を与える値が実効値である}
+\caption{実効値の意味}
 \label{fig8.4}
 \end{figure}
 
@@ -370,13 +369,13 @@ P = V_{\mathrm{rms}} I_{\mathrm{rms}}\cos\varphi = 100\times5\times\cos60^\circ 
 \subsection{パルス状電流が力率を下げる}
 
 \ref{sec8.2}節のキャパシタインプット形では，ダイオードが山の近くのごく短い間だけ導通するため，電源から流れる電流は\ref{fig8.3}下段のように鋭いパルス状になる。
-この電流を電源電圧と重ねて描くと\FIGref{fig8.5}のようになり，電圧は正弦波なのに電流はまったく違う形をしている。このとき，前節の$\mathrm{PF} = \cos\varphi$はそのままでは使えない。位相差$\varphi$を1つの値で決められないからである。
+この電流を電源電圧と重ねて描くと\FIGref{fig8.5}のようになり，電圧は正弦波なのに電流はまったく違う形をしている。このとき，前節の$\mathrm{PF} = \cos\varphi$はそのままでは使えない。位相差$\varphi$を1つの値で決められないからである。図中の$i_{S1}$は$i_S$の基本波成分（次に述べる）で，電圧と位相は合っていても振幅が小さい。
 
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig8.5.eps}
 \end{center}
-\caption{キャパシタインプット形の電源電流。電圧$v_S$は正弦波だが，電流$i_S$はピーク付近に集中したパルス状にひずむ。基本波成分$i_{S1}$は電圧と位相が合っていても振幅が小さく，力率を下げる}
+\caption{キャパシタインプット形の電源電流\LTspicefile{bridge_rectifier.asc}}
 \label{fig8.5}
 \end{figure}
 
@@ -419,6 +418,8 @@ I_{\mathrm{rms}} = \sqrt{I_{1,\mathrm{rms}}^2 + I_{3,\mathrm{rms}}^2 + I_{5,\mat
 を\textbf{全高調波ひずみ率}（total harmonic distortion）という。純粋な正弦波では$\mathrm{THD} = 0$である。
 \end{定義}
 
+\FIGref{fig8.6}は，ひずみ電流の各次数の振幅を基本波を$1$として示したもので，赤の高調波成分の実効値の総和と基本波の比がTHDにあたる。
+
 THDを使うと，式\ref{eq8.21}は
 \begin{equation}
 I_{\mathrm{rms}} = I_{1,\mathrm{rms}}\sqrt{1 + \mathrm{THD}^2}
@@ -439,7 +440,7 @@ I_{\mathrm{rms}} = I_{1,\mathrm{rms}}\sqrt{1 + \mathrm{THD}^2}
 \begin{center}
 \includegraphics[clip]{figures/fig8.6.eps}
 \end{center}
-\caption{ひずみ電流の高調波スペクトル。基本波を$1$に規格化し，各次数の相対振幅を棒で示す。高調波（赤）の実効値の総和と基本波の比がTHDである}
+\caption{ひずみ電流の高調波スペクトル\LTspicefile{bridge_rectifier.asc}}
 \label{fig8.6}
 \end{figure}
 
@@ -468,7 +469,7 @@ I_{\mathrm{rms}} = I_{1,\mathrm{rms}}\sqrt{1 + \mathrm{THD}^2}
 \begin{center}
 \includegraphics[clip]{figures/fig8.7.eps}
 \end{center}
-\caption{昇圧型PFC。ダイオードブリッジと5章の昇圧コンバータを組み合わせ，スイッチ$S$のデューティ比を制御して入力電流を電圧と同じ正弦波に整形する。出力は入力波高値より高い一定の直流電圧になる}
+\caption{昇圧型PFC}
 \label{fig8.7}
 \end{figure}
 

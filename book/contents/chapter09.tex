@@ -35,9 +35,7 @@
 \begin{center}
 \includegraphics[clip]{figures/fig9.1.eps}
 \end{center}
-\caption{インバータの基本回路。(a)ハーフブリッジは1レグ（スイッチ2個）で構成し，
-分割した電源の中点を基準に$\pm E/2$を出力する。(b)フルブリッジは2レグ（スイッチ4個）で構成し，
-1つの電源から$\pm E$を出力する}
+\caption{インバータの基本回路（(a)ハーフブリッジ，(b)フルブリッジ）}
 \label{fig9.1}
 \end{figure}
 
@@ -102,8 +100,7 @@ i_R = \frac{v_R}{R}
 \begin{center}
 \includegraphics[clip]{figures/fig9.2.eps}
 \end{center}
-\caption{フルブリッジインバータの出力波形。抵抗負荷では電流$i_R$は電圧$v_R$と同相の方形波だが，
-誘導性(RL)負荷では電流$i$は指数関数状になり，電圧に対して位相が遅れる}
+\caption{フルブリッジインバータの出力波形\LTspicefile{ch09_full_bridge_square.asc}}
 \label{fig9.2}
 \end{figure}
 
@@ -140,7 +137,7 @@ i_R = \frac{v_R}{R}
 しかしデッドタイム中は上下ともオフだから，還流電流の行き場を別に用意しなければならない。
 そこで各スイッチに逆向きの\index{かんりゅうだいおーど@還流ダイオード}\textbf{還流ダイオード}
 （フリーホイールダイオード）を並列に接続する。
-還流電流はこのダイオードを通って流れ続け，電流の連続性が保たれる（\ref{fig9.3}(b)）。
+還流電流はこのダイオード（\ref{fig9.3}(b)では下アームの$\mathrm{D}_2$）を通って流れ続け，電流の連続性が保たれる。
 MOSFETの場合は構造上そなわっている\index{ぼでぃだいおーど@ボディダイオード}\textbf{ボディダイオード}
 （寄生ダイオード）をそのまま還流ダイオードとして使えることが多い。
 デッドタイムの長さの見積りは章末問題\ref{ex9.2}で扱う。
@@ -149,8 +146,7 @@ MOSFETの場合は構造上そなわっている\index{ぼでぃだいおーど@
 \begin{center}
 \includegraphics[clip]{figures/fig9.3.eps}
 \end{center}
-\caption{(a)上下アームのゲート信号。切替えのたびに両方がオフのデッドタイム$t_d$を挟む。
-(b)デッドタイム中，誘導性負荷の還流電流は下アームの還流ダイオード$\mathrm{D}_2$を通って流れ続ける}
+\caption{デッドタイムと還流電流の経路\LTspicefile{ch09_dead_time.asc}}
 \label{fig9.3}
 \end{figure}
 
@@ -252,8 +248,7 @@ v_R(t) = \frac{4E}{\pi}\left(\sin\omega t + \frac{1}{3}\sin 3\omega t
 \begin{center}
 \includegraphics[clip]{figures/fig9.4.eps}
 \end{center}
-\caption{(a)基本波・3次・5次を足し合わせると方形波に近づく。
-(b)高調波の振幅スペクトル。奇数次だけが現れ，振幅は$4E/(n\pi)$で$1/n$に減っていく}
+\caption{方形波の分解（(a)基本波・3次・5次の合成，(b)振幅スペクトル）}
 \label{fig9.4}
 \end{figure}
 
@@ -352,14 +347,13 @@ $\mathit{\Delta}t$を大きくするほど基本波の振幅
 もう1つはそれよりずっと高い周波数の三角波である\index{はんそうは@搬送波}\textbf{搬送波}
 （キャリア）$v_{\mathrm{carr}}$である。この2つを比べ，
 \textbf{変調波が搬送波より大きい区間はスイッチをオン，小さい区間はオフ}にする。
-すると自然に，正弦波が大きいところほどオンの時間が長い（パルスが太い）パルス列が得られる（\ref{fig9.5}(b)）。
+すると自然に，正弦波が大きいところほどオンの時間が長い（パルスが太い）パルス列が得られる（\ref{fig9.5}(b)。出力は$+E$と$-E$の2値で，破線は取り出したい基本波）。
 
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig9.5.eps}
 \end{center}
-\caption{正弦波PWM（バイポーラ変調）。(a)正弦波の変調波と三角波の搬送波を比較する。
-(b)変調波が搬送波を上回る区間で$+E$，下回る区間で$-E$を出力する。破線は取り出したい基本波}
+\caption{正弦波PWM（バイポーラ変調）\LTspicefile{hbridge_pwm_bipolar.asc}}
 \label{fig9.5}
 \end{figure}
 
@@ -403,7 +397,7 @@ $m = 1$を超えて出力を増やすと，究極的には方形波（基本波�
 一方，フルブリッジの左右のレグを別々の指令（$+v_{\mathrm{ref}}$と$-v_{\mathrm{ref}}$）で制御すると，
 出力は$+E$，$0$，$-E$の3値をとる\index{ゆにぽーらへんちょう@ユニポーラ変調}\textbf{ユニポーラ変調}になる。
 
-両者の違いは，発生する高調波の\textbf{周波数帯}にはっきり現れる（\FIGref{fig9.6}）。
+両者の違いは，発生する高調波の\textbf{周波数帯}にはっきり現れる（\FIGref{fig9.6}。上段が出力波形，下段が高調波スペクトル）。
 どちらも基本波（低い周波数）はきれいに取り出せるが，PWMが生む高調波は搬送波周波数の付近に集まる。
 バイポーラでは搬送波周波数$f_c$（次数$m_f$）の付近に，
 ユニポーラでは左右のレグが交互に切り替わるため実効的なスイッチング周波数が2倍になり，
@@ -415,9 +409,7 @@ $m = 1$を超えて出力を増やすと，究極的には方形波（基本波�
 \begin{center}
 \includegraphics[clip]{figures/fig9.6.eps}
 \end{center}
-\caption{バイポーラ変調とユニポーラ変調の出力波形（上）と高調波スペクトル（下）。
-高調波は基本波付近には現れず搬送波周波数の付近に集まる。
-ユニポーラでは実効スイッチング周波数が2倍になり，高調波が$2m_f$付近のより高い周波数帯へ移る}
+\caption{PWM変調方式の比較\LTspicefile{hbridge_pwm_bipolar/unipolar.asc}}
 \label{fig9.6}
 \end{figure}
 
@@ -465,15 +457,14 @@ $m = 0.8$で動かすと基本波の振幅はいくらか。
 そこで，出力がとれる電圧レベルの\textbf{段数を増やす}のが
 \index{まるちれべるいんばーた@マルチレベルインバータ}\textbf{マルチレベルインバータ}である。
 たとえば電源を2つに分けて中点を作り，出力に$0$，$\pm E/2$，$\pm E$といった中間レベルを加えると，
-出力は正弦波をなめらかな\textbf{階段波}で近似できる（\FIGref{fig9.7}）。
+出力は正弦波をなめらかな\textbf{階段波}で近似できる（\FIGref{fig9.7}。破線は目標の正弦波）。
 段数が増えるほど1段の高さが小さくなり，正弦波との差（＝高調波）が減る。
 
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[clip]{figures/fig9.7.eps}
 \end{center}
-\caption{(a)2レベルの方形波と，(b)多レベルの階段波。破線の目標正弦波に対し，
-段数を増やすほど階段が細かくなって正弦波に近づき，高調波が減る}
+\caption{(a)2レベルの方形波，(b)多レベルの階段波}
 \label{fig9.7}
 \end{figure}
 
@@ -531,8 +522,8 @@ MOSFETのゲートは，絶縁膜をはさんだ導体であり，電気的に�
 \index{ぶーとすとらっぷ@ブートストラップ}\textbf{ブートストラップ}回路である（\FIGref{fig9.8}）。
 ハイサイド用のキャパシタ$C_{boot}$を1個追加し，
 下アーム$\mathrm{Q}_2$がオンでレグ中点がほぼグラウンド電位にある間に，
-制御電源$V_{cc}$からダイオード$\mathrm{D}_{boot}$を通して$C_{boot}$を充電しておく。
-上アーム$\mathrm{Q}_1$を駆動するときは，充電された$C_{boot}$が中点電位の上に乗った電源として働き，
+制御電源$V_{cc}$からダイオード$\mathrm{D}_{boot}$を通して$C_{boot}$を充電しておく（図の赤の経路）。
+上アーム$\mathrm{Q}_1$を駆動するときは，充電された$C_{boot}$が中点電位$V_S$の上に乗った電源として働き，
 ハイサイドのゲートに電荷を供給する。$\mathrm{Q}_2$がオンになるたびに充電が繰り返されるので，
 1個のキャパシタとダイオードだけでハイサイド電源をまかなえる。
 
@@ -540,9 +531,7 @@ MOSFETのゲートは，絶縁膜をはさんだ導体であり，電気的に�
 \begin{center}
 \includegraphics[clip]{figures/fig9.8.eps}
 \end{center}
-\caption{ブートストラップによるハイサイド駆動。下アーム$\mathrm{Q}_2$がオンの間に，
-$V_{cc}$から$\mathrm{D}_{boot}$を通して$C_{boot}$を充電する（赤の経路）。
-充電された$C_{boot}$が，浮動する中点電位$V_S$の上に乗ったハイサイド用電源として働く}
+\caption{ブートストラップによるハイサイド駆動}
 \label{fig9.8}
 \end{figure}
 
