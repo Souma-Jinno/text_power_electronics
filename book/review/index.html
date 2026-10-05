@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>パワエレ教科書（森北出版） 赤枠レビュー</title>
+<!-- 教科書の Blender 図の赤枠レビュー（slide_system_trial/tools/review.html と同じ使い方）。
+     図の上をドラッグ（スマホは指でなぞる）して赤枠を描き、コメントを書く。
+     結果は figure_review_notes.json（保存／コピー）。AI は name の生成スクリプト <name>.py を直して build_fig.sh で作り直す。
+     図の一覧は figs.js（make_figs_js は同じフォルダの生成手順を参照）。メモはこのブラウザに自動保存。 -->
+<script>/* 一覧は毎回読み直す（ブラウザに古い figs.js が残る事故の対策 2026-10-02） */document.write('<script src="figs.js?t='+Date.now()+'"><\/script>');</script>
+<style>
+  :root { --cyan: #00ADEF; --red: #E00000; --ink: #222; --sub: #666; --line: #ddd; --bg: #f4f4f4; --card: #fff; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Hiragino Sans", sans-serif; font-size: 14px; }
+  header { display: flex; gap: 6px; align-items: center; padding: 8px 12px; background: #fff; border-bottom: 1px solid var(--line); flex-wrap: wrap; position: sticky; top: 0; z-index: 5; }
+  header b { margin-right: 6px; }
+  button, select { font: inherit; padding: 4px 10px; border: 1px solid #bbb; background: #fff; border-radius: 3px; cursor: pointer; }
+  button.on { background: var(--cyan); color: #fff; border-color: var(--cyan); }
+  select { max-width: 260px; }
+  main { display: grid; grid-template-columns: 1fr 360px; gap: 12px; padding: 12px; }
+  #wrap { background: #fff; box-shadow: 0 0 0 1px var(--line); padding: 8px; overflow: auto; max-height: calc(100vh - 80px); -webkit-overflow-scrolling: touch; }
+  #stage.pan { touch-action: auto; }
+  #stage.pan #overlay { pointer-events: none; }
+  #zoomlv { min-width: 3.2em; display: inline-block; text-align: center; }
+  #stage { position: relative; margin: 0 auto; flex: none; touch-action: none; user-select: none; -webkit-user-select: none; }
+  #stage img { display: block; width: 100%; height: auto; pointer-events: none; }
+  #overlay { position: absolute; inset: 0; cursor: crosshair; }
+  #cmp { display: none; width: 100%; height: auto; }
+  #side { display: none; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+  #side figure { margin: 0; border: 2px solid var(--line); padding: 6px; background: #fff; cursor: pointer; }
+  #side figure.picked { border-color: var(--cyan); box-shadow: 0 0 0 2px var(--cyan); }
+  #side figure img { width: 100%; height: auto; display: block; }
+  #side figcaption { font-size: 13px; margin-bottom: 4px; display: flex; justify-content: space-between; }
+  #side figcaption .tag { color: #fff; background: var(--cyan); padding: 0 6px; border-radius: 2px; }
+  #side .none { color: var(--sub); font-size: 12px; padding: 30px 0; text-align: center; }
+  #pickbar { margin: 8px 0; display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+  #pickbar button.on { background: var(--cyan); color: #fff; border-color: var(--cyan); }
+  .frame { position: absolute; border: 3px solid var(--red); box-sizing: border-box; }
+  .frame .no { position: absolute; left: -3px; top: -22px; background: var(--red); color: #fff; font-size: 13px; font-weight: 700; padding: 0 6px; }
+  .frame.sel { outline: 3px dashed var(--red); outline-offset: 3px; }
+  aside { background: #fff; box-shadow: 0 0 0 1px var(--line); padding: 10px; overflow: auto; max-height: calc(100vh - 80px); }
+  .note { border-bottom: 1px solid var(--line); padding: 8px 0; }
+  .note h4 { margin: 0 0 4px; font-size: 13px; color: var(--red); display: flex; justify-content: space-between; gap: 6px; }
+  .note h4 a { color: var(--red); cursor: pointer; }
+  .note textarea, #general { width: 100%; box-sizing: border-box; min-height: 52px; font: inherit; }
+  .hint { color: var(--sub); font-size: 12px; line-height: 1.6; }
+  #out { width: 100%; box-sizing: border-box; height: 100px; font-family: monospace; font-size: 11px; margin-top: 8px; }
+  .count { color: var(--red); font-weight: 700; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } aside { max-height: none; } }
+</style>
+</head>
+<body>
+<header>
+  <b>パワエレ教科書（森北出版） 赤枠レビュー</b>
+  <span class="hint" id="sync" title="tailnet につながっていれば、書いた内容は自動で Mac mini に届く"></span>
+  <button id="zout" title="縮小">−</button><span id="zoomlv">100%</span><button id="zin" title="拡大">＋</button>
+  <button id="pan" title="拡大中に頁を指で動かす">移動</button>
+  <button id="prev">←</button>
+  <select id="sel"></select>
+  <button id="next">→</button>
+  <span id="modes" style="display:none"><button data-m="draw">赤枠を描く</button> <button data-m="side">並べて見る</button> <button data-m="page">本文中で見る</button></span>
+  <span style="flex:1"></span>
+  <button id="dl">JSONを保存</button>
+  <button id="cp">JSONをコピー</button>
+  <button id="clr">全部消す</button>
+</header>
+<main>
+  <div id="wrap">
+    <div id="stage"><img id="img" alt=""><div id="overlay"></div></div>
+    <img id="cmp" alt="本文中の比較（左＝今の図，右＝Blender 版）">
+    <div id="side"></div>
+  </div>
+  <aside>
+    <div class="hint">ページの上をドラッグ（スマホは指でなぞる）して赤枠を描き、コメントを書く。枠をタップで選択、Delete で削除。<br>ページ全体へのコメントは下の欄へ。<br>tailnet につながっていれば、書いた内容はそのまま Mac mini に届きます（上の「✓ Mac mini に保存済み」で確認）。</div>
+    <div id="pickbar" style="display:none"></div>
+    <h4 style="margin:10px 0 4px">このページ全体へのコメント</h4>
+    <textarea id="general" placeholder="例：この頁の論旨、言い回し、など"></textarea>
+    <div id="notes"></div>
+    <textarea id="out" readonly placeholder="（コピーできないときは、ここから手で選んでコピー）"></textarea>
+  </aside>
+</main>
+<script>
+const FIGS = window.FIGS || [];
+const KEY = "pe_textbook_review_v1";
+let st = { notes: [], general: {}, pick: {}, cur: FIGS.length ? FIGS[0].name : null };
+// レビューの回。make_pages.py が figs.js に書く。回が違うメモ（前の回の指示）は読まない
+const ROUND = window.ROUND || "0"; st.round = ROUND;
+try { const s = JSON.parse(localStorage.getItem(KEY) || "null"); if (s && s.round === ROUND) st = Object.assign(st, s); } catch (e) {}
+// 図の寸法が無かった版（4405112）で描いた枠は座標が NaN になっている。読み込み時に捨てる
+function normalize() {
+  st.pick = st.pick || {}; st.general = st.general || {};
+  st.notes = (st.notes || []).filter((n) => n.box && ["x", "y", "w", "h"].every((k) => Number.isFinite(n.box[k])));
+}
+normalize();
+if (!FIGS.find((f) => f.name === st.cur) && FIGS.length) st.cur = FIGS[0].name;
+let selected = null, mode = "draw";
+const PICKS = [["new", "新しいBlender版"], ["prev", "前回見た版"], ["cur", "今の図（TikZ）"], ["none", "どれも直す"]];
+const $ = (id) => document.getElementById(id);
+const img = $("img"), ov = $("overlay"), stage = $("stage");
+const fig = () => FIGS.find((f) => f.name === st.cur);
+
+function save() { st.updated = Date.now(); try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} renderOut(); fillSel(); push(); }
+
+// tailnet 同期：書いた内容を Mac mini（scripts/review_sync_server.py、:4568）へ自動で送る。届かなければブラウザ保存だけで続ける
+const SYNC = `${location.protocol}//${location.hostname}:4568/state/pe_textbook`;
+let pushTimer = null;
+const syncMsg = (t, ok) => { $("sync").textContent = t; $("sync").style.color = ok ? "#0a7d32" : "#999"; };
+function push() {
+  clearTimeout(pushTimer); syncMsg("送信待ち…", false);
+  pushTimer = setTimeout(async () => {
+    try {
+      const { cur, ...body } = st;
+      const r = await fetch(SYNC, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...body, cur }) });
+      if (!r.ok) throw 0; syncMsg("✓ Mac mini に保存済み " + new Date().toLocaleTimeString("ja-JP", { hour: "2-digit", minute: "2-digit" }), true);
+    } catch (e) { syncMsg("Mac mini に届かない（tailnet 外？）：ブラウザにだけ保存中", false); }
+  }, 800);
+}
+async function pull() {
+  try {
+    const r = await fetch(SYNC, { cache: "no-store" }); if (!r.ok) throw 0;
+    let srv = await r.json();
+    if (srv && srv.round !== ROUND) srv = {};  // 前の回のメモは無いものとして扱う
+    if (srv && srv.updated && (!st.updated || srv.updated > st.updated)) {
+      const cur = st.cur; st = Object.assign({ notes: [], general: {}, pick: {} }, srv); if (FIGS.find((f) => f.name === cur)) st.cur = cur;
+      normalize(); try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {}
+      show(); syncMsg("✓ Mac mini と同期済み", true);
+    } else if (!srv.updated || (st.updated && st.updated > srv.updated)) push();  // 同期を入れる前のメモ（updated なし）もここで送る
+    else syncMsg("✓ Mac mini と同期済み", true);
+  } catch (e) { syncMsg("Mac mini に届かない（tailnet 外？）：ブラウザにだけ保存中", false); }
+}
+
+function fillSel() {
+  const cnt = (n) => st.notes.filter((x) => x.name === n).length + (st.general[n] ? 1 : 0);
+  const mark = (n) => st.pick[n] ? "［" + { new: "新", prev: "前", cur: "今", none: "直" }[st.pick[n]] + "］" : "";
+  $("sel").innerHTML = FIGS.map((f) => `<option value="${f.name}" ${f.name === st.cur ? "selected" : ""}>${mark(f.name)}${f.name}${cnt(f.name) ? "（" + cnt(f.name) + "）" : ""}</option>`).join("");
+}
+$("sel").onchange = () => go($("sel").value);
+$("prev").onclick = () => step(-1); $("next").onclick = () => step(1);
+function step(d) { const i = FIGS.findIndex((f) => f.name === st.cur); go(FIGS[(i + d + FIGS.length) % FIGS.length].name); }
+function go(n) { st.cur = n; selected = null; save(); show(); }
+
+let zoom = 1, pan = false;
+function setZoom(z) { zoom = Math.max(1, Math.min(4, z)); $("zoomlv").textContent = Math.round(zoom * 100) + "%"; if (zoom === 1 && pan) togglePan(); fit(); }
+function togglePan() { pan = !pan; stage.classList.toggle("pan", pan); $("pan").classList.toggle("on", pan); $("pan").textContent = pan ? "移動中（赤枠は描けない）" : "移動"; }
+function fit() {
+  const f = fig(); if (!f) return;
+  const maxW = $("wrap").clientWidth - 16, maxH = window.innerWidth > 900 ? window.innerHeight - 110 : 1e9;
+  const s = Math.min(maxW / f.w, maxH / f.h, 1.3) * zoom;
+  stage.style.width = f.w * s + "px"; stage.dataset.scale = s;
+  drawFrames();
+}
+window.addEventListener("resize", fit);
+$("zin").onclick = () => setZoom(zoom * 1.5); $("zout").onclick = () => setZoom(zoom / 1.5); $("pan").onclick = togglePan;
+
+function show() {
+  const f = fig(); if (!f) return;
+  img.src = "../" + f.png; $("cmp").src = f.compare ? "../" + f.compare : "";
+  stage.style.display = mode === "draw" ? "" : "none"; $("cmp").style.display = mode === "page" ? "block" : "none";
+  $("side").style.display = mode === "side" ? "grid" : "none";
+  document.querySelectorAll("#modes button").forEach((b) => b.classList.toggle("on", b.dataset.m === mode));
+  renderSide(); renderPick();
+  $("general").value = st.general[f.name] || "";
+  fillSel(); fit(); renderNotes();
+}
+document.querySelectorAll("#modes button").forEach((b) => b.onclick = () => { mode = b.dataset.m; show(); });
+function setPick(k) { if (st.pick[st.cur] === k) delete st.pick[st.cur]; else st.pick[st.cur] = k; save(); renderSide(); renderPick(); renderNotes(); }
+function renderPick() {
+  const f = fig();
+  $("pickbar").innerHTML = PICKS.filter(([k]) => k === "new" || k === "none" || f[k]).map(([k, t]) =>
+    `<button data-k="${k}" class="${st.pick[st.cur] === k ? "on" : ""}">${t}</button>`).join("") + (st.pick[st.cur] ? "" : '<span class="hint">未選択</span>');
+  $("pickbar").querySelectorAll("button").forEach((b) => b.onclick = () => setPick(b.dataset.k));
+}
+function renderSide() {
+  const f = fig();
+  const cols = [["cur", "今の図（TikZ）", f.cur], ["prev", "前回見た版", f.prev], ["new", "新しいBlender版", f.png]];
+  $("side").innerHTML = cols.map(([k, t, src]) => src
+    ? `<figure data-k="${k}" class="${st.pick[st.cur] === k ? "picked" : ""}"><figcaption><span>${t}</span>${st.pick[st.cur] === k ? '<span class="tag">これを使う</span>' : ""}</figcaption><img src="../${src}" alt="${t}"></figure>`
+    : `<figure style="cursor:default"><figcaption><span>${t}</span></figcaption><div class="none">${k === "prev" ? "前回から変えていない（新しい版と同じ）" : "本文に今の図が無い"}</div></figure>`).join("");
+  $("side").querySelectorAll("figure[data-k]").forEach((el) => el.onclick = () => setPick(el.dataset.k));
+}
+let genTimer = null;
+$("general").oninput = () => { const v = $("general").value; if (v.trim()) st.general[st.cur] = v; else delete st.general[st.cur]; save(); clearTimeout(genTimer); genTimer = setTimeout(renderNotes, 600); };
+
+// 座標は図の PNG の画素（左上原点）で持つ。表示倍率に依らない
+function toFig(ev) {
+  const r = ov.getBoundingClientRect(), s = parseFloat(stage.dataset.scale), f = fig();
+  return { x: Math.max(0, Math.min(f.w, (ev.clientX - r.left) / s)), y: Math.max(0, Math.min(f.h, (ev.clientY - r.top) / s)) };
+}
+let drag = null, ghost = null;
+ov.addEventListener("pointerdown", (ev) => {
+  if (ev.target.closest(".frame")) return;
+  ov.setPointerCapture(ev.pointerId);
+  drag = toFig(ev); ghost = document.createElement("div"); ghost.className = "frame"; ov.appendChild(ghost);
+});
+ov.addEventListener("pointermove", (ev) => {
+  if (!drag) return; const p = toFig(ev), s = parseFloat(stage.dataset.scale);
+  Object.assign(ghost.style, { left: Math.min(p.x, drag.x) * s + "px", top: Math.min(p.y, drag.y) * s + "px", width: Math.abs(p.x - drag.x) * s + "px", height: Math.abs(p.y - drag.y) * s + "px" });
+});
+ov.addEventListener("pointerup", (ev) => {
+  if (!drag) return; const p = toFig(ev), d = drag; drag = null; ghost.remove();
+  const box = { x: Math.round(Math.min(p.x, d.x)), y: Math.round(Math.min(p.y, d.y)), w: Math.round(Math.abs(p.x - d.x)), h: Math.round(Math.abs(p.y - d.y)) };
+  if (box.w < 8 || box.h < 8) return;
+  const n = { id: Date.now(), name: st.cur, box, comment: "" };
+  st.notes.push(n); selected = n.id; save(); drawFrames(); renderNotes();
+  setTimeout(() => { const t = document.querySelector(`textarea[data-id="${n.id}"]`); if (t) t.focus(); }, 0);
+});
+window.addEventListener("keydown", (ev) => {
+  if ((ev.key === "Delete" || ev.key === "Backspace") && selected && document.activeElement.tagName !== "TEXTAREA") del(selected);
+});
+function del(id) { st.notes = st.notes.filter((n) => n.id !== id); selected = null; save(); drawFrames(); renderNotes(); }
+
+function drawFrames() {
+  ov.querySelectorAll(".frame").forEach((f) => f.remove());
+  const s = parseFloat(stage.dataset.scale) || 1;
+  st.notes.filter((n) => n.name === st.cur).forEach((n) => {
+    const f = document.createElement("div"); f.className = "frame" + (n.id === selected ? " sel" : "");
+    Object.assign(f.style, { left: n.box.x * s + "px", top: n.box.y * s + "px", width: n.box.w * s + "px", height: n.box.h * s + "px" });
+    f.innerHTML = `<span class="no">${st.notes.indexOf(n) + 1}</span>`;
+    f.onpointerdown = (ev) => { ev.stopPropagation(); selected = n.id; drawFrames(); renderNotes(); };
+    ov.appendChild(f);
+  });
+}
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+function renderNotes() {
+  const PL = Object.fromEntries(PICKS), order = (n) => FIGS.findIndex((f) => f.name === n);
+  const gen = Object.entries(st.general).sort((a, b) => order(a[0]) - order(b[0]));
+  const pk = Object.entries(st.pick).sort((a, b) => order(a[0]) - order(b[0]));
+  const total = st.notes.length + gen.length + pk.length;
+  $("notes").innerHTML = `<div class="hint" style="margin-top:10px">全体で <span class="count">${total}</span> 件（赤枠 ${st.notes.length}・図全体へのコメント ${gen.length}・どれを使う ${pk.length}）</div>` +
+    (st.notes.length ? '<h4 style="margin:10px 0 0">赤枠</h4>' : "") +
+    st.notes.map((n, i) => `<div class="note" style="${n.id === selected ? "background:#fff4f4" : ""}">
+    <h4><a data-go="${n.name}">${i + 1}. ${n.name}</a><button data-del="${n.id}">削除</button></h4>
+    <textarea data-id="${n.id}" placeholder="どう直したいか">${esc(n.comment)}</textarea></div>`).join("") +
+    (gen.length ? '<h4 style="margin:10px 0 0">図全体へのコメント</h4>' : "") +
+    gen.map(([name, c]) => `<div class="note"><h4><a data-go="${name}">${name}</a><button data-delgen="${name}">削除</button></h4><div style="white-space:pre-wrap">${esc(c)}</div></div>`).join("") +
+    (pk.length ? '<h4 style="margin:10px 0 0">どれを使う</h4>' : "") +
+    pk.map(([name, k]) => `<div class="note"><h4><a data-go="${name}">${name}</a><button data-delpick="${name}">取消</button></h4><div>${esc(PL[k])}</div></div>`).join("");
+  $("notes").querySelectorAll("textarea").forEach((t) => t.oninput = () => { st.notes.find((n) => n.id === +t.dataset.id).comment = t.value; save(); });
+  $("notes").querySelectorAll("[data-del]").forEach((b) => b.onclick = () => del(+b.dataset.del));
+  $("notes").querySelectorAll("[data-delgen]").forEach((b) => b.onclick = () => { delete st.general[b.dataset.delgen]; if (b.dataset.delgen === st.cur) $("general").value = ""; save(); renderNotes(); });
+  $("notes").querySelectorAll("[data-delpick]").forEach((b) => b.onclick = () => { delete st.pick[b.dataset.delpick]; save(); renderSide(); renderPick(); renderNotes(); });
+  $("notes").querySelectorAll("[data-go]").forEach((a) => a.onclick = () => { mode = "draw"; go(a.dataset.go); window.scrollTo(0, 0); });
+  renderOut();
+}
+
+function exportJSON() {
+  return JSON.stringify({
+    tool: "text_electromagnetic_theory/book/figures/blender/review/index.html",
+    created: new Date().toISOString(),
+    coords: "box は図の PNG（book/figures/blender/<name>.png）の画素、左上が原点",
+    how_to_fix: "name の生成スクリプト <name>.py（ラベルは <name>.labels.json の元）を comment のとおり直し、build_fig.sh で作り直して verify と比較画像を回す",
+    pick_legend: { new: "新しいBlender版を使う", prev: "前回見た版（git 4b67e04 の png）に戻す", cur: "今の図（TikZ の eps）のまま", none: "どれも直す" },
+    pick: Object.entries(st.pick).map(([name, choice]) => ({ name, choice })),
+    general: Object.entries(st.general).map(([name, comment]) => ({ name, comment })),
+    notes: st.notes.map((n, i) => ({ no: i + 1, name: n.name, box: n.box, comment: n.comment })),
+  }, null, 2);
+}
+function renderOut() { $("out").value = exportJSON(); }
+$("dl").onclick = () => {
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([exportJSON()], { type: "application/json" }));
+  a.download = "figure_review_notes.json"; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+};
+$("cp").onclick = async () => {
+  try { await navigator.clipboard.writeText(exportJSON()); $("cp").textContent = "コピーした"; }
+  catch (e) { $("out").select(); document.execCommand("copy"); $("cp").textContent = "コピーした（予備）"; }
+  setTimeout(() => $("cp").textContent = "JSONをコピー", 1500);
+};
+$("clr").onclick = () => { if (confirm("メモを全部消す？")) { st.notes = []; st.general = {}; st.pick = {}; save(); show(); } };
+
+if (!FIGS.length) document.body.insertAdjacentHTML("afterbegin", '<p style="color:#E00000;padding:8px">figs.js が見つからない。</p>');
+else { show(); pull(); }
+</script>
+</body>
+</html>
