@@ -1,5 +1,13 @@
-\documentclass[tombow,nosetpagesize]{corona-a5-1.1}
+%% [2026-10-05] 清書モード：./build.sh --clean で \PEclean が定義されて呼ばれる。
+%%   校正用（既定）＝トンボ＋上端の「main : 日時」＋修正箇所の赤字（\rev）。出力 main.pdf
+%%   清書（--clean）＝トンボ・日時なし（mentuke：版面の位置と頁割りは校正用と同じ），\rev は黒。出力 main_clean.pdf
+\ifdefined\PEclean
+  \documentclass[mentuke,nosetpagesize]{corona-a5-1.1}
+\else
+  \documentclass[tombow,nosetpagesize]{corona-a5-1.1}
+\fi
 \input{contents/preamble}
+\ifdefined\PEclean \revcolorfalse \fi
 
 %% 書名・著者
 \title{パワーエレクトロニクス ― エネルギーの蓄えと放出で読み解く電力変換}

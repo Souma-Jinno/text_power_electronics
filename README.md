@@ -3,7 +3,7 @@
 > **📕 森北出版で執筆中の教科書原稿は `book/` にあります。**
 > - **最新原稿: `book/main.pdf`**（コロナ社A5判クラス `corona-a5-1.1.cls` で組版済み・全11章＋章末解答）
 > - ソース: `book/contents/chapter01.tex` 〜 `chapter11.tex`、解答は `answer01.tex` 〜
-> - ビルド: `book/build.sh`
+> - ビルド: `book/build.sh`（校正用 `main.pdf`：トンボ・日時・修正箇所の赤字あり）／`book/build.sh --clean`（清書 `main_clean.pdf`：トンボ・日時なし，赤字は黒。頁割りは校正用と同じ。森北送付用）
 > - 編集担当: 森北出版 上村紗帆さん（kamimura@morikita.co.jp）。やり取りは `correspondence/` 参照
 >
 > **本書の核となる方針**（まえがきより）:

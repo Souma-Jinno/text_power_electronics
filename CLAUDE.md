@@ -23,6 +23,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 1. **執筆前に必ず `WRITING_GUIDE.md` を読む**（コロナ社規約+パワエレ固有規約）
 2. ビルドは **pLaTeX**（platex→mendex→platex→dvipdfmx。このマシンでは /usr/bin の各コマンド直叩き）
+   - `./build.sh` は校正用 main.pdf（トンボ・日時・`\rev` の赤字）。`./build.sh --clean` は清書 main_clean.pdf（`\PEclean` を定義して組む：クラスオプション mentuke でトンボ・日時なし，`\revcolorfalse`）。`\rev` はソースから消さない（レビュー履歴）
 3. **スライド画像・LTspiceスクショの貼り込み禁止**。図は全点スクリプト生成EPS（1図=1スクリプト、`book/figures/scripts/`。TikZは `render.sh` 相当のパイプラインで、matplotlibは直接EPS出力）
 4. 図ファイル名は `fig{章}.{番}.eps`=ラベル名。図の幅は318pt以下
 5. ベクトル `\boldsymbol`、句読点「，」「。」、である調

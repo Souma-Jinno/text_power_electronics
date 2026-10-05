@@ -20,7 +20,15 @@ else
     MENDEX=${TEXBIN}/mendex
 fi
 
+# 使い方: ./build.sh          … 校正用 main.pdf（トンボ・日時・赤字あり）
+#         ./build.sh --clean  … 清書 main_clean.pdf（トンボ・日時なし，赤字は黒。森北送付用）
 MAIN=main
+JOB=main
+PRE=""
+if [ "${1:-}" = "--clean" ]; then
+    JOB=main_clean
+    PRE='\def\PEclean{}'
+fi
 WORKDIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$WORKDIR"
 
@@ -35,42 +43,42 @@ show_log_errors() {
 }
 
 echo "=== [1/5] platex 1回目 ==="
-if ! ${PLATEX} -interaction=nonstopmode -halt-on-error ${MAIN}.tex; then
+if ! ${PLATEX} -interaction=nonstopmode -halt-on-error -jobname=${JOB} "${PRE}\input{${MAIN}}"; then
     echo "ERROR: platex 1回目 失敗"
-    show_log_errors "${MAIN}.log"
+    show_log_errors "${JOB}.log"
     exit 1
 fi
 
 echo "=== [2/5] platex 2回目（相互参照解決） ==="
-if ! ${PLATEX} -interaction=nonstopmode -halt-on-error ${MAIN}.tex; then
+if ! ${PLATEX} -interaction=nonstopmode -halt-on-error -jobname=${JOB} "${PRE}\input{${MAIN}}"; then
     echo "ERROR: platex 2回目 失敗"
-    show_log_errors "${MAIN}.log"
+    show_log_errors "${JOB}.log"
     exit 1
 fi
 
 echo "=== [3/5] mendex（索引生成，corona+.ist 使用） ==="
-${MENDEX} -s corona+.ist -o ${MAIN}.ind ${MAIN}.idx || true
+${MENDEX} -s corona+.ist -o ${JOB}.ind ${JOB}.idx || true
 # 索引エントリが0件の場合 mendex は exit 255 を返し .ind を生成しない。
 # platex が \printindex で .ind を要求するので空ファイルを用意する。
-if [ ! -f ${MAIN}.ind ]; then
+if [ ! -f ${JOB}.ind ]; then
     echo "(索引エントリなし: 空の .ind を生成します)"
-    touch ${MAIN}.ind
+    touch ${JOB}.ind
 fi
 
 echo "=== [4/5] platex 3回目（索引反映） ==="
-if ! ${PLATEX} -interaction=nonstopmode -halt-on-error ${MAIN}.tex; then
+if ! ${PLATEX} -interaction=nonstopmode -halt-on-error -jobname=${JOB} "${PRE}\input{${MAIN}}"; then
     echo "ERROR: platex 3回目 失敗"
-    show_log_errors "${MAIN}.log"
+    show_log_errors "${JOB}.log"
     exit 1
 fi
 
 echo "=== [5/5] dvipdfmx ==="
-if ! ${DVIPDFMX} -o ${MAIN}.pdf ${MAIN}.dvi; then
+if ! ${DVIPDFMX} -o ${JOB}.pdf ${JOB}.dvi; then
     echo "ERROR: dvipdfmx 失敗"
     exit 1
 fi
 
 echo ""
 echo "=== ビルド完了 ==="
-echo "出力: ${WORKDIR}/${MAIN}.pdf"
-ls -lh "${MAIN}.pdf"
+echo "出力: ${WORKDIR}/${JOB}.pdf"
+ls -lh "${JOB}.pdf"
