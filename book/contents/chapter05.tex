@@ -132,7 +132,7 @@ V_{\mathrm{on}} \cdot DT + V_{\mathrm{off}} \cdot (1-D)T = 0
 式\ref{eq5.5}に代入すれば出力電圧が得られる。以降の3つの回路はすべて，この同じ手順で解析する。
 
 \begin{screen}
-\noindent\textbf{手順：変換回路の解析}\\[3pt]
+\PEboxhead{手順：変換回路の解析}
 \begin{enumerate}
 \item 仮定を明示する（理想素子・定常状態・電流連続・リプル小）
 \item オン期間とオフ期間の\index{とうかかいろ@等価回路}\textbf{等価回路}を描く
@@ -472,7 +472,7 @@ $(V_{\mathrm{in}}-V_{\mathrm{out}})/L$で$DT$の間増え続けるから，そ�
 そこで実務では「負荷電流の2〜4割程度のリプルを許す」のが一般的な出発点である。
 
 \begin{screen}
-\noindent\textbf{手順：リプル電流からインダクタを決める（降圧コンバータ）}\\[3pt]
+\PEboxhead{手順：リプル電流からインダクタを決める（降圧コンバータ）}
 \begin{enumerate}
 \item 仕様を確定する：$V_{\mathrm{in}}$，$V_{\mathrm{out}}$，負荷電流$I_{\mathrm{out}}$，スイッチング周波数$f$
 \item デューティ比を求める：$D = V_{\mathrm{out}}/V_{\mathrm{in}}$
@@ -559,7 +559,7 @@ $i_C$は平均ゼロの三角波だから，正である時間はちょうど半
 となる。リプル電流と同じく，$C$を大きくするか$f$を高くすれば小さくできる。
 
 \begin{screen}
-\noindent\textbf{手順：リプル電圧からキャパシタを決める（降圧コンバータ）}\\[3pt]
+\PEboxhead{手順：リプル電圧からキャパシタを決める（降圧コンバータ）}
 \begin{enumerate}
 \item 許容リプル電圧$\mathit{\Delta}V_{\mathrm{out}}$を決める（目安：$V_{\mathrm{out}}$の1\,\%程度）
 \item \ref{sec5.5}節で決めた$\mathit{\Delta}I_L$を使い，式\ref{eq5.24}を$C$について解いて

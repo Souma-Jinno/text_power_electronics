@@ -82,3 +82,8 @@
 \renewcommand{\bottomfraction}{0.8}
 \renewcommand{\textfraction}{0.07}
 \renewcommand{\floatpagefraction}{0.8}
+
+%% [2026-10-05 森北r1] 囲み（screen）の見出し行。直後に箇条（enumerate 等）が来る囲みで使う。
+%%   旧来の「\noindent\textbf{見出し}\\[3pt]」に箇条を続けると，\\ のあとに空の行が1つ
+%%   できて見出しと項目1の間が大きく空いていた（著者指摘「余白減らす」）。
+\newcommand{\PEboxhead}[1]{\noindent\textbf{#1}\par}
