@@ -26,12 +26,15 @@ BK = "#222222"
 BLUE = "#2a5db0"
 RED = "#c0392b"
 SHADE = "#eef3fb"
-FILL_P = "#c5d5ef"  # v_L の正の面積（fig5.8 の ΔQ と同じ色）
-FILL_N = "#f2c4bf"  # v_L の負の面積
-EMPH_P = "#9fb8e6"  # 注記する周期の正の面積（濃い青）
-EMPH_N = "#e59a91"  # 注記する周期の負の面積（濃い赤）
+FILL_P = "#f2c4bf"  # v_L の正の面積（i_L の増加：赤）
+FILL_N = "#c5d5ef"  # v_L の負の面積（i_L の減少：青）
+EMPH_P = "#e59a91"  # 注記する周期の正の面積（濃い赤）
+EMPH_N = "#9fb8e6"  # 注記する周期の負の面積（濃い青）
 # 2026-10-15 著者指摘（森北送付案 r4）「正と負の色分けたほうが良いかも」：
-# v_L の線も正の部分を青，負の部分を赤で描き分け，負の面積の塗りを少し濃くした。
+# v_L の線も正の部分と負の部分で描き分けた。
+# 2026-10-15 著者指摘（森北送付案 r5）「増加時を赤、減少時を青にして」：
+# 増加（v_L>0，i_L が上がる）を赤，減少（v_L<0，i_L が下がる）を青に統一。
+# 上パネルの v_L の線・塗り，下パネルの i_L の上り・下りの線，増加・減少の矢印すべて同じ対応。
 GUIDE = "#999999"
 
 NET = os.path.expanduser(
@@ -147,7 +150,7 @@ fig, axes = plt.subplots(2, 1, figsize=(4.25, 3.4),
                          gridspec_kw=dict(height_ratios=[1.0, 1.12]))
 fig.subplots_adjust(hspace=0.32)   # 2つのパネルの間に注記（2行）を置く
 
-# --- (1) v_L：正の面積（青）と負の面積（赤）。はじめは正が大きく，やがて等しくなる
+# --- (1) v_L：正の面積（赤）と負の面積（青）。はじめは正が大きく，やがて等しくなる
 ax = axes[0]
 setup(ax, VMIN, VMAX, [-5, 0, 5, 10], "$v_L$ [V]", top=VTOP, label_y=0.33)
 ax.fill_between(t, 0, vL, where=vL > 0, fc=FILL_P, ec="none", zorder=1)
@@ -156,9 +159,9 @@ ax.fill_between(t, 0, vL, where=vL < 0, fc=FILL_N, ec="none", zorder=1)
 for k in (KA, KB):
     on = (t >= k * TSW) & (t <= (k + DUTY) * TSW)
     off = (t >= (k + DUTY) * TSW) & (t <= (k + 1) * TSW)
-    ax.fill_between(t[on], 0, vL[on], fc=EMPH_P, ec=BLUE, lw=0.7, zorder=2)
-    ax.fill_between(t[off], 0, vL[off], fc=EMPH_N, ec=RED, lw=0.7, zorder=2)
-# v_L の線を正（青）と負（赤）に描き分ける。符号が変わる点に 0 の点を補ってから分けると，
+    ax.fill_between(t[on], 0, vL[on], fc=EMPH_P, ec=RED, lw=0.7, zorder=2)
+    ax.fill_between(t[off], 0, vL[off], fc=EMPH_N, ec=BLUE, lw=0.7, zorder=2)
+# v_L の線を正（赤）と負（青）に描き分ける。符号が変わる点に 0 の点を補ってから分けると，
 # 切り替わりの縦線が途切れない
 tz, vz = [t[0]], [vL[0]]
 for i in range(1, len(t)):
@@ -167,8 +170,8 @@ for i in range(1, len(t)):
         tz.append(tc); vz.append(0.0)
     tz.append(t[i]); vz.append(vL[i])
 tz, vz = np.array(tz), np.array(vz)
-ax.plot(tz, np.where(vz >= 0, vz, np.nan), color=BLUE, lw=0.9, zorder=3)
-ax.plot(tz, np.where(vz <= 0, vz, np.nan), color=RED, lw=0.9, zorder=3)
+ax.plot(tz, np.where(vz >= 0, vz, np.nan), color=RED, lw=0.9, zorder=3)
+ax.plot(tz, np.where(vz <= 0, vz, np.nan), color=BLUE, lw=0.9, zorder=3)
 # 定常値 V_in-V_out，-V_out の点線と右側のラベル
 on = (t >= T1 - TSW) & (t <= T1 - (1 - DUTY) * TSW)
 off = (t >= T1 - (1 - DUTY) * TSW) & (t <= T1)
@@ -204,24 +207,32 @@ ax.plot([TB, TB], [ya - 0.6, ya + 0.6], color=BK, lw=0.6)
 # --- (2) i_L：三角波が周期ごとに持ち上がり，やがて一定の高さで振動する
 ax = axes[1]
 setup(ax, IMIN, IMAX, [0, 0.2, 0.4, 0.6], "$i_L$ [A]", top=ITOP)
-ax.plot(t, iL, color=BLUE, lw=0.9, zorder=3)
+# i_L の上り（オン期間＝増加）を赤，下り（オフ期間＝減少）を青で描く。
+# 各区間の端点を共有させ，色の切り替わりで線が途切れないようにする
+for k in range(NP):
+    for xa, xb, c in [(k * TSW, (k + DUTY) * TSW, RED),
+                      ((k + DUTY) * TSW, (k + 1) * TSW, BLUE)]:
+        sel = (t >= xa) & (t <= xb)
+        ts = np.concatenate(([xa], t[sel], [xb]))
+        ys = np.concatenate(([np.interp(xa, t, iL)], iL[sel], [np.interp(xb, t, iL)]))
+        ax.plot(ts, ys, color=c, lw=0.9, zorder=3, solid_capstyle="butt")
 ax.plot([T0, T1 + 0.3], [Iout] * 2, color=RED, lw=0.8, ls="--", zorder=2)
 ax.text(T1 + 0.45, Iout, r"$I_{\mathrm{out}}$", ha="left", va="center",
         fontsize=6.6, color=RED)
 
 
 def rise_fall(ax, k, label):
-    """k 周期目の i_L の増加（オン期間，青の上向き矢印）と減少（オフ期間，赤の下向き矢印）。
-    上パネルの正の面積（青）が増加に，負の面積（赤）が減少に対応する。"""
+    """k 周期目の i_L の増加（オン期間，赤の上向き矢印）と減少（オフ期間，青の下向き矢印）。
+    上パネルの正の面積（赤）が増加に，負の面積（青）が減少に対応する。"""
     xa, xm, xb = k * TSW, (k + DUTY) * TSW, (k + 1) * TSW
     i0, ipk, i1 = (np.interp(x, t, iL) for x in (xa, xm, xb))
     ax.plot([xa, xb], [i0] * 2, color=GUIDE, lw=0.5, ls=":", zorder=2)   # 始点の高さ
     ax.plot([xm, xb], [ipk] * 2, color=GUIDE, lw=0.5, ls=":", zorder=2)  # 山の高さ
     ax.annotate("", xy=(xm, ipk), xytext=(xm, i0),
-                arrowprops=dict(arrowstyle="-|>", lw=1.0, color=BLUE,
+                arrowprops=dict(arrowstyle="-|>", lw=1.0, color=RED,
                                 mutation_scale=7, shrinkA=0, shrinkB=0), zorder=4)
     ax.annotate("", xy=(xb, i1), xytext=(xb, ipk),
-                arrowprops=dict(arrowstyle="-|>", lw=1.0, color=RED,
+                arrowprops=dict(arrowstyle="-|>", lw=1.0, color=BLUE,
                                 mutation_scale=7, shrinkA=0, shrinkB=0), zorder=4)
     ax.plot([xa, xb], [i0, i1], "o", ms=2.2, color=BK, zorder=5)
     ax.text(xm, i0 - 0.035, label, ha="center", va="top", fontsize=6.2,
