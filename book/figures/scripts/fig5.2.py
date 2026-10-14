@@ -27,9 +27,11 @@ BLUE = "#2a5db0"
 RED = "#c0392b"
 SHADE = "#eef3fb"
 FILL_P = "#c5d5ef"  # v_L の正の面積（fig5.8 の ΔQ と同じ色）
-FILL_N = "#f3cfcb"  # v_L の負の面積
+FILL_N = "#f2c4bf"  # v_L の負の面積
 EMPH_P = "#9fb8e6"  # 注記する周期の正の面積（濃い青）
-EMPH_N = "#eaa79f"  # 注記する周期の負の面積（濃い赤）
+EMPH_N = "#e59a91"  # 注記する周期の負の面積（濃い赤）
+# 2026-10-15 著者指摘（森北送付案 r4）「正と負の色分けたほうが良いかも」：
+# v_L の線も正の部分を青，負の部分を赤で描き分け，負の面積の塗りを少し濃くした。
 GUIDE = "#999999"
 
 NET = os.path.expanduser(
@@ -156,7 +158,17 @@ for k in (KA, KB):
     off = (t >= (k + DUTY) * TSW) & (t <= (k + 1) * TSW)
     ax.fill_between(t[on], 0, vL[on], fc=EMPH_P, ec=BLUE, lw=0.7, zorder=2)
     ax.fill_between(t[off], 0, vL[off], fc=EMPH_N, ec=RED, lw=0.7, zorder=2)
-ax.plot(t, vL, color=BLUE, lw=0.9, zorder=3)
+# v_L の線を正（青）と負（赤）に描き分ける。符号が変わる点に 0 の点を補ってから分けると，
+# 切り替わりの縦線が途切れない
+tz, vz = [t[0]], [vL[0]]
+for i in range(1, len(t)):
+    if vL[i - 1] * vL[i] < 0:
+        tc = t[i - 1] + (t[i] - t[i - 1]) * vL[i - 1] / (vL[i - 1] - vL[i])
+        tz.append(tc); vz.append(0.0)
+    tz.append(t[i]); vz.append(vL[i])
+tz, vz = np.array(tz), np.array(vz)
+ax.plot(tz, np.where(vz >= 0, vz, np.nan), color=BLUE, lw=0.9, zorder=3)
+ax.plot(tz, np.where(vz <= 0, vz, np.nan), color=RED, lw=0.9, zorder=3)
 # 定常値 V_in-V_out，-V_out の点線と右側のラベル
 on = (t >= T1 - TSW) & (t <= T1 - (1 - DUTY) * TSW)
 off = (t >= T1 - (1 - DUTY) * TSW) & (t <= T1)
@@ -175,7 +187,7 @@ ax.text(T0 + 0.15, 10.9, r"起動直後は$V_{\mathrm{out}}\approx 0$",
 ax.text((KA + 0.5) * TSW, -5.3, "正の面積＞負の面積", ha="center", va="center",
         fontsize=6.2, fontproperties=JP, color="#555", zorder=6,
         bbox=dict(fc="white", ec="none", pad=0.6))
-ax.text((KB + 0.5) * TSW, 8.2, "正の面積＝負の面積\n（ボルト秒平衡）", ha="center",
+ax.text((KB + 0.5) * TSW, 8.9, "正の面積＝負の面積\n（ボルト秒平衡）", ha="center",
         va="center", fontsize=6.2, fontproperties=JP, color="#555",
         linespacing=1.15)
 # 図の上：過渡状態 → 定常状態

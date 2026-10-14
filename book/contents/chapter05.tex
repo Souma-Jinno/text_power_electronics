@@ -7,7 +7,7 @@
 スイッチング電源の考え方のすべてが詰まっており，6章以降のどの変換回路も本章の考え方の組合せで読める。その意味で本章は本書全体の要の章である。
 
 %%======================================================================
-\section{DC-DC変換とは}
+\section{\rev{DC-DC変換の概要}}
 \label{sec5.1}
 
 \subsection{直流電圧を作り替える3つの方法}
@@ -67,7 +67,7 @@ $f = 1/T$を\index{すいっちんぐしゅうはすう@スイッチング周波
 
 本章の主役はこの$D$である。後で示すように，3つの回路の出力電圧はいずれも$D$だけで決まり，$D$を変えることで出力を連続的に制御できる。
 
-\subsection{定常状態とボルト秒平衡 ― 4章の引き継ぎ}
+\subsection{\rev{定常状態とボルト秒平衡（4章の復習）}}
 
 変換回路の解析の鍵は，4章で学んだインダクタの性質である。インダクタの電圧$v_L$と電流$i_L$の関係
 \begin{equation}
@@ -203,7 +203,7 @@ v_L = -V_{\mathrm{out}}
 \end{equation}
 である。$v_L < 0$だから電流は傾き$-V_{\mathrm{out}}/L$で減り，蓄えたエネルギーが負荷へ放出される。
 
-\subsection{ボルト秒平衡から電圧比を導く}
+\subsection{\rev{ボルト秒平衡による電圧比の導出}}
 
 式\ref{eq5.6}と式\ref{eq5.7}をボルト秒平衡（式\ref{eq5.5}）に代入する。
 \begin{equation}
@@ -263,7 +263,7 @@ D = \frac{V_{\mathrm{out}}}{V_{\mathrm{in}}} = \frac{5}{12} \approx 0.417
 \section{昇圧コンバータ}
 \label{sec5.3}
 
-\subsection{どうすれば入力より高い電圧が作れるか}
+\subsection{\rev{昇圧の原理}}
 
 抵抗で分圧しても，スイッチで刻んで平均しても，入力より高い電圧は作れない。入力より高い電圧を作るには，
 \textbf{いったんエネルギーを蓄え，電源に上乗せして送り出す}しかない。これを実現するのが\index{しょうあつこんばーた@昇圧コンバータ}\textbf{昇圧コンバータ}
@@ -299,7 +299,7 @@ v_L = V_{\mathrm{in}} - V_{\mathrm{out}}
 である。昇圧コンバータでは$V_{\mathrm{out}} > V_{\mathrm{in}}$になる（すぐ後で示す）から$v_L < 0$，
 電流は減りながら，\textbf{電源とインダクタが直列になって}負荷へエネルギーを送り込む。インダクタの電圧が電源に上乗せされる ― これが昇圧の正体である。
 
-\subsection{ボルト秒平衡から電圧比を導く}
+\subsection{\rev{ボルト秒平衡による電圧比の導出}}
 
 式\ref{eq5.10}と式\ref{eq5.11}をボルト秒平衡（式\ref{eq5.5}）に代入する。
 \begin{equation}
@@ -386,7 +386,7 @@ v_L = V_{\mathrm{out}}
 \end{equation}
 である。
 
-\subsection{ボルト秒平衡から電圧比を導く}
+\subsection{\rev{ボルト秒平衡による電圧比の導出}}
 
 式\ref{eq5.15}と式\ref{eq5.16}をボルト秒平衡（式\ref{eq5.5}）に代入する。
 \begin{equation}
@@ -420,6 +420,8 @@ V_{\mathrm{out}} = -\frac{D}{1-D}\, V_{\mathrm{in}}
 \begin{center}
 \caption{3つの回路の比較}
 \label{tab5.1}
+%% [対応済 2026-10-15] 著者指摘（森北送付案 r4）「式重なってる」：\dfrac の行どうしが重なっていたので行の高さを広げた
+\renewcommand{\arraystretch}{1.9}
 \begin{tabular}{c|c|c|c}
 \hline
 回路 & 電圧比$V_{\mathrm{out}}/V_{\mathrm{in}}$ & 出力範囲 & 極性 \\
@@ -442,7 +444,7 @@ V_{\mathrm{out}} = -\frac{D}{1-D}\, V_{\mathrm{in}}
 \section{リプル電流とインダクタの設計}
 \label{sec5.5}
 
-\subsection{リプル電流はオン期間の電流の増え幅}
+\subsection{\rev{リプル電流とオン期間の電流増加}}
 
 ここからは設計の話に入る。\ref{fig5.4}で見たとおり，インダクタ電流は平均値のまわりを三角波状に増減する。
 この振れの全幅（山から谷まで）を\index{りぷるでんりゅう@リプル電流}\textbf{リプル電流}$\mathit{\Delta}I_L$という。
@@ -517,7 +519,7 @@ I_{\mathrm{out}} + \frac{\mathit{\Delta}I_L}{2} = 2 + 0.2 = 2.2\,\mathrm{A}
 \section{リプル電圧とキャパシタの設計}
 \label{sec5.6}
 
-\subsection{リプル電流の行き先}
+\subsection{\rev{リプル電流の経路}}
 
 負荷が求めているのは一定の直流電流$I_{\mathrm{out}}$である。では三角波状に揺れる$i_L$との差はどこへ行くのか ― 平滑キャパシタ$C$である。
 出力ノードでキルヒホッフの電流則を立てると，キャパシタに流れ込む電流は
@@ -536,7 +538,7 @@ i_C = i_L - I_{\mathrm{out}}
 \label{fig5.8}
 \end{figure}
 
-\subsection{リプル電圧を求める}
+\subsection{\rev{リプル電圧の計算}}
 
 \FIGref{fig5.8}を見ながら，1周期の間の電圧の揺れ幅を求めよう。キャパシタの電圧は$i_C > 0$の間だけ上がり続けるから，電圧の山と谷は$i_C$のゼロ交差の時刻に現れる。
 $i_C$は平均ゼロの三角波だから，正である時間はちょうど半周期$T/2$である。
@@ -614,7 +616,7 @@ $L = 30$\,mH，$C = 100\,\mathrm{\mu F}$のとき，リプル電流$\mathit{\Del
 \section{電流不連続モード}
 \label{sec5.7}
 
-\subsection{軽負荷で仮定が崩れる}
+\subsection{\rev{軽負荷時の電流不連続}}
 
 ここまで「インダクタ電流は常に正」と仮定してきた。この仮定が崩れるのはどんなときか。\ref{fig5.4}の$i_L$の谷の値は
 \begin{equation}
@@ -646,7 +648,7 @@ I_{\mathrm{out}} = \frac{\mathit{\Delta}I_L}{2}= \frac{(V_{\mathrm{in}} - V_{\ma
 のときである（降圧コンバータの場合）。
 \end{定義}
 
-\subsection{DCMでは電圧比が$D$だけで決まらない}
+\subsection{\rev{DCMにおける電圧比}}
 
 DCMに入ると何が変わるか。1周期が「オン」「オフ（電流あり）」に加えて，
 \textbf{Sも$\mathrm{D}$も導通せず$i_L = 0$のまま止まっている第3の期間}をもつようになる（\ref{fig5.9}(c)）。この期間は$v_L = 0$だから，ボルト秒平衡の式\ref{eq5.5}は

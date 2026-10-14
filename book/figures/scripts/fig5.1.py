@@ -74,26 +74,28 @@ def draw_wave(ax, D, panel):
     # 付け，段の間隔を広くとって当たらないようにする（下に付けると波形に重なる）。
     # 補助の縦線はそれぞれの段の高さまでで止める。
     # こうしないと，D が大きいとき2本の矢印がほぼ同じ長さで重なって読めない。
-    yd_on, yd_T = 1.12, 1.62
+    # 2026-10-15 著者指摘（森北送付案 r4）「重なってる」：T_on のラベルが上段の T の寸法線に
+    # 食い込んでいたので，T の段を上げて段の間隔を広げ，T_on のラベルを寸法線の近くに戻した。
+    yd_on, yd_T = 1.12, 1.92
     for x in (0, ton):
         ax.plot([x, x], [1.0, yd_on + 0.04], color="#888888", lw=0.5,
                 ls=(0, (1.5, 1.5)), zorder=1)
     ax.plot([T, T], [1.0, yd_T + 0.04], color="#888888", lw=0.5,
             ls=(0, (1.5, 1.5)), zorder=1)
     # T_on のラベルは寸法線から離す（2026-09-08 著者指摘「Tonが矢印に被ってます」）
-    dim(ax, 0, ton, yd_on, r"$T_{\mathrm{on}}$", c=RED, pad=0.17)
+    dim(ax, 0, ton, yd_on, r"$T_{\mathrm{on}}$", c=RED, pad=0.10)
     dim(ax, 0, T, yd_T, r"$T$", c=BK)
     # 右端に D の値
-    ax.text(XR - 0.05, 1.62, r"$D = \dfrac{T_{\mathrm{on}}}{T} = %.2f$" % D,
+    ax.text(XR - 0.05, yd_T - 0.15, r"$D = \dfrac{T_{\mathrm{on}}}{T} = %.2f$" % D,
             ha="right", va="center", fontsize=7.5, color=BK)
     ax.set_xlim(XL, XR)
-    ax.set_ylim(-0.42, 2.10)
+    ax.set_ylim(-0.42, 2.40)
     ax.axis("off")
     ax.text(0.5 * (XL + XR), -0.40, panel, ha="center", va="top", fontsize=7.2,
             fontproperties=JP, color="#555")
 
 
-fig, axes = plt.subplots(2, 1, figsize=(3.9, 2.4))
+fig, axes = plt.subplots(2, 1, figsize=(3.9, 2.65))
 fig.subplots_adjust(hspace=0.30)
 draw_wave(axes[0], 0.25, "(a) $D$が小さいとき（オンの時間が短い）")
 draw_wave(axes[1], 0.75, "(b) $D$が大きいとき（オンの時間が長い）")

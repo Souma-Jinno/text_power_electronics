@@ -112,12 +112,14 @@ def setup(ax, title):
             fontsize=7.0, color=BLUE)
     ax.text(TMAX / 2, -0.50 * YM, title, ha="center", fontsize=6.6,
             fontproperties=JP, color="#555")
-    ax.set_xlim(-0.42 * TMAX, 1.30 * TMAX)
+    ax.set_xlim(-0.26 * TMAX, 1.30 * TMAX)
     ax.set_ylim(-0.66 * YM, 1.20 * YM)
     ax.axis("off")
 
 
-fig, axes = plt.subplots(1, 3, figsize=(4.25, 1.6))
+# 2026-10-15 著者指摘（森北送付案 r4）「横にスペースあるのでもう少しグラフ横長にする。合わせる。」：
+# 図の幅を版面幅（318 pt）近くまで広げ，各グラフの時間軸を横に伸ばした。
+fig, axes = plt.subplots(1, 3, figsize=(5.05, 1.6))
 
 # --- (a) CCM（R = 40 Ω）：谷が 0 より十分上にある
 ax = axes[0]
@@ -156,7 +158,7 @@ for k in range(2):
 ax.text(0.5 * (tz + TSW), ya + 0.06 * YM, "$i_L=0$", ha="center",
         va="bottom", fontsize=6.2)
 
-fig.subplots_adjust(wspace=0.30)
+fig.subplots_adjust(wspace=0.42)
 EPS = os.path.expanduser("~/text_power_electronics/book/figures/fig5.9.eps")
 fig.savefig(EPS, format="eps", bbox_inches="tight")
 print("wrote", EPS)
