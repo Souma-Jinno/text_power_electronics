@@ -10,7 +10,32 @@ $T_{\mathrm{on}} = DT = 0.3 \times 10 = 3\,\mathrm{\mu s}$。
 $D \times 12 = 3.6$\,Vである。
 デューティ比の制御がそのまま平均電圧の制御になる。}
 
-%%--- 章末問題 5.2（旧 例題。2026-10-15 本文から移した） ---
+%%--- 章末問題 5.2（2026-10-15 r8 note05 で新設。理解度チェック2項目めに対応） ---
+\item[\ref{ex5.vsb}]
+\rev{(a) オン期間は$v_L = V_{\mathrm{in}} - V_{\mathrm{out}}$（式\ref{eq5.6}），オフ期間は$v_L = -V_{\mathrm{out}}$（式\ref{eq5.7}）で，
+$v_L$は\ref{fig5.4}の上段のような2値の矩形波になる。$V_{\mathrm{out}} = D V_{\mathrm{in}}$を使うと，
+正の面積は$(V_{\mathrm{in}} - D V_{\mathrm{in}})\,DT = V_{\mathrm{in}} D(1-D)T$，
+負の面積の大きさは$D V_{\mathrm{in}} (1-D)T$で，両者は等しい。}
+
+\rev{(b) インダクタに入る電力は$v_L i_L$である。オン期間は$v_L$が一定で，$i_L$の平均が$I_{\mathrm{out}}$だから}
+\begin{equation*}
+\rev{\mathit{\Delta}W_L = \int_0^{DT} v_L i_L\, dt = (V_{\mathrm{in}} - V_{\mathrm{out}})\, I_{\mathrm{out}}\, DT}
+\end{equation*}
+\rev{同様にオフ期間に放出するエネルギーは$V_{\mathrm{out}} I_{\mathrm{out}} (1-D)T$である。両者が等しいという条件は}
+\begin{equation*}
+\rev{(V_{\mathrm{in}} - V_{\mathrm{out}})\, I_{\mathrm{out}}\, DT - V_{\mathrm{out}}\, I_{\mathrm{out}}\, (1-D)T = 0}
+\end{equation*}
+\rev{であり，式\ref{eq5.5}（$V_{\mathrm{on}} = V_{\mathrm{in}} - V_{\mathrm{out}}$，$V_{\mathrm{off}} = -V_{\mathrm{out}}$）の両辺に$I_{\mathrm{out}}$を掛けたものにほかならない。
+ボルト秒平衡は，オン期間に増えたエネルギーをオフ期間に放出しきるという釣合いを，電圧と時間の言葉で書いたものである。
+なお$\mathit{\Delta}W_L$は，山と谷のエネルギーの差$\frac{1}{2}L(i_{L,\max}^2 - i_{L,\min}^2) = L I_{\mathrm{out}} \mathit{\Delta}I_L$にも等しい。}
+
+\rev{(c) $D = 5/12$，$T = 10\,\mathrm{\mu s}$だから}
+\begin{equation*}
+\rev{\mathit{\Delta}W_L = (12 - 5) \times 2 \times \frac{5}{12} \times 10 \times 10^{-6} \approx 58\,\mathrm{\mu J}}
+\end{equation*}
+\rev{オン期間に電源が送り出す$V_{\mathrm{in}} I_{\mathrm{out}} DT = 100\,\mathrm{\mu J}$のうち，約$58\,\mathrm{\mu J}$がいったん$L$に蓄えられ，オフ期間に負荷へ渡される。}
+
+%%--- 章末問題 5.3（旧 例題。2026-10-15 本文から移した） ---
 \item[\ref{ex5.rei1}]
 \rev{式\ref{eq5.9}より}
 \begin{equation*}
@@ -19,7 +44,7 @@ $D \times 12 = 3.6$\,Vである。
 \rev{周期は$T = 1/f = 10\,\mathrm{\mu s}$だから，Sの導通時間は$DT \approx 4.2\,\mathrm{\mu s}$，
 ダイオードの導通時間は$(1-D)T \approx 5.8\,\mathrm{\mu s}$である。この動作点は章末問題\ref{ex5.rei2}の設計でも使う。}
 
-%%--- 章末問題 5.3（旧 本文中の問。2026-10-15 章末問題に移した） ---
+%%--- 章末問題 5.4（旧 本文中の問。2026-10-15 章末問題に移した） ---
 \item[\ref{ex5.toi2}]
 \rev{式\ref{eq5.9}より$D = 12/48 = 0.25$。
 オフ期間はダイオードが導通してSの出力側の端子はほぼ接地電位になるから，
@@ -27,7 +52,7 @@ Sの両端には入力電圧$V_{\mathrm{in}} = 48$\,Vがかかる。
 降圧コンバータのスイッチとダイオードには，
 いずれも入力電圧以上の耐圧が必要である。}
 
-%%--- 章末問題 5.4 ---
+%%--- 章末問題 5.5 ---
 \item[\ref{ex5.1}]
 (a) 式\ref{eq5.13}を$D$について解くと
 \begin{equation*}
@@ -40,14 +65,14 @@ I_{\mathrm{in}} = \frac{I_{\mathrm{out}}}{1-D}= \frac{0.42}{5/12} \approx 1.0\,\
 \end{equation*}
 出力の2.4倍の電流が入力側に流れる。昇圧コンバータの入力側の配線・インダクタ・スイッチは，この大きな電流を前提に選ばなければならない。
 
-%%--- 章末問題 5.5（旧 本文中の問。2026-10-15 章末問題に移した） ---
+%%--- 章末問題 5.6（旧 本文中の問。2026-10-15 章末問題に移した） ---
 \item[\ref{ex5.toi3}]
 \rev{式\ref{eq5.13}より
 $D = 1 - V_{\mathrm{in}}/V_{\mathrm{out}} = 1 - 24/96 = 0.75$。
 $D = 0.9$では$V_{\mathrm{out}}/V_{\mathrm{in}} = 1/(1-0.9) = 10$倍が理論上の上限である
 （実際には損失のためこの比までは使えない。\ref{sec5.3}節の注意）。}
 
-%%--- 章末問題 5.6 ---
+%%--- 章末問題 5.7 ---
 \item[\ref{ex5.2}]
 (a) 式\ref{eq5.13}より$D = 1 - 12/48 = 0.75$。
 損失がなければ入出力の電力は等しいから，式\ref{eq5.14}より
@@ -66,7 +91,7 @@ $2 + 0.45 = 2.45$\,Aである。
 いずれも\textbf{出力}電圧で決まる。
 昇圧コンバータの素子には出力電圧以上の耐圧が必要である。
 
-%%--- 章末問題 5.7 ---
+%%--- 章末問題 5.8 ---
 \item[\ref{ex5.3}]
 等価回路は\ref{fig5.7}(b)，(c)のとおり。
 オン期間は電源→S→$L$のループで$v_L = V_{\mathrm{in}}$，
@@ -81,17 +106,7 @@ $-12$\,V：$D = 0.5$，
 $-5$\,V：$D = 5/17 \approx 0.29$，
 $-24$\,V：$D = 2/3 \approx 0.67$。
 
-%%--- 章末問題 5.8（旧 本文中の問。2026-10-15 章末問題に移した） ---
-\item[\ref{ex5.toi5}]
-\rev{式\ref{eq5.21}の右辺の単位は，$D$が無次元であることに注意して}
-\begin{equation*}
-\rev{\frac{\mathrm{V}}{\mathrm{Hz}\cdot\mathrm{A}}
-= \frac{\mathrm{V}}{(1/\mathrm{s})\cdot\mathrm{A}}
-= \frac{\mathrm{V \cdot s}}{\mathrm{A}} = \mathrm{H}}
-\end{equation*}
-\rev{となり，左辺（インダクタンス）と一致する。
-$1\,\mathrm{H} = 1\,\mathrm{V\cdot s/A}$は式\ref{eq5.2}
-（$v_L = L\, di_L/dt$）そのものである。}
+%% [2026-10-15 著者指示（r8 note03）「いらない」] 旧 章末問題（式5.21の単位，label ex5.toi5）の解答を削除した
 
 %%--- 章末問題 5.9（旧 例題。2026-10-15 本文から移した） ---
 \item[\ref{ex5.rei2}]
@@ -200,6 +215,7 @@ V_{\mathrm{in}} D - V_{\mathrm{out}} - V_F (1-D) &=& 0
 低電圧・大電流の電源ではダイオードをMOSFETに置き換える同期整流が必須になる。
 
 %%--- 章末問題 5.15 ---
+%% [2026-10-15 著者指示（r8 note04）] 問題を式で求める形に改めたのに合わせ，解答から「シミュレーションの波形から読み取る」部分と旧(d)を外した
 \item[\ref{ex5.8}]
 (a) \rev{$V_{\mathrm{out}} = DV_{\mathrm{in}} = 5$\,V。式\ref{eq5.19}より}
 \begin{equation*}
@@ -213,10 +229,6 @@ V_{\mathrm{in}} D - V_{\mathrm{out}} - V_F (1-D) &=& 0
 \approx 0.10\,\mathrm{V}}
 \end{equation*}
 \rev{で，出力$5$\,Vに対して約2\,\%のリプルである。}
-シミュレーションの定常波形から
-$\mathit{\Delta}I_L \approx 83$\,mA，
-$\mathit{\Delta}V_{\mathrm{out}} \approx 0.10$\,Vが読み取れ，
-\rev{計算値}と一致する。
 
 (b) 境界抵抗は章末問題\ref{ex5.6}より
 $R_B = 2\times10^{3}\times30\times10^{-3}/0.5 = 120\,\Omega$。
@@ -225,15 +237,10 @@ $i_L$が0に張り付く期間が現れて，出力は$5$\,Vより高い値に�
 軽負荷が受け取りきれないエネルギーが毎周期送り込まれ，
 $C$の電圧が押し上げられるからである（\ref{sec5.7}節）。
 
-(c) 式\ref{eq5.19}より$\mathit{\Delta}I_L$は$1/f$に比例して$1/10$
+(c) \rev{式\ref{eq5.20}より}$\mathit{\Delta}I_L$は$1/f$に比例して$1/10$
 （約$8.3$\,mA）になる。
 $\mathit{\Delta}V_{\mathrm{out}}$は式\ref{eq5.24}で
 $\mathit{\Delta}I_L$と$f$の両方が効くため$1/f^2$に比例し，
 $1/100$（約$1$\,mV）まで下がる。
 高周波化が平滑部品にどれほど効くかがわかる（\ref{sec5.8}節）。
-
-(d) $\mathit{\Delta}I_L$は$1/L$に比例するから10倍（約$0.83$\,A）になる。
-境界抵抗は$R_B = 12\,\Omega$に下がるので，
-$R = 150\,\Omega$では(b)よりさらに深いDCMになる
-（$R = 10\,\Omega$ならかろうじてCCMを保つ）。
 \end{enumerate}
