@@ -114,14 +114,17 @@ ax.plot(t, vL, color=BLUE, lw=1.1, zorder=3)
 # 1周期目のオン区間（正）とオフ区間（負）にハッチ
 on = (t >= T0) & (t <= T0 + DUTY * TSW)
 off = (t >= T0 + DUTY * TSW) & (t <= T0 + TSW)
-ax.fill_between(t[on], 0, vL[on], fc="none", ec=BLUE, hatch="////",
+# 2026-10-15 著者指摘（森北送付案 r6）「赤がプラス、青がマイナスに合わせる」：
+# 正の面積を赤，負の面積を青の斜線にする（図5.2・図5.8 と同じ対応）。
+ax.fill_between(t[on], 0, vL[on], fc="none", ec=RED, hatch="////",
                 lw=0, alpha=0.45, zorder=1)
-ax.fill_between(t[off], 0, vL[off], fc="none", ec=RED, hatch="\\\\\\\\",
+ax.fill_between(t[off], 0, vL[off], fc="none", ec=BLUE, hatch="\\\\\\\\",
                 lw=0, alpha=0.45, zorder=1)
 # ラベルはハッチに重ねない（斜線と文字が干渉して読めない）。
 # 1周期目のオフ区間は波形が負側にいるので，その真上が空いている（2026-09-08）。
-# 中央を 0.75T に置くと文字の左端が青ハッチの右辺（0.5T）に接するので，少し右へ寄せる。
-ax.text(T0 + 0.80 * TSW, 2.6, "面積が等しい", fontsize=6.2, fontproperties=JP,
+# 「面積が等しい」の1行では 0.5T〜1T の間に収まらず両側の縦線に触れ，2行では 0 と 5 V の線に触れる（r6）。
+# 短い「同じ面積」にして 0.75T の中央に置く。
+ax.text(T0 + 0.75 * TSW, 2.6, "同じ面積", fontsize=6.2, fontproperties=JP,
         color="#555", ha="center", va="center", zorder=4)
 vp, vn = vL[on].mean(), vL[off].mean()
 ax.plot([T0, T1 + 0.05], [vp] * 2, color="#999", lw=0.5, ls=":", zorder=1)

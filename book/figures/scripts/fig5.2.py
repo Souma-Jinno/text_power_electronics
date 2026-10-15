@@ -216,9 +216,10 @@ for k in range(NP):
         ts = np.concatenate(([xa], t[sel], [xb]))
         ys = np.concatenate(([np.interp(xa, t, iL)], iL[sel], [np.interp(xb, t, iL)]))
         ax.plot(ts, ys, color=c, lw=0.9, zorder=3, solid_capstyle="butt")
-ax.plot([T0, T1 + 0.3], [Iout] * 2, color=RED, lw=0.8, ls="--", zorder=2)
+# I_out の破線とラベルは黒（赤＝増加と混ざらないように。2026-10-15 森北送付案 r6）
+ax.plot([T0, T1 + 0.3], [Iout] * 2, color=BK, lw=0.8, ls="--", zorder=2)
 ax.text(T1 + 0.45, Iout, r"$I_{\mathrm{out}}$", ha="left", va="center",
-        fontsize=6.6, color=RED)
+        fontsize=6.6, color=BK)
 
 
 def rise_fall(ax, k, label):

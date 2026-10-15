@@ -117,12 +117,20 @@ zc = np.where(np.diff(np.sign(iC)) != 0)[0]
 zc = zc[t[zc] < T0 + TSW]
 t1, t2 = t[zc[0]], t[zc[1]]
 pos = (t >= t1) & (t <= t2)
-ax.fill_between(t[pos], 0, iC[pos], fc="#c5d5ef", ec=BLUE, hatch="////",
+# 2026-10-15 著者指摘（森北送付案 r6）「赤がプラス、青がマイナスに合わせる」：
+# i_C の正の部分（ΔQ）を赤の斜線にする（図5.2・図5.4 と同じ対応）。
+ax.fill_between(t[pos], 0, iC[pos], fc="#f2c4bf", ec=RED, hatch="////",
                 lw=0, alpha=0.6, zorder=1)  # 斜線部 = ΔQ
-ax.text(0.5 * (t1 + t2), 0.012, r"$\Delta Q$", ha="center", va="bottom",
-        fontsize=7.4, color=BLUE, zorder=4,
-        bbox=dict(fc="white", ec="none", alpha=0.85, pad=0.3))
-yb = 0.052
+# ΔQ のラベルは三角形の中に置くと波形の山に重なるので，三角形の真下（x軸の下，
+# i_C>0 の区間なので波形は来ない）に置き，短い引き出し線で斜線部を指す（r6）。
+xq = 0.5 * (t1 + t2)
+# 引き出し線は斜線と紛れないよう縦の灰色の線にする。
+ax.annotate(r"$\Delta Q$", xy=(xq - 0.08, 0.015), xytext=(xq - 0.08, -0.017),
+            ha="center", va="top", fontsize=7.4, color=RED, zorder=4,
+            arrowprops=dict(arrowstyle="-", lw=0.6, color="#555",
+                            shrinkA=0.5, shrinkB=0))
+# T/2 の寸法線は波形の山（ΔI_L/2 の点線）から離して上に置く（r6）
+yb = 0.060
 ax.annotate("", xy=(t2, yb), xytext=(t1, yb),
             arrowprops=dict(arrowstyle="<->", lw=0.8, color=BK,
                             mutation_scale=7))
@@ -134,6 +142,7 @@ imax = iC.max()
 ax.plot([T0 + DUTY * TSW, T1 + 0.05], [imax] * 2, color="#999", lw=0.5, ls=":")
 ax.text(T1 + 0.08, imax, r"$\Delta I_L/2$", ha="left", va="center",
         fontsize=7.2)
+ax.set_ylim(-0.06 - 0.36 * 0.12, 0.06 + 0.30 * 0.12)  # T/2 を上へ逃がした分の余白
 
 # --- (2) v_out：i_C の積分。山と谷は i_C のゼロ交差の時刻
 ax = axes[1]
