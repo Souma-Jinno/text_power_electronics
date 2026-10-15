@@ -1,0 +1,28 @@
+%% qenv.sty -- 「問い」「理解度チェック」環境（節冒頭の問い・章末チェックリスト用）
+%% a5update.sty が提供する ascmac の itembox（角丸罫線＋タイトル）をベースに，
+%% 節冒頭に置く「問い」ボックスと，章末の理解度チェックリストを定義する。
+%% corona-a5-1.1.cls 本体・a5update.sty は改変しない方針のため別 sty で定義する。
+\ProvidesPackage{qenv}[2026/07/15 v1.0 question/checklist environment for corona-a5]
+\makeatletter
+
+%% 「問い」―― 節の冒頭に置き，その節が答える具体的な問いを示す。
+\newenvironment{問い}{%
+\begin{itembox}[l]{問い}
+\small
+}{%
+\end{itembox}
+}
+
+%% 「理解度チェック」―― 章末（まとめの後・章末問題の前）に置くチェックリスト。
+%% 中身は itemize（\item[$\square$] ...）で箇条書きにする。
+\newenvironment{理解度チェック}{%
+\begin{itembox}[l]{理解度チェック}
+\small
+\begin{itemize}
+\setlength{\itemsep}{0pt}
+}{%
+\end{itemize}
+\end{itembox}
+}
+
+\makeatother

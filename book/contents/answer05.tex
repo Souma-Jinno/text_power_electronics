@@ -1,7 +1,16 @@
 \answer
+%% [2026-10-15 著者指示] 本文中の問を廃止し，理解度チェックの順（＝節の順）に章末問題を並べ替えた。解答もその順に並べる。
 \begin{enumerate}
 
-%%--- 章末問題 5.1（旧 例題5.1。2026-10-15 本文から移した） ---
+%%--- 章末問題 5.1（旧 本文中の問。2026-10-15 章末問題に移した） ---
+\item[\ref{ex5.toi1}]
+\rev{$T = 1/f = 1/(100\times10^{3}) = 10\,\mathrm{\mu s}$，
+$T_{\mathrm{on}} = DT = 0.3 \times 10 = 3\,\mathrm{\mu s}$。
+平均電圧は「$12$\,Vである時間の割合」で決まるから
+$D \times 12 = 3.6$\,Vである。
+デューティ比の制御がそのまま平均電圧の制御になる。}
+
+%%--- 章末問題 5.2（旧 例題。2026-10-15 本文から移した） ---
 \item[\ref{ex5.rei1}]
 \rev{式\ref{eq5.9}より}
 \begin{equation*}
@@ -10,7 +19,15 @@
 \rev{周期は$T = 1/f = 10\,\mathrm{\mu s}$だから，Sの導通時間は$DT \approx 4.2\,\mathrm{\mu s}$，
 ダイオードの導通時間は$(1-D)T \approx 5.8\,\mathrm{\mu s}$である。この動作点は章末問題\ref{ex5.rei2}の設計でも使う。}
 
-%%--- 章末問題 5.2 ---
+%%--- 章末問題 5.3（旧 本文中の問。2026-10-15 章末問題に移した） ---
+\item[\ref{ex5.toi2}]
+\rev{式\ref{eq5.9}より$D = 12/48 = 0.25$。
+オフ期間はダイオードが導通してSの出力側の端子はほぼ接地電位になるから，
+Sの両端には入力電圧$V_{\mathrm{in}} = 48$\,Vがかかる。
+降圧コンバータのスイッチとダイオードには，
+いずれも入力電圧以上の耐圧が必要である。}
+
+%%--- 章末問題 5.4 ---
 \item[\ref{ex5.1}]
 (a) 式\ref{eq5.13}を$D$について解くと
 \begin{equation*}
@@ -23,7 +40,14 @@ I_{\mathrm{in}} = \frac{I_{\mathrm{out}}}{1-D}= \frac{0.42}{5/12} \approx 1.0\,\
 \end{equation*}
 出力の2.4倍の電流が入力側に流れる。昇圧コンバータの入力側の配線・インダクタ・スイッチは，この大きな電流を前提に選ばなければならない。
 
-%%--- 章末問題 5.3 ---
+%%--- 章末問題 5.5（旧 本文中の問。2026-10-15 章末問題に移した） ---
+\item[\ref{ex5.toi3}]
+\rev{式\ref{eq5.13}より
+$D = 1 - V_{\mathrm{in}}/V_{\mathrm{out}} = 1 - 24/96 = 0.75$。
+$D = 0.9$では$V_{\mathrm{out}}/V_{\mathrm{in}} = 1/(1-0.9) = 10$倍が理論上の上限である
+（実際には損失のためこの比までは使えない。\ref{sec5.3}節の注意）。}
+
+%%--- 章末問題 5.6 ---
 \item[\ref{ex5.2}]
 (a) 式\ref{eq5.13}より$D = 1 - 12/48 = 0.75$。
 損失がなければ入出力の電力は等しいから，式\ref{eq5.14}より
@@ -42,7 +66,7 @@ $2 + 0.45 = 2.45$\,Aである。
 いずれも\textbf{出力}電圧で決まる。
 昇圧コンバータの素子には出力電圧以上の耐圧が必要である。
 
-%%--- 章末問題 5.4 ---
+%%--- 章末問題 5.7 ---
 \item[\ref{ex5.3}]
 等価回路は\ref{fig5.7}(b)，(c)のとおり。
 オン期間は電源→S→$L$のループで$v_L = V_{\mathrm{in}}$，
@@ -57,7 +81,19 @@ $-12$\,V：$D = 0.5$，
 $-5$\,V：$D = 5/17 \approx 0.29$，
 $-24$\,V：$D = 2/3 \approx 0.67$。
 
-%%--- 章末問題 5.5（旧 例題5.2。2026-10-15 本文から移した） ---
+%%--- 章末問題 5.8（旧 本文中の問。2026-10-15 章末問題に移した） ---
+\item[\ref{ex5.toi5}]
+\rev{式\ref{eq5.21}の右辺の単位は，$D$が無次元であることに注意して}
+\begin{equation*}
+\rev{\frac{\mathrm{V}}{\mathrm{Hz}\cdot\mathrm{A}}
+= \frac{\mathrm{V}}{(1/\mathrm{s})\cdot\mathrm{A}}
+= \frac{\mathrm{V \cdot s}}{\mathrm{A}} = \mathrm{H}}
+\end{equation*}
+\rev{となり，左辺（インダクタンス）と一致する。
+$1\,\mathrm{H} = 1\,\mathrm{V\cdot s/A}$は式\ref{eq5.2}
+（$v_L = L\, di_L/dt$）そのものである。}
+
+%%--- 章末問題 5.9（旧 例題。2026-10-15 本文から移した） ---
 \item[\ref{ex5.rei2}]
 \rev{章末問題\ref{ex5.rei1}より$D = 5/12 \approx 0.417$。式\ref{eq5.21}より}
 \begin{eqnarray*}
@@ -71,7 +107,7 @@ $-24$\,V：$D = 2/3 \approx 0.67$。
 \end{equation*}
 \rev{であり，この値で磁気飽和しないインダクタと，余裕を見た電流定格のスイッチ・ダイオードを選ぶ。}
 
-%%--- 章末問題 5.6 ---
+%%--- 章末問題 5.10 ---
 \item[\ref{ex5.4}]
 (a) 式\ref{eq5.9}より$D = 12/24 = 0.5$。
 
@@ -89,7 +125,7 @@ C = \frac{0.6}{8\times200\times10^{3}\times0.05} = 7.5\,\mathrm{\mu F}
 (d) $I_{\mathrm{out}} + \mathit{\Delta}I_L/2 = 3 + 0.3 = 3.3$\,A。
 この値が磁気飽和とスイッチ・ダイオードの電流定格の基準になる。
 
-%%--- 章末問題 5.7 ---
+%%--- 章末問題 5.11 ---
 \item[\ref{ex5.5}]
 式\ref{eq5.25}より
 \begin{eqnarray*}
@@ -99,7 +135,27 @@ C &=& \frac{\mathit{\Delta}I_L}{8 f\, \mathit{\Delta}V_{\mathrm{out}}}
 \end{eqnarray*}
 リプル電流$0.4$\,Aに対してわずか$10\,\mathrm{\mu F}$で済むのは，スイッチング周波数が高いからである（\ref{sec5.8}節）。
 
-%%--- 章末問題 5.8 ---
+%%--- 章末問題 5.12（旧 本文中の問。2026-10-15 章末問題に移した） ---
+\item[\ref{ex5.toi7}]
+\rev{式\ref{eq5.24b}の右辺の単位は，$D$が無次元であることに注意して}
+\begin{equation*}
+\rev{\frac{\mathrm{A}}{\mathrm{Hz}\cdot\mathrm{F}}
+= \frac{\mathrm{A\cdot s}}{\mathrm{F}}
+= \frac{\mathrm{A\cdot s}}{\mathrm{A\cdot s/V}} = \mathrm{V}}
+\end{equation*}
+\rev{となり，左辺（リプル電圧）と一致する。
+分子の$\mathrm{A\cdot s}$は，オン期間に$C$から失われる電荷$\mathit{\Delta}Q$の単位そのものである。
+章末問題\ref{ex5.2}の昇圧コンバータでは$D = 1 - 12/48 = 0.75$，$I_{\mathrm{out}} = 0.5$\,Aだから，
+式\ref{eq5.25b}より}
+\begin{equation*}
+\rev{C = \frac{I_{\mathrm{out}}\,D}{f\,\mathit{\Delta}V_{\mathrm{out}}}
+= \frac{0.5\times0.75}{100\times10^{3}\times0.5} = 7.5\,\mathrm{\mu F}}
+\end{equation*}
+\rev{降圧コンバータの式\ref{eq5.25}と違ってリプル電流ではなく負荷電流そのものが効くので，
+同じ$C$では降圧よりずっと大きなリプルが出る。
+実際にはESR（\ref{sec5.6}節の注意）を見込んで，これより大きめの値を選ぶ。}
+
+%%--- 章末問題 5.13 ---
 \item[\ref{ex5.6}]
 (a) 境界では$I_{\mathrm{out}} = \mathit{\Delta}I_L/2$（式\ref{eq5.27}）。
 左辺に$I_{\mathrm{out}} = V_{\mathrm{out}}/R_B = DV_{\mathrm{in}}/R_B$，
@@ -118,9 +174,14 @@ R_B = \frac{2 f L}{1-D}
 R_B = \frac{2\times100\times10^{3}\times73\times10^{-6}}{1-0.417}
 \approx \frac{14.6}{0.583} \approx 25\,\Omega
 \end{equation*}
-\ref{sec5.7}節の問で求めた「$25\,\Omega$以上でDCM」と一致する。
+\rev{また式\ref{eq5.27}より，境界の負荷電流は
+$I_{\mathrm{out}} = \mathit{\Delta}I_L/2 = 0.2$\,Aであり，これ以下でDCMに入る。そのときの負荷抵抗は}
+\begin{equation*}
+\rev{R = \frac{V_{\mathrm{out}}}{I_{\mathrm{out}}} = \frac{5}{0.2} = 25\,\Omega}
+\end{equation*}
+\rev{で，$R_B$に一致する。$25\,\Omega$以上でDCMに入るわけである（軽負荷＝大きい抵抗であることに注意）。}
 
-%%--- 章末問題 5.9 ---
+%%--- 章末問題 5.14 ---
 \item[\ref{ex5.7}]
 (a) オフ期間のループはダイオード→$L$→負荷で，
 ダイオードの電圧降下$V_F$を含めてキルヒホッフの電圧則を立てると
@@ -138,12 +199,24 @@ V_{\mathrm{in}} D - V_{\mathrm{out}} - V_F (1-D) &=& 0
 出力電圧が低いほどこのずれの割合は大きくなるから，
 低電圧・大電流の電源ではダイオードをMOSFETに置き換える同期整流が必須になる。
 
-%%--- 章末問題 5.10 ---
+%%--- 章末問題 5.15 ---
 \item[\ref{ex5.8}]
-(a) シミュレーションの定常波形から
+(a) \rev{$V_{\mathrm{out}} = DV_{\mathrm{in}} = 5$\,V。式\ref{eq5.19}より}
+\begin{equation*}
+\rev{\mathit{\Delta}I_L = \frac{(10-5)\times0.5}{1\times10^{3}\times30\times10^{-3}}
+\approx 83\,\mathrm{mA}}
+\end{equation*}
+\rev{式\ref{eq5.24}より}
+\begin{equation*}
+\rev{\mathit{\Delta}V_{\mathrm{out}}
+= \frac{83\times10^{-3}}{8\times1\times10^{3}\times100\times10^{-6}}
+\approx 0.10\,\mathrm{V}}
+\end{equation*}
+\rev{で，出力$5$\,Vに対して約2\,\%のリプルである。}
+シミュレーションの定常波形から
 $\mathit{\Delta}I_L \approx 83$\,mA，
 $\mathit{\Delta}V_{\mathrm{out}} \approx 0.10$\,Vが読み取れ，
-\ref{sec5.6}節の問の計算値と一致する。
+\rev{計算値}と一致する。
 
 (b) 境界抵抗は章末問題\ref{ex5.6}より
 $R_B = 2\times10^{3}\times30\times10^{-3}/0.5 = 120\,\Omega$。

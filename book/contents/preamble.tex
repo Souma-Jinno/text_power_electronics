@@ -19,6 +19,7 @@
 
 \usepackage{lawenv}     %% 「法則」環境（公理＝出発点の基本法則用）
 \usepackage{etoolbox}   %% \patchcmd 用（下記の \@startsection 修正）
+\usepackage{qenv}       %% [2026-10-15] 「理解度チェック」環境（章末のチェックリスト）。電磁気本の qenv.sty の写し
 
 %%====================================================================
 %% 組版の修正（2026-09-02 Fableレビュー C群対応）
@@ -94,3 +95,19 @@
 %%   旧来の「\noindent\textbf{見出し}\\[3pt]」に箇条を続けると，\\ のあとに空の行が1つ
 %%   できて見出しと項目1の間が大きく空いていた（著者指摘「余白減らす」）。
 \newcommand{\PEboxhead}[1]{\noindent\textbf{#1}\par}
+
+%% [2026-10-15] 章末問題の番号を「理解度チェック」から素の数字で参照するための仕掛け（電磁気本 main.tex と同じ）
+%%   クラス(corona-a5-1.1.cls)は章末問題の \theenumi を \<【\hbox to10.64987pt{...}】\< と定義している。
+%%   .aux には \exnumfmt{7} の形で書き出し，見出しと本文の \ref では従来どおり【7】を描く（見た目は不変）。
+%%   \exref{ラベル} のときだけ \exnumfmt を「数字そのまま」に差し替える。
+\makeatletter
+\newcommand{\exnumfmt}[1]{\<【\hbox to10.64987pt{\hfill{\bfseries #1}\hfill}】\<}
+\patchcmd{\Senumerate}
+  {\renewcommand{\theenumi}{\<【\hbox to10.64987pt{\hfill{\bfseries\@arabic\c@enumi}\hfill}】\<}}
+  {\renewcommand{\theenumi}{\protect\exnumfmt{\@arabic\c@enumi}}}
+  {}{\@latex@warning@no@line{exnumfmt: \string\Senumerate\space のパッチに失敗}}
+\makeatother
+%% 素の数字で参照する（例：\exref{ex5.1} → 4）
+\DeclareRobustCommand{\exref}[1]{\begingroup\def\exnumfmt##1{##1}\ref{#1}\endgroup}
+%% 本文中で【7】の形のまま参照する（行頭の \< を落とすので，直前の漢字に「【」が食い込まない）
+\DeclareRobustCommand{\exrefb}[1]{\begingroup\def\exnumfmt##1{【{\bfseries ##1}】}\ref{#1}\endgroup}

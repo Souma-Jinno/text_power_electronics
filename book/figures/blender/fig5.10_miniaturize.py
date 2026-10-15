@@ -1,7 +1,9 @@
 # fig5.10_miniaturize.py — 図5.10 高周波化で L と C が小さくなるイメージ（Blender 版）
 #
-# 狙い（一行）：同じリプルを許すなら L も C も 1/f で済む（式 5.21・5.25）。f = 10 kHz・100 kHz・1 MHz の 3 組の
-#               インダクタ（トロイダルコアに巻線）とキャパシタ（電解コンデンサの円筒）を横に並べ，右へ行くほど小さくなる様子を見せる。
+# 狙い（一行）：同じリプルを許すなら L も C も 1/f で済む（式 5.21・5.25）。f = 10 kHz・100 kHz の 2 組の
+#               インダクタ（トロイダルコアに巻線）とキャパシタ（電解コンデンサの円筒）を横に並べ，間の矢印（f×10）で小さくなる様子を見せる。
+# [2026-10-15 先生の赤枠（森北送付案 r7 note01 p31）「いらない。一つ目と二つ目の間に矢印入れる。」]
+#   3 組目（1 MHz，7.3 µH・1 µF）を外し，1 組目と 2 組目の間に右向きの矢印と $f\times 10$ を入れた。大きさの比はそのまま。
 # [2026-10-15 先生の赤枠（森北送付案 r6 note01 p32）「このグラフなんか当たり前なので、素子が小さくなるイメージを載せてくれない？
 #   blenderとかで作れる？」] L ∝ 1/f, C ∝ 1/f の両対数グラフ（旧 scripts/fig5.10.py）をこの図に替えた。
 #
@@ -11,7 +13,7 @@
 #   章末問題（ΔV_out = 50 mV）の C = ΔI_L / (8 f ΔV_out)。100 kHz で 73 µH・10 µF（旧図の印と同じ値）。
 # 図に和文は入れない（数値と単位だけ）。白背景，版面幅（318 pt）以内，文字は \footnotesize（8 pt）。
 # 検算：verify_fig5.10_miniaturize.py（geom.json の寸法比が (1/10)^(1/3)，体積比が 1/10，ラベルの L・C が設計式の値に一致，
-#   3 組が左から右へ単調に小さく重ならない，EPS の幅が 318 pt 以下）。
+#   2 組が左から右へ小さく重ならない，矢印が 2 組の間にある，EPS の幅が 318 pt 以下）。
 # 使い方：./build_fig.sh fig5.10_miniaturize   （最後に ../fig5.10.eps へ写る）
 
 import sys
@@ -25,18 +27,18 @@ from blfig import Fig, args, col, cyl_solid, circle_pts, flat_poly
 OUT, SAMPLES = args()
 F = Fig("fig5.10_miniaturize", SAMPLES, world=0.9)
 
-UNIT_CM = 1.62
+UNIT_CM = 1.70                            # 2 組にしたので少し大きく（幅 318 pt 以内）
 PT = 1 / 72 * 2.54 / UNIT_CM              # 1 pt を図の単位に
-VIEW = Vector((0.0, -1.0, 0.42))          # 正面やや上から見る（横向きの成分を入れると 3 組の接地の高さが画面でずれる）
+VIEW = Vector((0.0, -1.0, 0.42))          # 正面やや上から見る（横向きの成分を入れると 2 組の接地の高さが画面でずれる）
 
 # ---------------- 設計値（章末問題【5】（旧 例題 5.2）と章末問題の ΔV_out = 50 mV） ----------------
 Vin, Vout, dI, dV = 12.0, 5.0, 0.4, 0.05
 D = Vout / Vin
-FREQ = [1e4, 1e5, 1e6]
+FREQ = [1e4, 1e5]
 Lval = [(Vin - Vout) * D / (f * dI) for f in FREQ]       # [H]
 Cval = [dI / (8 * f * dV) for f in FREQ]                 # [F]
 K = (1 / 10) ** (1 / 3)                                  # 1 組ごとの線寸法の比
-SC = [K ** k for k in range(3)]
+SC = [K ** k for k in range(len(FREQ))]
 
 # ---------------- 色 ----------------
 M_CORE = F.solid("core", col(0.30, 0.30, 0.32), emit=0.05, rough=0.55)          # フェライトのコア（濃い灰）
@@ -51,7 +53,7 @@ F.scene.collection.children.link(sil)
 
 # 単位の大きさ（s = 1，10 kHz の組）
 R_MAJ, R_MIN = 0.62, 0.25                 # トロイダルコア（中心半径，断面半径）
-NTURN = 16                                # 巻数（3 組とも同じ形をそのまま縮める）
+NTURN = 16                                # 巻数（2 組とも同じ形をそのまま縮める）
 R_W = 0.042                               # 巻線の太さ（半径）
 RC, HC = 0.42, 1.30                       # コンデンサの半径・高さ
 GAP_IC = 0.30                             # インダクタとコンデンサの間
@@ -117,8 +119,8 @@ def capacitor(c, s):
     F.mesh("band", V, Fc, [M_BAND], mark_edges=False, coll=F.other, smooth=True)
 
 
-# ---------------- 3 組を左から右へ（地面 z = 0 にそろえて置く） ----------------
-GAP = 0.62                                # 組と組の間（ラベルの幅を確保）
+# ---------------- 2 組を左から右へ（地面 z = 0 にそろえて置く） ----------------
+GAP = 1.25                                # 組と組の間（矢印と f×10 の幅を確保）
 groups, x = [], 0.0
 for k, s in enumerate(SC):
     w = W_GROUP * s
@@ -131,7 +133,15 @@ for k, s in enumerate(SC):
     groups.append(dict(k=k, s=s, x0=x, x1=x + w, xc=x + w / 2, ind_center=list(ci),
                        ind_outer_d=2 * (R_MAJ + R_MIN + R_W) * s, cap_r=RC * s, cap_h=HC * s,
                        f=FREQ[k], L=Lval[k], C=Cval[k]))
-    x += w + GAP * (1.0 if k == 0 else 0.85)
+    x += w + GAP
+
+# ---------------- 2 組の間の矢印（大きい組 → 小さい組） ----------------
+M_ARR = F.solid("arrow", col(0.20, 0.20, 0.22), emit=0.3, rough=0.5)
+ZA = 0.42                                 # 矢印の高さ（2 組目の部品の中ほど）
+pa = Vector((groups[0]["x1"] + 0.18, 0, ZA))
+pb = Vector((groups[1]["x0"] - 0.18, 0, ZA))
+F.arrow(pa, pb, M_ARR, r_shaft=0.028, head_l=0.20, r_head=0.075)
+arrow_geom = dict(x0=pa.x, x1=pb.x, z=ZA)
 
 # ---------------- 光・カメラ ----------------
 F.area_light((x / 2 - 3.5, -6.5, 7.5), (x / 2, 0, 0), size=8, energy=1100)
@@ -151,7 +161,7 @@ def fmt(v, unit):
 
 labels = []
 for g in groups:
-    ftxt = {1e4: r"10\,\mathrm{kHz}", 1e5: r"100\,\mathrm{kHz}", 1e6: r"1\,\mathrm{MHz}"}[g["f"]]
+    ftxt = {1e4: r"10\,\mathrm{kHz}", 1e5: r"100\,\mathrm{kHz}"}[g["f"]]
     Lt, Ct = fmt(g["L"], "H"), fmt(g["C"], "F")
     tex = (r"\begin{tabular}{@{}c@{}}$f=" + ftxt + r"$\\[1pt]"
            r"$L=" + Lt + r"\,\mu\mathrm{H}$\\$C=" + Ct + r"\,\mu\mathrm{F}$\end{tabular}")
@@ -159,5 +169,7 @@ for g in groups:
     g["label_L_uH"], g["label_C_uF"] = float(Lt), float(Ct)
     labels.append(tex)
 
-geom = dict(K=K, groups=groups, Vin=Vin, Vout=Vout, dI=dI, dV=dV, unit_cm=UNIT_CM, labels=labels)
+F.label(Vector(((pa.x + pb.x) / 2, 0, ZA + 0.10)), r"$f\times 10$", anchor="south")   # 矢印の上
+
+geom = dict(K=K, groups=groups, arrow=arrow_geom, Vin=Vin, Vout=Vout, dI=dI, dV=dV, unit_cm=UNIT_CM, labels=labels)
 F.render(OUT, geom)

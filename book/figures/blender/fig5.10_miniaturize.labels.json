@@ -1,29 +1,29 @@
 {
- "width_px": 2524,
- "height_px": 1085,
+ "width_px": 2433,
+ "height_px": 1138,
  "dpi": 600,
  "labels": [
   {
    "tex": "\\begin{tabular}{@{}c@{}}$f=10\\,\\mathrm{kHz}$\\\\[1pt]$L=730\\,\\mu\\mathrm{H}$\\\\$C=100\\,\\mu\\mathrm{F}$\\end{tabular}",
-   "x": 647.5189212560654,
-   "y": 772.5490507483482,
+   "x": 679.339033126831,
+   "y": 810.3540285825729,
    "anchor": "north",
    "dx": 0.0,
    "dy": 0.0
   },
   {
    "tex": "\\begin{tabular}{@{}c@{}}$f=100\\,\\mathrm{kHz}$\\\\[1pt]$L=73\\,\\mu\\mathrm{H}$\\\\$C=10\\,\\mu\\mathrm{F}$\\end{tabular}",
-   "x": 1715.1917021274567,
-   "y": 772.5490507483482,
+   "x": 2052.424357652664,
+   "y": 810.3540285825729,
    "anchor": "north",
    "dx": 0.0,
    "dy": 0.0
   },
   {
-   "tex": "\\begin{tabular}{@{}c@{}}$f=1\\,\\mathrm{MHz}$\\\\[1pt]$L=7.3\\,\\mu\\mathrm{H}$\\\\$C=1\\,\\mu\\mathrm{F}$\\end{tabular}",
-   "x": 2302.310141801834,
-   "y": 772.5490507483482,
-   "anchor": "north",
+   "tex": "$f\\times 10$",
+   "x": 1525.3008186221123,
+   "y": 506.80944323539734,
+   "anchor": "south",
    "dx": 0.0,
    "dy": 0.0
   }

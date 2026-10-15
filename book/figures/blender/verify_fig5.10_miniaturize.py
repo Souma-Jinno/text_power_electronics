@@ -1,10 +1,11 @@
 """verify_fig5.10_miniaturize.py — 図5.10（Blender 版）の検算
 
-  (a) 3 組の線寸法の比が (1/10)^(1/3)（≈ 0.464）ずつ，体積の比が 1/10 ずつ（誇張していない）。
+  (a) 2 組の線寸法の比が (1/10)^(1/3)（≈ 0.464）ずつ，体積の比が 1/10 ずつ（誇張していない）。
   (b) ラベルの L・C が設計式 L = (V_in − V_out) D / (f ΔI_L)，C = ΔI_L / (8 f ΔV_out) の値（有効数字 2 桁）に一致し，
-      100 kHz で 73 µH・10 µF（例題 5.2・旧図の値）。
+      100 kHz で 73 µH・10 µF（章末問題（旧例題 5.2）・旧図の値）。
   (c) f が 10 倍ずつで，L・C が 1/10 ずつ。
-  (d) 3 組が左から右へ並び重ならず，右ほど小さい。
+  (d) 2 組が左から右へ並び重ならず，右ほど小さい。矢印（f×10）が 2 組の間にあり右向き。
+      [2026-10-15 r7] 3 組目（1 MHz）を外したので 2 組を確かめる。
   (e) EPS の幅が版面幅 318 pt 以下。
 """
 import json
@@ -36,7 +37,11 @@ for a, b in zip(gs[:-1], gs[1:]):
     assert abs(b["f"] / a["f"] - 10) < 1e-9
     assert abs(b["L"] / a["L"] - 0.1) < 1e-9 and abs(b["C"] / a["C"] - 0.1) < 1e-9
     assert a["x1"] < b["x0"] and b["s"] < a["s"]
-print("(c)(d) f は 10 倍ずつ，L・C は 1/10 ずつ，3 組は左から右へ重ならず右ほど小さい")
+assert len(gs) == 2 and gs[0]["f"] == 1e4
+A = G["arrow"]
+assert gs[0]["x1"] < A["x0"] < A["x1"] < gs[1]["x0"]
+assert 0 < A["z"] < 2 * max(gs[1]["cap_h"], gs[1]["ind_outer_d"])
+print("(c)(d) f は 10 倍，L・C は 1/10，2 組は左から右へ重ならず右が小さい。矢印は 2 組の間で右向き")
 
 bb = re.search(r"%%BoundingBox: (\S+) (\S+) (\S+) (\S+)", (H / "fig5.10_miniaturize.eps").read_text(errors="ignore"))
 w = float(bb.group(3)) - float(bb.group(1))
