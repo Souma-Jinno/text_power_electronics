@@ -1,7 +1,16 @@
 \answer
 \begin{enumerate}
 
-%%--- 章末問題 5.1 ---
+%%--- 章末問題 5.1（旧 例題5.1。2026-10-15 本文から移した） ---
+\item[\ref{ex5.rei1}]
+\rev{式\ref{eq5.9}より}
+\begin{equation*}
+\rev{D = \frac{V_{\mathrm{out}}}{V_{\mathrm{in}}} = \frac{5}{12} \approx 0.417}
+\end{equation*}
+\rev{周期は$T = 1/f = 10\,\mathrm{\mu s}$だから，Sの導通時間は$DT \approx 4.2\,\mathrm{\mu s}$，
+ダイオードの導通時間は$(1-D)T \approx 5.8\,\mathrm{\mu s}$である。この動作点は章末問題\ref{ex5.rei2}の設計でも使う。}
+
+%%--- 章末問題 5.2 ---
 \item[\ref{ex5.1}]
 (a) 式\ref{eq5.13}を$D$について解くと
 \begin{equation*}
@@ -14,7 +23,7 @@ I_{\mathrm{in}} = \frac{I_{\mathrm{out}}}{1-D}= \frac{0.42}{5/12} \approx 1.0\,\
 \end{equation*}
 出力の2.4倍の電流が入力側に流れる。昇圧コンバータの入力側の配線・インダクタ・スイッチは，この大きな電流を前提に選ばなければならない。
 
-%%--- 章末問題 5.2 ---
+%%--- 章末問題 5.3 ---
 \item[\ref{ex5.2}]
 (a) 式\ref{eq5.13}より$D = 1 - 12/48 = 0.75$。
 損失がなければ入出力の電力は等しいから，式\ref{eq5.14}より
@@ -33,7 +42,7 @@ $2 + 0.45 = 2.45$\,Aである。
 いずれも\textbf{出力}電圧で決まる。
 昇圧コンバータの素子には出力電圧以上の耐圧が必要である。
 
-%%--- 章末問題 5.3 ---
+%%--- 章末問題 5.4 ---
 \item[\ref{ex5.3}]
 等価回路は\ref{fig5.7}(b)，(c)のとおり。
 オン期間は電源→S→$L$のループで$v_L = V_{\mathrm{in}}$，
@@ -48,7 +57,21 @@ $-12$\,V：$D = 0.5$，
 $-5$\,V：$D = 5/17 \approx 0.29$，
 $-24$\,V：$D = 2/3 \approx 0.67$。
 
-%%--- 章末問題 5.4 ---
+%%--- 章末問題 5.5（旧 例題5.2。2026-10-15 本文から移した） ---
+\item[\ref{ex5.rei2}]
+\rev{章末問題\ref{ex5.rei1}より$D = 5/12 \approx 0.417$。式\ref{eq5.21}より}
+\begin{eqnarray*}
+\rev{L} &\rev{=}& \rev{\frac{(V_{\mathrm{in}} - V_{\mathrm{out}})\, D}{f\, \mathit{\Delta}I_L}
+= \frac{(12 - 5) \times 0.417}{100 \times 10^{3} \times 0.4}} \\
+&\rev{\approx}& \rev{73\,\mathrm{\mu H}}
+\end{eqnarray*}
+\rev{となる（実際にはこれ以上の標準値，たとえば$100\,\mathrm{\mu H}$から選ぶ）。電流の最大値は}
+\begin{equation*}
+\rev{I_{\mathrm{out}} + \frac{\mathit{\Delta}I_L}{2} = 2 + 0.2 = 2.2\,\mathrm{A}}
+\end{equation*}
+\rev{であり，この値で磁気飽和しないインダクタと，余裕を見た電流定格のスイッチ・ダイオードを選ぶ。}
+
+%%--- 章末問題 5.6 ---
 \item[\ref{ex5.4}]
 (a) 式\ref{eq5.9}より$D = 12/24 = 0.5$。
 
@@ -66,7 +89,7 @@ C = \frac{0.6}{8\times200\times10^{3}\times0.05} = 7.5\,\mathrm{\mu F}
 (d) $I_{\mathrm{out}} + \mathit{\Delta}I_L/2 = 3 + 0.3 = 3.3$\,A。
 この値が磁気飽和とスイッチ・ダイオードの電流定格の基準になる。
 
-%%--- 章末問題 5.5 ---
+%%--- 章末問題 5.7 ---
 \item[\ref{ex5.5}]
 式\ref{eq5.25}より
 \begin{eqnarray*}
@@ -76,7 +99,7 @@ C &=& \frac{\mathit{\Delta}I_L}{8 f\, \mathit{\Delta}V_{\mathrm{out}}}
 \end{eqnarray*}
 リプル電流$0.4$\,Aに対してわずか$10\,\mathrm{\mu F}$で済むのは，スイッチング周波数が高いからである（\ref{sec5.8}節）。
 
-%%--- 章末問題 5.6 ---
+%%--- 章末問題 5.8 ---
 \item[\ref{ex5.6}]
 (a) 境界では$I_{\mathrm{out}} = \mathit{\Delta}I_L/2$（式\ref{eq5.27}）。
 左辺に$I_{\mathrm{out}} = V_{\mathrm{out}}/R_B = DV_{\mathrm{in}}/R_B$，
@@ -97,7 +120,7 @@ R_B = \frac{2\times100\times10^{3}\times73\times10^{-6}}{1-0.417}
 \end{equation*}
 \ref{sec5.7}節の問で求めた「$25\,\Omega$以上でDCM」と一致する。
 
-%%--- 章末問題 5.7 ---
+%%--- 章末問題 5.9 ---
 \item[\ref{ex5.7}]
 (a) オフ期間のループはダイオード→$L$→負荷で，
 ダイオードの電圧降下$V_F$を含めてキルヒホッフの電圧則を立てると
@@ -115,7 +138,7 @@ V_{\mathrm{in}} D - V_{\mathrm{out}} - V_F (1-D) &=& 0
 出力電圧が低いほどこのずれの割合は大きくなるから，
 低電圧・大電流の電源ではダイオードをMOSFETに置き換える同期整流が必須になる。
 
-%%--- 章末問題 5.8 ---
+%%--- 章末問題 5.10 ---
 \item[\ref{ex5.8}]
 (a) シミュレーションの定常波形から
 $\mathit{\Delta}I_L \approx 83$\,mA，
